@@ -1,10 +1,13 @@
 import * as React from 'react';
+import {StyleProvider} from './Providers';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Unitalk</h1>
-    </div>
+    <StyleProvider>
+      <div>
+        
+      </div>
+    </StyleProvider>
   );
 }
 
