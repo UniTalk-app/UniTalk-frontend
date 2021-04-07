@@ -11,6 +11,9 @@ const appTheme = createMuiTheme({
     palette: {
         primary: {
             main: '#fafafa'
+        },
+        secondary: {
+            main: '#282828'
         }
     }
 });

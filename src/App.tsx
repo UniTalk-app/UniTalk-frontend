@@ -6,7 +6,8 @@ import {
   Route
 } from "react-router-dom";
 
-import HomePage from './pages/HomePage';
+import HomePage from 'pages/HomePage';
+import MainLayout from 'pages/MainLayout';
 
 // @todo separate to other file
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
 function App() {
   return (
     <StyleProvider>
+      <MainLayout>
       <Router>
         <Switch>
           {
@@ -28,6 +30,7 @@ function App() {
           }
         </Switch>
       </Router>
+      </MainLayout>
     </StyleProvider>
   );
 }
