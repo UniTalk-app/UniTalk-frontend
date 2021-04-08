@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import {Avatar, Box, createStyles, Grid, makeStyles, Theme, Typography} from "@material-ui/core";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import CreateIcon from '@material-ui/icons/Create';
-import DeleteIcon from '@material-ui/icons/Delete';
-
+import {
+    Create as CreateIcon,
+    Delete as DeleteIcon,
+    Visibility as VisibilityIcon
+} from '@material-ui/icons'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     small: {
@@ -15,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     }
 }));
 
-type ThreadInfoProps = {
+// waiting for backend
+type dummyThread = {
     title: string,
     author: string,
     lastReply: string,
@@ -23,39 +25,41 @@ type ThreadInfoProps = {
     creationTime: string
 }
 
+type ThreadInfoProps = {
+    firstColumnSize: any,
+    thread: dummyThread
+}
+
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
     const {
-        title,
-        author,
-        lastReply,
-        replyTime,
-        creationTime
+        firstColumnSize,
+        thread
     } = props;
     const classes = useStyles();
 
     return (
         <Box bgcolor={"background.dp02"} boxShadow={1} borderRadius={"borderRadius"} pl={1} pr={1} height={40} display="flex" justifyContent="center">
             <Grid container justify={"space-between"} alignItems={"center"}>
-                <Grid item sm={5}>
-                    <Typography variant={"body1"}>{title}</Typography>
+                <Grid item sm={firstColumnSize}>
+                    <Typography variant={"body1"}>{thread.title}</Typography>
                 </Grid>
                 <Grid item>
-                    <Box display="flex">
+                    <Box display="flex" alignItems="center">
                         <Avatar className={classes.small + " " + classes.margin}/>
-                        <Typography variant={"body2"}>{author}</Typography>
+                        <Typography variant={"body2"}>{thread.author}</Typography>
                     </Box>
                 </Grid>
                 <Grid item>
-                    <Box display="flex">
+                    <Box display="flex" alignItems="center">
                         <Avatar className={classes.small + " " + classes.margin}/>
-                        <Typography variant={"body2"}>{lastReply}</Typography>
+                        <Typography variant={"body2"}>{thread.lastReply}</Typography>
                     </Box>
                 </Grid>
                 <Grid item>
-                    <Typography variant={"body2"}>{replyTime}</Typography>
+                    <Typography variant={"body2"}>{thread.replyTime}</Typography>
                 </Grid>
                 <Grid item>
-                    <Typography variant={"body2"}>{creationTime}</Typography>
+                    <Typography variant={"body2"}>{thread.creationTime}</Typography>
                 </Grid>
                 <Grid item>
                     <VisibilityIcon fontSize={"small"} />

@@ -21,6 +21,23 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
         threads
     } = props;
 
+    const firstColumnSize = 5;
+    const headers = [
+        "Author",
+        "Last replied by",
+        "Reply time",
+        "Creation time",
+        "Options"
+    ];
+
+    const headerElement = (sm: any, variant: any, color: any, text: string) => {
+        return (
+            <Grid item sm={sm}>
+                <Typography variant={variant} color={color}>{text}</Typography>
+            </Grid>
+        )
+    }
+
     const latestChipClicked = () => {
         console.info("Latest chip clicked");
     }
@@ -74,33 +91,15 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
                     </Grid>
                 </Grid>
             </Box>
-            <Box mt={1} pl={1}>
+            <Box mt={1} pl={1} pr={1}>
                 <Grid container spacing={2} justify={"space-between"}>
-                    <Grid item sm={5}>
-                        <Typography variant={"caption"} color={"textSecondary"}>Title</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant={"caption"} color={"textSecondary"}>Author</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant={"caption"} color={"textSecondary"}>Last replied by</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant={"caption"} color={"textSecondary"}>Reply time</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant={"caption"} color={"textSecondary"}>Creation time</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant={"caption"} color={"textSecondary"}>Options</Typography>
-                    </Grid>
+                    {headerElement(firstColumnSize, "caption", "textSecondary", "Title")}
+                    {headers.map(text => headerElement(false, "caption", "textSecondary", text))}
                 </Grid>
             </Box>
             <Box mt={1}>
                 <Grid container direction={"column"} spacing={1}>
-                    {threads.map(value =>
-                        <Grid item>{ThreadInfo(value)}</Grid>
-                    )}
+                    {threads.map(value => <Grid item>{ThreadInfo({firstColumnSize: firstColumnSize, thread: value})}</Grid>)}
                 </Grid>
             </Box>
         </Box>
