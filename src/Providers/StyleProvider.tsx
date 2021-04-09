@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { ThemeProvider as MUIThemeProvider } from '@material-ui/core';
-import { ThemeProvider } from 'styled-components';
 import appTheme from "./theme";
 
 /**
@@ -13,9 +12,7 @@ import appTheme from "./theme";
 
 const StyleProvider: React.FC = ({children}) => (
     <MUIThemeProvider theme={appTheme}>
-        <ThemeProvider theme={appTheme}>
-            {children}
-        </ThemeProvider>
+        {children}
     </MUIThemeProvider>
 )
 
