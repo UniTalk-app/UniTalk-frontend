@@ -1,22 +1,27 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import { useFormik } from 'formik';
+import * as React from 'react';
+import { Button, Typography, Container,Grid } from '@material-ui/core';
+import { useFormik, FormikErrors, Form, Field } from 'formik';
 
-const validate = values => {
-  const errors = {};
+interface FormValues{
+  firstName: string,
+  lastName: string,
+  password: string,
+  email: string,
+}
+
+const validate = (values: FormValues) => {
+
+  const errors: FormikErrors<FormValues> = {};
+
   if (!values.firstName) {
     errors.firstName = 'Required';
-  } else if (values.firstName.length > 15) {
+  } else if (values.firstName.length > 5) {
     errors.firstName = 'Must be 15 characters or less';
   }
 
   if (!values.lastName) {
     errors.lastName = 'Required';
-  } else if (values.lastName.length > 20) {
+  } else if (values.lastName.length > 5) {
     errors.lastName = 'Must be 20 characters or less';
   }
 
@@ -51,14 +56,13 @@ function Register() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <div>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form noValidate  onSubmit={formik.handleSubmit}>
+        <Form noValidate  onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
+              <Field
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -70,10 +74,10 @@ function Register() {
                 value={formik.values.firstName}
                 autoFocus
               />
-              {formik.errors.firstName ? <div>{formik.errors.firstName}</div> : null}
+              {formik.errors.firstName ? <>{formik.errors.firstName}</> : null}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
+              <Field
                 variant="outlined"
                 required
                 fullWidth
@@ -84,10 +88,10 @@ function Register() {
                 onChange={formik.handleChange}
                 value={formik.values.lastName}
               />
-              {formik.errors.lastName ? <div>{formik.errors.lastName}</div> : null}
+              {formik.errors.lastName ? <>{formik.errors.lastName}</> : null}
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <Field
                 variant="outlined"
                 required
                 fullWidth
@@ -101,7 +105,7 @@ function Register() {
               {formik.errors.email ? <div>{formik.errors.email}</div> : null}
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <Field
                 variant="outlined"
                 required
                 fullWidth
@@ -119,8 +123,7 @@ function Register() {
           <Button type="submit" fullWidth variant="contained" color="primary">
             Sign Up
           </Button>
-        </form>
-      </div>
+        </Form>
     </Container>
   );
 }

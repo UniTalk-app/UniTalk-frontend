@@ -1,15 +1,16 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import { useFormik } from 'formik';
+import * as React from 'react';
+import { Button, CssBaseline, FormControlLabel, Checkbox, Typography, Container } from '@material-ui/core';
+import { useFormik, FormikErrors, Form, Field } from 'formik';
 
-const validate = (values: any)=> {
-  const errors = {};
+interface FormValues{
+  password: string,
+  email: string,
+}
+
+const validate = (values: FormValues)=> {
+  
+  const errors: FormikErrors<FormValues> = {};
+
   if (!values.password) {
     errors.password = 'Required';
   } else if (values.password.length > 10) {
@@ -41,12 +42,11 @@ const SignIn: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <TextField
+        <Form noValidate onSubmit={formik.handleSubmit}>
+          <Field
             variant="outlined"
             margin="normal"
             required
@@ -59,8 +59,8 @@ const SignIn: React.FC = () => {
             value={formik.values.email}
             autoFocus
           />
-          {formik.errors.email ? <div>{formik.errors.email}</div> : null}
-          <TextField
+          {formik.errors.email ? <>{formik.errors.email}</> : null}
+          <Field
             variant="outlined"
             margin="normal"
             required
@@ -73,7 +73,7 @@ const SignIn: React.FC = () => {
             autoComplete="current-password"
             value={formik.values.password}
           />
-          {formik.errors.password ? <div>{formik.errors.password}</div> : null}
+          {formik.errors.password ? <>{formik.errors.password}</> : null}
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -81,8 +81,7 @@ const SignIn: React.FC = () => {
           <Button type="submit" fullWidth variant="contained" color="primary">
             Sign In
           </Button>
-        </form>
-      </div>
+        </Form>
     </Container>
   );
 }
