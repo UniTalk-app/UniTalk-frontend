@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Avatar, Box, createStyles, Grid, makeStyles, Theme, Typography} from "@material-ui/core";
+import {Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
@@ -26,7 +26,7 @@ type dummyThread = {
 }
 
 type ThreadInfoProps = {
-    firstColumnSize: any,
+    firstColumnSize: boolean | GridSize,
     thread: dummyThread
 }
 

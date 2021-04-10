@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Divider, Button, Chip, Grid, Typography} from '@material-ui/core';
+import {Box, Divider, Button, Chip, Grid, Typography, GridSize} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ThreadInfo from "./ThreadInfo";
 
@@ -30,10 +30,10 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
         "Options"
     ];
 
-    const headerElement = (sm: any, variant: any, color: any, text: string) => {
+    const headerElement = (sm: boolean | GridSize, color: "textPrimary" | "textSecondary", text: string) => {
         return (
             <Grid item sm={sm}>
-                <Typography variant={variant} color={color}>{text}</Typography>
+                <Typography variant={"caption"} color={color}>{text}</Typography>
             </Grid>
         )
     }
@@ -93,8 +93,8 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
             </Box>
             <Box mt={1} pl={1} pr={1}>
                 <Grid container spacing={2} justify={"space-between"}>
-                    {headerElement(firstColumnSize, "caption", "textSecondary", "Title")}
-                    {headers.map(text => headerElement(false, "caption", "textSecondary", text))}
+                    {headerElement(firstColumnSize, "textSecondary", "Title")}
+                    {headers.map(text => headerElement(false, "textSecondary", text))}
                 </Grid>
             </Box>
             <Box mt={1}>
