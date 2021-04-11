@@ -55,7 +55,7 @@ function Register() {
   });
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>

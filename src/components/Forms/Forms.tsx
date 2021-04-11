@@ -4,22 +4,18 @@ import {
   HowToReg as HowToRegIcon,
   AddToHomeScreen as AddToHomeScreenIcon
  } from '@material-ui/icons';
-import SignIn from "./Login";
+import Login from "./Login";
 import Register from "./Register";
 
 const Forms: React.FC = () => {
   const [open, setOpen] = React.useState(false);
-  const [LoginForm, SetLoginForm] = React.useState(false);
+  const [loginForm, setLoginForm] = React.useState(false);
 
   const trigger = (value: boolean) => {
-    SetLoginForm(value);
+    setLoginForm(value);
     setOpen(true);
   };
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
+  
   const handleClose = () => {
     setOpen(false);
   };
@@ -30,7 +26,6 @@ const Forms: React.FC = () => {
         variant="outlined"
         color="primary"
         onClick={() => {
-        //  handleClickOpen();
           trigger(true);
         }}
       >
@@ -41,7 +36,6 @@ const Forms: React.FC = () => {
         variant="outlined"
         color="primary"
         onClick={() => {
-        //  handleClickOpen();
           trigger(false);
         }}
       >
@@ -53,13 +47,13 @@ const Forms: React.FC = () => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <b>{LoginForm ? <SignIn /> : <Register />}</b>
+        <b>{loginForm ? <Login /> : <Register />}</b>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button onClick={handleClose} color="primary">
-            <b>{LoginForm ? "Login" : "Register"}</b>
+            <b>{loginForm ? "Login" : "Register"}</b>
           </Button>
         </DialogActions>
       </Dialog>

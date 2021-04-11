@@ -27,7 +27,7 @@ const validate = (values: FormValues)=> {
   return errors;
 };
 
-const SignIn: React.FC = () => {
+const Login: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       password: '',
@@ -40,7 +40,7 @@ const SignIn: React.FC = () => {
   });
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container>
       <CssBaseline />
         <Typography component="h1" variant="h5">
           Sign in
@@ -86,4 +86,4 @@ const SignIn: React.FC = () => {
   );
 }
 
-export default SignIn;
+export default Login;
