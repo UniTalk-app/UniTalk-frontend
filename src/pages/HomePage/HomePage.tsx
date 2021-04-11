@@ -1,13 +1,21 @@
 import * as React from 'react';
-
-import Button from '../../components/Button';
+import { Box } from '@material-ui/core';
+import ThreadsList from '../../components/ThreadsList';
 
 const HomePage: React.FC = () => {
-    const [ s, uS] = React.useState(0);
 
     return (
-        <Button onClick={() => uS(p => p+1)} label={`You clicked ${s} times`} />
+        <>
+            <Box width="50%" m={10}>
+                <ThreadsList threads={[
+                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"},
+                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"},
+                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"}
+                ]} />
+            </Box>
+        </>
+
     )
-}
+};
 
 export default HomePage;

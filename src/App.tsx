@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {StyleProvider} from './Providers';
+import {CssBaseline} from '@material-ui/core';
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,6 +20,7 @@ const routes = [
 function App() {
   return (
     <StyleProvider>
+      <CssBaseline />
       <Router>
         <Switch>
           {
