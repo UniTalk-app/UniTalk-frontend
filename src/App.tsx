@@ -7,7 +7,8 @@ import {
   Route
 } from "react-router-dom";
 
-import HomePage from './pages/HomePage';
+import HomePage from 'pages/HomePage';
+import MainLayout from 'pages/MainLayout';
 
 // @todo separate to other file
 const routes = [
@@ -21,15 +22,17 @@ function App() {
   return (
     <StyleProvider>
       <CssBaseline />
-      <Router>
-        <Switch>
-          {
-            routes.map(({path, Component}) => (
-              <Route path={path}><Component /></Route>
-            ))
-          }
-        </Switch>
-      </Router>
+      <MainLayout>
+        <Router>
+          <Switch>
+            {
+              routes.map(({path, Component}) => (
+                <Route path={path}><Component /></Route>
+              ))
+            }
+          </Switch>
+        </Router>
+      </MainLayout>
     </StyleProvider>
   );
 }
