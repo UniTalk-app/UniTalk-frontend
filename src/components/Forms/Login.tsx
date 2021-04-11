@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, CssBaseline, FormControlLabel, Checkbox, Typography, Container } from '@material-ui/core';
+import { Button, FormControlLabel, Checkbox, Typography, Container } from '@material-ui/core';
 import { useFormik, FormikErrors, Form, Field } from 'formik';
 
 interface FormValues{
@@ -41,7 +41,6 @@ const Login: React.FC = () => {
 
   return (
     <Container>
-      <CssBaseline />
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
