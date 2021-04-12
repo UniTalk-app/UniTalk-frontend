@@ -1,27 +1,27 @@
-import * as React from 'react'
+import * as React from "react";
 import {
     Typography, 
     AppBar, 
     Toolbar,
     IconButton
-} from '@material-ui/core';
+} from "@material-ui/core";
 import { 
     Menu as MenuIcon, 
-} from '@material-ui/icons';
+} from "@material-ui/icons";
 
 const Navbar: React.FC = () => {
     return (
-      <AppBar position="sticky" color="secondary">
-        <Toolbar>
-        <IconButton edge="start" color="primary">
-            <MenuIcon />
-         </IconButton>
-          <Typography variant="h6" noWrap>
+        <AppBar position="sticky" color="default">
+            <Toolbar>
+                <IconButton edge="start" color="inherit">
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h5" noWrap>
             UniTalk
-          </Typography>        
-        </Toolbar>
-      </AppBar>
-    )
-}
+                </Typography>        
+            </Toolbar>
+        </AppBar>
+    );
+};
 
-export default Navbar
+export default Navbar;

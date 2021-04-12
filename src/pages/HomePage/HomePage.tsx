@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Box } from '@material-ui/core';
-import ThreadsList from '../../components/ThreadsList';
-import Categories from 'components/Categories';
-import Forms from 'components/Forms/Forms';
+import * as React from "react";
+import { Box } from "@material-ui/core";
+import ThreadsList from "../../components/ThreadsList";
+import Categories from "components/Categories";
+import Forms from "components/Forms/Forms";
 
 const HomePage: React.FC = () => {
 
@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
                 ]} />
             </Box>
         </>
-    )
+    );
 };
 
 export default HomePage;

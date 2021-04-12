@@ -25,6 +25,9 @@ jobs:
         
       - name: Build
         run: yarn build
+
+      - name: Run linter
+        run: eslint src
         
       - name: Test
         run: yarn test --watchAll=false

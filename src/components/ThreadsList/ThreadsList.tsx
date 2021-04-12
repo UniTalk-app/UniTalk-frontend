@@ -1,6 +1,6 @@
-import React from 'react';
-import {Box, Divider, Button, Chip, Grid, Typography, GridSize} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import React from "react";
+import {Box, Divider, Button, Chip, Grid, Typography, GridSize} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import ThreadInfo from "./ThreadInfo";
 
 // Just for testing purpose
@@ -35,16 +35,16 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
             <Grid item sm={sm}>
                 <Typography variant={"caption"} color={color}>{text}</Typography>
             </Grid>
-        )
-    }
+        );
+    };
 
     const latestChipClicked = () => {
         console.info("Latest chip clicked");
-    }
+    };
 
     const oldestChipClicked = () => {
         console.info("Oldest chip clicked");
-    }
+    };
 
     return (
         <Box>
@@ -99,12 +99,12 @@ const ThreadsList : React.FC<ThreadsListProps> = (props) => {
             </Box>
             <Box mt={1}>
                 <Grid container direction={"column"} spacing={1}>
-                    {threads.map(value => <Grid item>{ThreadInfo({firstColumnSize: firstColumnSize, thread: value})}</Grid>)}
+                    {threads.map(value => <><Grid item>{ThreadInfo({firstColumnSize: firstColumnSize, thread: value})}</Grid></>)}
                 </Grid>
             </Box>
         </Box>
         
-    )
+    );
 };
 
 export default ThreadsList;

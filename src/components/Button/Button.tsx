@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Button as MUIButton, ButtonProps as MUIButtonProps } from '@material-ui/core';
+import * as React from "react";
+import { Button as MUIButton, ButtonProps as MUIButtonProps } from "@material-ui/core";
 
 // Props types definition
 type ButtonProps = {
@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = (props) => {
         <MUIButton {...otherProps}>
             { label }
         </MUIButton>
-    )
+    );
 };
 
 export default Button;

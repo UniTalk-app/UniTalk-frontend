@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { render } from '@testing-library/react';
+import * as React from "react";
+import { render } from "@testing-library/react";
 
 import ThreadsList from "../ThreadsList";
 
-describe('ThreadsList', () => {
-    test('renders ThreadsList', async() => {
+describe("ThreadsList", () => {
+    test("renders ThreadsList", async() => {
         const {findByText} = render(<ThreadsList threads={[
             {title: "testTitle", author: "testAuthor", lastReply: "testLastReply", replyTime: "testReplyTime", creationTime: "testCreationTime"}
         ]} />);
@@ -20,5 +20,5 @@ describe('ThreadsList', () => {
         expect(lastReply).toBeTruthy();
         expect(replyTime).toBeTruthy();
         expect(creationTime).toBeTruthy();
-    })
-})
+    });
+});
