@@ -26,17 +26,14 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Run linter
-        run: eslint src
-        
-      - name: Test
-        run: yarn test --watchAll=false
-
   Test:
     name: Test
     runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn  
 
       - name: Test
         run: yarn test --watchAll=false
@@ -46,6 +43,9 @@ jobs:
     runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn  
 
       - name: Run linter
         run: eslint src
