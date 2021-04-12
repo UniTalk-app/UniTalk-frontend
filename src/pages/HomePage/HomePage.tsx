@@ -14,7 +14,6 @@ const HomePage: React.FC = () => {
                 ]} />
             </Box>
         </>
-
     )
 };
 
