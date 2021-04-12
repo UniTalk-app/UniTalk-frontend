@@ -1,4 +1,5 @@
 # Unitalk frontend
+[![CI](https://github.com/UniTalk-app/UniTalk-frontend/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/UniTalk-app/UniTalk-frontend/actions/workflows/main.yml)
 
 ## Requirements
 
