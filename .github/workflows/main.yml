@@ -14,8 +14,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  buildAndTest:
-    name: Build and Test
+  Build:
+    name: Build
     runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v2
@@ -25,6 +25,27 @@ jobs:
         
       - name: Build
         run: yarn build
-        
+
+  Test:
+    name: Test
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn  
+
       - name: Test
         run: yarn test --watchAll=false
+
+  Linter:
+    name: Linter
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn  
+
+      - name: Run linter
+        run: yarn run eslint src

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { ThemeProvider as MUIThemeProvider } from '@material-ui/core';
+import { ThemeProvider as MUIThemeProvider } from "@material-ui/core";
 import appTheme from "./theme";
 
 /**
@@ -14,6 +14,6 @@ const StyleProvider: React.FC = ({children}) => (
     <MUIThemeProvider theme={appTheme}>
         {children}
     </MUIThemeProvider>
-)
+);
 
 export default StyleProvider;

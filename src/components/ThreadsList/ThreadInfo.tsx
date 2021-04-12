@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import {Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
     Visibility as VisibilityIcon
-} from '@material-ui/icons'
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     small: {
@@ -69,6 +69,6 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
             </Grid>
         </Box>
     );
-}
+};
 
 export default ThreadInfo;
