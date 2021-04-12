@@ -1,12 +1,14 @@
 import * as React from 'react';
 import {StyleProvider} from './Providers';
+import {CssBaseline} from '@material-ui/core';
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
 
-import HomePage from './pages/HomePage';
+import HomePage from 'pages/HomePage';
+import MainLayout from 'pages/MainLayout';
 
 // @todo separate to other file
 const routes = [
@@ -19,15 +21,18 @@ const routes = [
 function App() {
   return (
     <StyleProvider>
-      <Router>
-        <Switch>
-          {
-            routes.map(({path, Component}) => (
-              <Route path={path}><Component /></Route>
-            ))
-          }
-        </Switch>
-      </Router>
+      <CssBaseline />
+      <MainLayout>
+        <Router>
+          <Switch>
+            {
+              routes.map(({path, Component}) => (
+                <Route path={path}><Component /></Route>
+              ))
+            }
+          </Switch>
+        </Router>
+      </MainLayout>
     </StyleProvider>
   );
 }

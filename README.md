@@ -12,6 +12,6 @@ Node v12+, yarn v1.22+
 ## Technology stack
 
 1. Main technology - React.js + Typescript
-2. Theming - styled-components + MaterialUI
+2. Theming - MaterialUI
 3. React-testing-library
 4
