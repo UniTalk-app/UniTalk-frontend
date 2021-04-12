@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const Categories: React.FC = () => {
 
-    function createData(name: string) {
-    return { name };
+    const createData = (name: string) => {
+         return { name }
     }
     
     const rows = [  // temporarily, insted of database table
