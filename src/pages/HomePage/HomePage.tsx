@@ -2,13 +2,11 @@ import * as React from "react";
 import { Box } from "@material-ui/core";
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
-import Forms from "components/Forms/Forms";
 
 const HomePage: React.FC = () => {
 
     return (
         <>
-            <Forms />
             <Categories />
             <Box width="50%" m={10}>
                 <ThreadsList threads={[

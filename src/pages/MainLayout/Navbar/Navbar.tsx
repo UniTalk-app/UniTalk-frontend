@@ -3,13 +3,25 @@ import {
     Typography, 
     AppBar, 
     Toolbar,
-    IconButton
+    IconButton,
+    createStyles, 
+    makeStyles,
+    Box
 } from "@material-ui/core";
 import { 
     Menu as MenuIcon, 
 } from "@material-ui/icons";
 
+import Forms from "components/Forms";
+
+const useStyles = makeStyles(() => createStyles({
+    authButtons: {
+        marginLeft: "auto"
+    }
+}));
+
 const Navbar: React.FC = () => {
+    const classes = useStyles();
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
@@ -18,7 +30,10 @@ const Navbar: React.FC = () => {
                 </IconButton>
                 <Typography variant="h5" noWrap>
             UniTalk
-                </Typography>        
+                </Typography>
+                <Box className={classes.authButtons}>
+                    <Forms />    
+                </Box>
             </Toolbar>
         </AppBar>
     );
