@@ -6,10 +6,14 @@ import {
     IconButton,
     createStyles, 
     makeStyles,
-    Box
+    Box,
+    InputAdornment,
+    Input
 } from "@material-ui/core";
 import { 
     Menu as MenuIcon, 
+    Search as SearchIcon,
+    FilterList as FilterListIcon
 } from "@material-ui/icons";
 
 import Forms from "components/Forms";
@@ -17,6 +21,10 @@ import Forms from "components/Forms";
 const useStyles = makeStyles(() => createStyles({
     authButtons: {
         marginLeft: "auto"
+    },
+    searchBar: {
+        position: "absolute",
+        left: "40%"
     }
 }));
 
@@ -31,6 +39,13 @@ const Navbar: React.FC = () => {
                 <Typography variant="h5" noWrap>
             UniTalk
                 </Typography>
+                <Box className={classes.searchBar}>
+                    <Input
+                        placeholder="Search…"
+                        startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+                        endAdornment={<InputAdornment position="end"><FilterListIcon /></InputAdornment>}
+                    />
+                </Box>
                 <Box className={classes.authButtons}>
                     <Forms />    
                 </Box>
