@@ -1,13 +1,34 @@
-import * as React from 'react';
-import { Button, Dialog, DialogActions } from '@material-ui/core';
+import * as React from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  makeStyles,
+  Theme,
+  createStyles,
+} from "@material-ui/core";
 import {
   HowToReg as HowToRegIcon,
-  AddToHomeScreen as AddToHomeScreenIcon
- } from '@material-ui/icons';
+  ExitToApp as ExitToAppIcon,
+} from "@material-ui/icons";
 import Login from "./Login";
 import Register from "./Register";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    small: {
+      width: theme.spacing(15),
+      height: theme.spacing(5),
+      borderRadius: theme.spacing(0),
+    },
+    margin: {
+      marginRight: theme.spacing(3),
+    },
+  })
+);
+
 const Forms: React.FC = () => {
+  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [loginForm, setLoginForm] = React.useState(false);
 
@@ -15,31 +36,33 @@ const Forms: React.FC = () => {
     setLoginForm(value);
     setOpen(true);
   };
-  
+
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   return (
     <>
       <Button
+        className={classes.small + " " + classes.margin}
         variant="outlined"
         color="primary"
         onClick={() => {
           trigger(true);
         }}
       >
-      <HowToRegIcon/>
+        <ExitToAppIcon />
         Login
       </Button>
       <Button
+        className={classes.small + " " + classes.margin}
         variant="outlined"
-        color="primary"
+        color="secondary"
         onClick={() => {
           trigger(false);
         }}
       >
-        <AddToHomeScreenIcon/>
+        <HowToRegIcon />
         Register
       </Button>
       <Dialog
@@ -59,5 +82,5 @@ const Forms: React.FC = () => {
       </Dialog>
     </>
   );
-}
- export default Forms;
+};
+export default Forms;
