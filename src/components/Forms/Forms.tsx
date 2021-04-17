@@ -24,6 +24,7 @@ const Forms: React.FC = () => {
         <>
             <Button
                 variant="outlined"
+                size="small"
                 color="primary"
                 onClick={() => {
                     trigger(true);
@@ -34,6 +35,7 @@ const Forms: React.FC = () => {
             </Button>
             <Button
                 variant="outlined"
+                size="small"
                 color="primary"
                 onClick={() => {
                     trigger(false);

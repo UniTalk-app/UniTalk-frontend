@@ -1,14 +1,22 @@
 import * as React from "react";
-import {  createStyles, makeStyles, Typography,Divider,
-    Box,Button,TableContainer,Table,Tabs,TableRow} from "@material-ui/core";
+import { 
+    createStyles, 
+    makeStyles, 
+    Typography,
+    Divider,
+    Box,
+    Button,
+    TableContainer,
+    Table,
+    Tabs,
+    TableRow
+} from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 const useStyles = makeStyles(() => createStyles({
     root: {
-        marginLeft:"100px",
-        marginTop:"90px",
-        height:"310px",
-        width:"270px",
+        marginTop: "80px",
+        width: "100%",
         border:"1px solid #7878a1",
         borderRadius:"5px",
     },
