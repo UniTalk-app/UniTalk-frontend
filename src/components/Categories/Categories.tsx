@@ -17,8 +17,7 @@ const useStyles = makeStyles(() => createStyles({
     root: {
         marginTop: "80px",
         width: "100%",
-        border:"1px solid #7878a1",
-        borderRadius:"5px",
+        borderRadius:"10px",
     },
     table:{
         maxHeight:253,
@@ -26,29 +25,26 @@ const useStyles = makeStyles(() => createStyles({
     tab:{
         width:"100%",
         height:"35px",
-        justifyContent: "right",
+        justifyContent: "left",
         textTransform:"none",
         borderRadius: "8px",
-        margin: "0 0 10px ",
+        margin: "0 0 13px 0",
     }, 
 }));
 
-const Categories: React.FC = () => {
+type dummyCateg = {
+    name: string,
+    creationTime: string
+}
+type CategListProps = {
+    categories: Array<dummyCateg>
+}
 
-    const createData = (name: string) => {
-        return { name };
-    };
-    
-    const rows = [  // temporarily, insted of database table
-        createData("All"),
-        createData("Linuxiarze"),
-        createData("Nie widzę"),
-        createData("Nie slyszę"),
-        createData("Do...dzieła"),
-        createData("Sesja depresja"),
-        createData("Matlabowe świry 2"),
-        createData("Goelodzy"),
-    ];
+const Categories: React.FC<CategListProps> = (props) => {
+
+    const {
+        categories
+    } = props;
 
     const plusClicked= () => {
         console.info("Plus clicked");
@@ -56,12 +52,12 @@ const Categories: React.FC = () => {
     const classes = useStyles();
 
     return (
-        <Box className={classes.root}>
-            <Box display="flex" alignItems="center" height="57px" >
-                <Box flexGrow={1} ml={2}>
-                    <Typography variant="h6" >Categories</Typography>
+        <Box className={classes.root} bgcolor={"background.dp04"} >
+            <Box display="flex"  height="57px" alignItems="center" justifyContent="center">
+                <Box flexGrow={1} ml={3}>
+                    <Typography variant="h6">Categories</Typography>
                 </Box>
-                <Box mr={1}>
+                <Box mr={2}>
                     <AddCircleIcon onClick={plusClicked}></AddCircleIcon>
                 </Box>                
             </Box>
@@ -69,11 +65,11 @@ const Categories: React.FC = () => {
             <Box>
                 <TableContainer className={classes.table}>
                     <Table>
-                        <Box m={1} >
-                            <Tabs orientation="vertical"  aria-label="Vertical tabs example"> 
-                                {rows.map((row) => (
-                                    <TableRow key={row.name}>
-                                        <Button className={classes.tab}variant="outlined">{row.name}</Button>
+                        <Box m={2} >
+                            <Tabs  orientation="vertical"  aria-label="Vertical tabs example"  style={{scrollbarColor:"transparent transparent"}}> 
+                                {categories.map((categories) => (
+                                    <TableRow key={categories.name}>
+                                        <Button className={classes.tab}variant="outlined">{categories.name}</Button>
                                     </TableRow>
                                 ))}
                             </Tabs>

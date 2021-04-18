@@ -19,7 +19,11 @@ const HomePage: React.FC = () => {
     return (
         <Container className={classes.mainBox}>
             <Box width="20%">
-                <Categories />
+                <Categories categories={[
+                    {name:"All",creationTime:"1 day ago"},  {name:"Linux",creationTime:"1 day ago"},
+                    {name:"Course schedule (IS2)",creationTime:"1 day ago"},  {name:"WGGiOŚ",creationTime:"1 day ago"},
+                    {name:"Course retake fee:(",creationTime:"1 day ago"}, {name:"How to die successfully",creationTime:"1 day ago"}
+                ]}/>            
             </Box>
             <Box width="80%" m={10}>
                 <ThreadsList threads={[
