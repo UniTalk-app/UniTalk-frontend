@@ -10,7 +10,6 @@ import {
     createStyles,
 } from "@material-ui/core";
 import { FormikErrors, Form, Field, Formik, useFormik } from "formik";
-import { Label } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

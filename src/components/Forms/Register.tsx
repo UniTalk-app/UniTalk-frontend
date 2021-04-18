@@ -74,7 +74,7 @@ const validate = (values: FormValues) => {
     return errors;
 };
 
-function Register() {
+const Register : React.FC = () => {
     const classes = useStyles();
     const formik = useFormik({
         initialValues: {
@@ -192,6 +192,6 @@ function Register() {
             </Formik>
         </Container>
     );
-}
+};
 
 export default Register;
