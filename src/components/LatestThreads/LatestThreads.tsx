@@ -1,0 +1,81 @@
+import * as React from "react";
+//import {RemoveScrollBar} from 'react-remove-scroll-bar';
+import {
+    createStyles,
+    makeStyles,
+    Theme,
+    Typography,
+    Divider,
+    Box,
+    List,
+    ListItem,
+    ListItemText
+} from "@material-ui/core";
+import ForumIcon from "@material-ui/icons/Forum";
+
+const documentWidth = document.documentElement.clientWidth;
+const windowWidth = window.innerWidth;
+const ScrollBarWidth = windowWidth - documentWidth;
+const useStyles = makeStyles((theme: Theme) => createStyles({
+    root: {
+        marginTop: "30px",
+        width: "100%",
+        borderRadius:"10px",
+        
+    },
+    middlebox: {
+        width: "100%",
+        maxHeight: "250px",
+        overflowY:"scroll",
+        scrollbarColor:"transparent transparent",
+        paddingRight: ScrollBarWidth,
+    },
+}));
+
+// Just for testing purpose
+type dummyThread = {
+    name: string,
+    comments:string,
+}
+type ThreadsListProps = {
+    latestthreads: Array<dummyThread>
+}
+
+const Categories: React.FC<ThreadsListProps> = (props) => {
+    const {
+        latestthreads
+    } = props;
+    
+    const classes = useStyles();
+
+    return (
+        <Box className={classes.root} bgcolor={"background.dp04"}>
+            <Box display="flex"  height="57px" alignItems="center" justifyContent="center">
+                <Box flexGrow={1} ml={3}>
+                    <Typography variant="h6" >Latest threads</Typography>
+                </Box>              
+            </Box>
+            <Divider />
+            <Box className={classes.middlebox}>
+                <List>
+                    {latestthreads.map((latestthreads) => (
+                        <Box key={latestthreads.name}>
+                            <ListItem alignItems="flex-start" >
+                                <ListItemText
+                                    primary={latestthreads.name}
+                                    secondary={
+                                        <React.Fragment>
+                                            <ForumIcon style={{fontSize:"small", marginRight:"5px"}} />
+                                            {latestthreads.comments+" comments"}
+                                        </React.Fragment>
+                                    }/>
+                            </ListItem>
+                            <Divider variant="middle"/> 
+                        </Box>
+                    ))}
+                </List>
+            </Box>
+        </Box>
+    );
+};
+export default Categories;
