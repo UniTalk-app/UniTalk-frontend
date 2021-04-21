@@ -3,7 +3,6 @@ import * as React from "react";
 import {
     createStyles,
     makeStyles,
-    Theme,
     Typography,
     Divider,
     Box,
@@ -13,10 +12,7 @@ import {
 } from "@material-ui/core";
 import ForumIcon from "@material-ui/icons/Forum";
 
-const documentWidth = document.documentElement.clientWidth;
-const windowWidth = window.innerWidth;
-const ScrollBarWidth = windowWidth - documentWidth;
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles(() => createStyles({
     root: {
         marginTop: "30px",
         width: "100%",
@@ -27,8 +23,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width: "100%",
         maxHeight: "250px",
         overflowY:"scroll",
-        scrollbarColor:"transparent transparent",
-        paddingRight: ScrollBarWidth,
     },
 }));
 
@@ -37,6 +31,7 @@ type dummyThread = {
     name: string,
     comments:string,
 }
+
 type ThreadsListProps = {
     latestthreads: Array<dummyThread>
 }
