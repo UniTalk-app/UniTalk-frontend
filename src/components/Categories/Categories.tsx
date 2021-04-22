@@ -23,7 +23,6 @@ const useStyles = makeStyles(() => createStyles({
         maxHeight:253,
     },
     tab:{
-        fontSize:"0.93rem",
         width:"100%",
         height:"35px",
         justifyContent: "left",
@@ -70,7 +69,9 @@ const Categories: React.FC<CategListProps> = (props) => {
                             <Tabs  orientation="vertical"  aria-label="Vertical tabs example"  style={{scrollbarColor:"transparent transparent"}}> 
                                 {categories.map((categories) => (
                                     <TableRow key={categories.name}>
-                                        <Button className={classes.tab}variant="outlined">{categories.name}</Button>
+                                        <Button className={classes.tab}variant="outlined">
+                                            <Typography variant="body1">{categories.name}</Typography>
+                                        </Button>
                                     </TableRow>
                                 ))}
                             </Tabs>
