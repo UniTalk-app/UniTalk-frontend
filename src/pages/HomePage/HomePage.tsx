@@ -20,16 +20,19 @@ const HomePage: React.FC = () => {
     return (
         <Container className={classes.mainBox}>
             <Box width="20%">
-                <Categories categories={[
-                    {name:"All",creationTime:"1 day ago"},  {name:"Linux",creationTime:"1 day ago"},
-                    {name:"Course schedule (IS2)",creationTime:"1 day ago"},  {name:"WGGiOŚ",creationTime:"1 day ago"},
-                    {name:"Course retake fee:(",creationTime:"1 day ago"}, {name:"How to die successfully",creationTime:"1 day ago"}
-                ]}/>            
-        
-                <LatestThreads  latestthreads={[
-                    {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
-                    {name:"Juwenalia",comments:"143"}
-                ]} />
+                <Box mb={4}>
+                    <Categories categories={[
+                        {name:"All",creationTime:"1 day ago"},  {name:"Linux",creationTime:"1 day ago"},
+                        {name:"Course schedule (IS2)",creationTime:"1 day ago"},  {name:"WGGiOŚ",creationTime:"1 day ago"},
+                        {name:"Course retake fee:(",creationTime:"1 day ago"}, {name:"How to die successfully",creationTime:"1 day ago"}
+                    ]}/>            
+                </Box>
+                <Box>
+                    <LatestThreads  latestthreads={[
+                        {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
+                        {name:"Juwenalia",comments:"143"}
+                    ]} />
+                </Box>
             </Box>
             <Box width="80%" m={10}>
                 <ThreadsList threads={[

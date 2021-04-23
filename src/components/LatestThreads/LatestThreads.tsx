@@ -1,5 +1,4 @@
 import * as React from "react";
-//import {RemoveScrollBar} from 'react-remove-scroll-bar';
 import {
     createStyles,
     makeStyles,
@@ -14,10 +13,8 @@ import ForumIcon from "@material-ui/icons/Forum";
 
 const useStyles = makeStyles(() => createStyles({
     root: {
-        marginTop: "30px",
         width: "100%",
         borderRadius:"10px",
-        
     },
     middlebox: {
         width: "100%",
@@ -59,10 +56,10 @@ const Categories: React.FC<ThreadsListProps> = (props) => {
                                 <ListItemText
                                     primary={latestthreads.name}
                                     secondary={
-                                        <React.Fragment>
+                                        <>
                                             <ForumIcon style={{fontSize:"small", marginRight:"5px"}} />
                                             {latestthreads.comments+" comments"}
-                                        </React.Fragment>
+                                        </>
                                     }/>
                             </ListItem>
                             <Divider variant="middle"/> 
