@@ -65,11 +65,13 @@ const Categories: React.FC<CategListProps> = (props) => {
             <Box>
                 <TableContainer className={classes.table}>
                     <Table>
-                        <Box m={2} >
+                        <Box m={1.5} >
                             <Tabs  orientation="vertical"  aria-label="Vertical tabs example"  style={{scrollbarColor:"transparent transparent"}}> 
                                 {categories.map((categories) => (
                                     <TableRow key={categories.name}>
-                                        <Button className={classes.tab}variant="outlined">{categories.name}</Button>
+                                        <Button className={classes.tab}variant="outlined">
+                                            <Typography variant="body1">{categories.name}</Typography>
+                                        </Button>
                                     </TableRow>
                                 ))}
                             </Tabs>
