@@ -75,9 +75,6 @@ const Forms: React.FC = () => {
                     <Button onClick={handleClose} color="primary">
             Cancel
                     </Button>
-                    <Button onClick={handleClose} color="primary">
-                        <b>{loginForm ? "Login" : "Register"}</b>
-                    </Button>
                 </DialogActions>
             </Dialog>
         </>
