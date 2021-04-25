@@ -27,7 +27,7 @@ export const StoreProvider: React.FC = ({children}) => {
 export function useMainData(): MainPageStoreData{
     const ctx = React.useContext<MainPageStoreData>(Context);
     // We want to force the rerender of components
-    const [_, forceRerender] = React.useState(true);
+    const [, forceRerender] = React.useState(true);
     React.useEffect(() => {
         ctx.getData();
         ctx.subscribeToServiceChange(() => forceRerender(p => !p));

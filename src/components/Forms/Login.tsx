@@ -76,7 +76,6 @@ const Login: React.FC = () => {
                 validate={validate}
                 onSubmit={(values) => {
                     AuthService.login(values);
-                    alert(JSON.stringify(values));
                 }}
             >
                 {
