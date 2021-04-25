@@ -3,17 +3,8 @@ import {Box, Divider, Button, Chip, Grid, Typography, GridSize} from "@material-
 import AddIcon from "@material-ui/icons/Add";
 import ThreadInfo from "./ThreadInfo";
 
-// Just for testing purpose
-type dummyThread = {
-    title: string,
-    author: string,
-    lastReply: string,
-    replyTime: string,
-    creationTime: string
-}
-
 type ThreadsListProps = {
-    threads: Array<dummyThread>
+    threads: Array<Thread>
 }
 
 const ThreadsList : React.FC<ThreadsListProps> = (props) => {

@@ -8,7 +8,8 @@ import {
     Theme,
     createStyles,
 } from "@material-ui/core";
-import { useFormik, FormikErrors, Form, Field, Formik } from "formik";
+import { FormikErrors, Form, Field, Formik } from "formik";
+import AuthService from "services/auth.service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface FormValues {
+    username: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -46,16 +48,22 @@ interface FormValues {
 
 const validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
+    
+    if (!values.username) {
+        errors.username = "Required";
+    } else if (values.firstName.length > 15) {
+        errors.username = "Must be 15 characters or less";
+    }
 
     if (!values.firstName) {
         errors.firstName = "Required";
-    } else if (values.firstName.length > 5) {
+    } else if (values.firstName.length > 15) {
         errors.firstName = "Must be 15 characters or less";
     }
 
     if (!values.lastName) {
         errors.lastName = "Required";
-    } else if (values.lastName.length > 5) {
+    } else if (values.lastName.length > 20) {
         errors.lastName = "Must be 20 characters or less";
     }
 
@@ -76,19 +84,6 @@ const validate = (values: FormValues) => {
 
 const Register : React.FC = () => {
     const classes = useStyles();
-    const formik = useFormik({
-        initialValues: {
-            firstName: "",
-            lastName: "",
-            password: "",
-            email: "",
-        },
-        validate,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
-    });
-
     return (
         <Container>
             <Typography component="h1" variant="h3" className={classes.header}>
@@ -96,6 +91,7 @@ const Register : React.FC = () => {
             </Typography>
             <Formik
                 initialValues={{
+                    username: "",
                     firstName: "",
                     lastName: "",
                     password: "",
@@ -103,92 +99,116 @@ const Register : React.FC = () => {
                 }}
                 validate={validate}
                 onSubmit={(values) => {
-                    alert(JSON.stringify(values, null, 2));
+                    AuthService.register(values);
                 }}
-            >
-                <Form noValidate onSubmit={formik.handleSubmit} className={classes.big}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <Typography component="h3" variant="h6" color="primary">
-                Fisrt name
-                            </Typography>
-                            <Field
-                                className={classes.textField}
-                                autoComplete="fname"
-                                name="firstName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                onChange={formik.handleChange}
-                                value={formik.values.firstName}
-                                autoFocus
-                            />
-                            {formik.errors.firstName ? <>{formik.errors.firstName}</> : null}
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography component="h3" variant="h6" color="primary">
+            > 
+                {
+                    (props)=>(
+                        <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography component="h3" variant="h6" color="primary">
+                Username
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        autoComplete="username"
+                                        name="username"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="username"
+                                        label="Username"
+                                        onChange={props.handleChange}
+                                        value={props.values.username}
+                                        autoFocus
+                                    />
+                                    {props.errors.username ? <>{props.errors.username}</> : null}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography component="h3" variant="h6" color="primary">
+                First name
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        autoComplete="fname"
+                                        name="firstName"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="firstName"
+                                        label="First Name"
+                                        onChange={props.handleChange}
+                                        value={props.values.firstName}
+                                        autoFocus
+                                    />
+                                    {props.errors.firstName ? <>{props.errors.firstName}</> : null}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography component="h3" variant="h6" color="primary">
                 Last name
-                            </Typography>
-                            <Field
-                                className={classes.textField}
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lname"
-                                onChange={formik.handleChange}
-                                value={formik.values.lastName}
-                            />
-                            {formik.errors.lastName ? <>{formik.errors.lastName}</> : null}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component="h3" variant="h6" color="primary">
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="lastName"
+                                        label="Last Name"
+                                        name="lastName"
+                                        autoComplete="lname"
+                                        onChange={props.handleChange}
+                                        value={props.values.lastName}
+                                    />
+                                    {props.errors.lastName ? <>{props.errors.lastName}</> : null}
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography component="h3" variant="h6" color="primary">
                 Email
-                            </Typography>
-                            <Field
-                                className={classes.textField}
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                onChange={formik.handleChange}
-                                value={formik.values.email}
-                            />
-                            {formik.errors.email ? <div>{formik.errors.email}</div> : null}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography component="h3" variant="h6" color="primary">
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Email Address"
+                                        name="email"
+                                        autoComplete="email"
+                                        onChange={props.handleChange}
+                                        value={props.values.email}
+                                    />
+                                    {props.errors.email ? <div>{props.errors.email}</div> : null}
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography component="h3" variant="h6" color="primary">
                 Password
-                            </Typography>
-                            <Field
-                                className={classes.textField}
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={formik.handleChange}
-                                value={formik.values.password}
-                            />
-                            {formik.errors.password ? (
-                                <div>{formik.errors.password}</div>
-                            ) : null}
-                        </Grid>
-                    </Grid>
-                    <Button type="submit" fullWidth variant="contained" color="primary">
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        onChange={props.handleChange}
+                                        value={props.values.password}
+                                    />
+                                    {props.errors.password ? (
+                                        <div>{props.errors.password}</div>
+                                    ) : null}
+                                </Grid>
+                            </Grid>
+                            <Button type="submit" fullWidth variant="contained" color="primary">
             Sign Up
-                    </Button>
-                </Form>
+                            </Button>
+                        </Form>
+                    )
+                }
+                
             </Formik>
         </Container>
     );

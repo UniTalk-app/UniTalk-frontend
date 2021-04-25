@@ -8,6 +8,7 @@ import {
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
 import LatestThreads from "../../components/LatestThreads";
+import { StoreProvider, useMainData } from "./store/StoreProvider";
 
 const useStyles = makeStyles(() => createStyles({
     mainBox: {
@@ -17,31 +18,28 @@ const useStyles = makeStyles(() => createStyles({
 
 const HomePage: React.FC = () => {
     const classes = useStyles();
+    const {
+        threads,
+        categories
+    } = useMainData();
     return (
-        <Container className={classes.mainBox}>
-            <Box width="20%">
-                <Box mb={4}>
-                    <Categories categories={[
-                        {name:"All",creationTime:"1 day ago"},  {name:"Linux",creationTime:"1 day ago"},
-                        {name:"Course schedule (IS2)",creationTime:"1 day ago"},  {name:"WGGiOŚ",creationTime:"1 day ago"},
-                        {name:"Course retake fee:(",creationTime:"1 day ago"}, {name:"How to die successfully",creationTime:"1 day ago"}
-                    ]}/>            
+        <StoreProvider>
+            <Container className={classes.mainBox}>
+                <Box width="20%">
+                    <Categories categories={categories()}/>
+                    <Box mt={4}>
+                        <LatestThreads  latestthreads={[
+                            {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
+                            {name:"Juwenalia",comments:"143"}
+                        ]} />
+                    </Box>        
                 </Box>
-                <Box>
-                    <LatestThreads  latestthreads={[
-                        {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
-                        {name:"Juwenalia",comments:"143"}
-                    ]} />
+
+                <Box width="80%" m={10}>
+                    <ThreadsList threads={threads()} />
                 </Box>
-            </Box>
-            <Box width="80%" m={10}>
-                <ThreadsList threads={[
-                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"},
-                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"},
-                    {title: "How to die successfully", author: "rafi", lastReply: "TrytianKurek", replyTime: "10h ago", creationTime: "1 day ago"}
-                ]} />
-            </Box>
-        </Container>
+            </Container>
+        </StoreProvider>
     );
 };
 
