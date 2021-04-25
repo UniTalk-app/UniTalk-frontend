@@ -10,6 +10,7 @@ const store: MainPageStoreData = {
     getData: MainDataService.getData,
     categories: () => MainDataService.categories,
     threads: () => MainDataService.threads,
+    subscribeToServiceChange: MainDataService.subscribeToServiceChange
 };
 
 const Context = React.createContext<MainPageStoreData>(store);
@@ -29,6 +30,7 @@ export function useMainData(): MainPageStoreData{
     const [_, forceRerender] = React.useState(true);
     React.useEffect(() => {
         ctx.getData();
+        ctx.subscribeToServiceChange(() => forceRerender(p => !p));
         // we invalidate data every 30 minutes
         const id = setInterval(() => {
             ctx.getData();
@@ -38,7 +40,7 @@ export function useMainData(): MainPageStoreData{
         return () => {
             clearInterval(id);
         };
-    });
+    }, []);
 
     return ctx;
 }
