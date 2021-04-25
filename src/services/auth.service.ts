@@ -1,14 +1,17 @@
 import axios from "axios";
+import BackendAPI from "./backendAPI";
+import mainDataService from "./mainData.service";
 
-const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = BackendAPI.AUTH;
 
 class AuthService {
-    async login(data: { email: string; password: string }) {
+    async login(data: { username: string; password: string }) {
         try {
             const response = await axios.post(API_URL + "login", data);
 
-            if (response.data.accessToken) {
-                localStorage.setItem("user", JSON.stringify(response.data));
+            if (response.data.token) {
+                localStorage.setItem("user", response.data.token);
+                await mainDataService.getData();
             }
 
             return response.data;

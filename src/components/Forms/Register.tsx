@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface FormValues {
+    username: string;
   firstName: string;
   lastName: string;
   password: string;
@@ -47,6 +48,12 @@ interface FormValues {
 
 const validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
+    
+    if (!values.username) {
+        errors.username = "Required";
+    } else if (values.firstName.length > 15) {
+        errors.username = "Must be 15 characters or less";
+    }
 
     if (!values.firstName) {
         errors.firstName = "Required";
@@ -93,16 +100,34 @@ const Register : React.FC = () => {
                 validate={validate}
                 onSubmit={(values) => {
                     AuthService.register(values);
-                    alert(JSON.stringify(values, null, 2));
                 }}
             > 
                 {
                     (props)=>(
                         <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
                             <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography component="h3" variant="h6" color="primary">
+                Username
+                                    </Typography>
+                                    <Field
+                                        className={classes.textField}
+                                        autoComplete="username"
+                                        name="username"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="username"
+                                        label="Username"
+                                        onChange={props.handleChange}
+                                        value={props.values.username}
+                                        autoFocus
+                                    />
+                                    {props.errors.username ? <>{props.errors.username}</> : null}
+                                </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <Typography component="h3" variant="h6" color="primary">
-                Fisrt name
+                First name
                                     </Typography>
                                     <Field
                                         className={classes.textField}

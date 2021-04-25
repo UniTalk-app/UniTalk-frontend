@@ -32,12 +32,8 @@ const useStyles = makeStyles(() => createStyles({
     }, 
 }));
 
-type dummyCateg = {
-    name: string,
-    creationTime: string
-}
 type CategListProps = {
-    categories: Array<dummyCateg>
+    categories: Array<Category>
 }
 
 const Categories: React.FC<CategListProps> = (props) => {

@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface FormValues {
-    email: string;
+    username: string;
   password: string;
 }
 
@@ -53,11 +53,9 @@ const validate = (values: FormValues) => {
         errors.password = "Must be 10 characters or less";
     }
 
-    if (!values.email) {
-        errors.email = "Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address";
-    }
+    if (!values.username) {
+        errors.username = "Required";
+    } 
 
     return errors;
 };
@@ -72,59 +70,61 @@ const Login: React.FC = () => {
             </Typography>
             <Formik
                 initialValues={{
-                    email: "",
+                    username: "",
                     password: "",
                 }}
                 validate={validate}
                 onSubmit={(values) => {
                     AuthService.login(values);
-                    alert(JSON.stringify(values, null, 2));
+                    alert(JSON.stringify(values));
                 }}
-            >{(props)=>(
-                    <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
-                        <Typography component="h3" variant="h6" color="primary">
-            Email
-                        </Typography>
-                        <Field
-                            className={classes.textField}
+            >
+                {
+                    (props) => (
+                        <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
+                            <Typography component="h3" variant="h6" color="primary">
+                        Username
+                            </Typography>
+                            <Field
+                                className={classes.textField}
             
-                            variant="outlined"
-                            required
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            onChange={props.handleChange}
-                            value={props.values.email}
-                            autoFocus
-                        />
-                        {props.errors.email ? <>{props.errors.email}</> : null}
-                        <Typography component="h3" variant="h6" color="primary">
+                                variant="outlined"
+                                required
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
+                                onChange={props.handleChange}
+                                value={props.values.username}
+                                autoFocus
+                            />
+                            {props.errors.username ? <>{props.errors.username}</> : null}
+                            <Typography component="h3" variant="h6" color="primary">
             Password
-                        </Typography>
-                        <Field
-                            className={classes.textField}
+                            </Typography>
+                            <Field
+                                className={classes.textField}
 
-                            variant="outlined"
-                            required
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            onChange={props.handleChange}
-                            autoComplete="current-password"
-                            value={props.values.password}
-                        />
-                        {props.errors.password ? <>{props.errors.password}</> : null}
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
-                        <Button type="submit" fullWidth variant="contained" color="primary">
+                                variant="outlined"
+                                required
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                onChange={props.handleChange}
+                                autoComplete="current-password"
+                                value={props.values.password}
+                            />
+                            {props.errors.password ? <>{props.errors.password}</> : null}
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me"
+                            />
+                            <Button type="submit" fullWidth variant="contained" color="primary">
             Sign In
-                        </Button>
-                    </Form>
-                )}
+                            </Button>
+                        </Form>
+                    )}
                 
             </Formik>
         </Container>
