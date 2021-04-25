@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
-import { useMainData } from "./store/StoreProvider";
+import { StoreProvider, useMainData } from "./store/StoreProvider";
 
 const useStyles = makeStyles(() => createStyles({
     mainBox: {
@@ -22,14 +22,16 @@ const HomePage: React.FC = () => {
         categories
     } = useMainData();
     return (
-        <Container className={classes.mainBox}>
-            <Box width="20%">
-                <Categories categories={categories()}/>            
-            </Box>
-            <Box width="80%" m={10}>
-                <ThreadsList threads={threads()} />
-            </Box>
-        </Container>
+        <StoreProvider>
+            <Container className={classes.mainBox}>
+                <Box width="20%">
+                    <Categories categories={categories()}/>            
+                </Box>
+                <Box width="80%" m={10}>
+                    <ThreadsList threads={threads()} />
+                </Box>
+            </Container>
+        </StoreProvider>
     );
 };
 
