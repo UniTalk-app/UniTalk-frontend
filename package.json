@@ -20,15 +20,14 @@
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1",
-    "yup": "^0.32.9"
+    "@stomp/stompjs": "6.1.0",
+    "sockjs-client": "1.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "hook:precommit": "lint-staged",
-    "eject": "react-scripts eject",
-    "typecheck": "tsc --noEmit"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -50,12 +49,11 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
+    "@types/sockjs-client": "^1.5.0",
     "@types/styled-components": "^5.1.9",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.24.0",
-    "msw": "^0.28.2",
-    "husky": "^6.0.0",
-    "lint-staged": "^11.0.0"
+    "eslint-plugin-react": "^7.23.2"
   }
 }

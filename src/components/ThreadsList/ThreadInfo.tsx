@@ -1,10 +1,11 @@
 import * as React from "react";
-import {Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
+import {    Button,Dialog, DialogActions,Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
+import Chat from "../Chat/Chat";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     small: {
@@ -16,18 +17,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     }
 }));
 
-// waiting for backend
-type dummyThread = {
-    title: string,
-    author: string,
-    lastReply: string,
-    replyTime: string,
-    creationTime: string
-}
-
 type ThreadInfoProps = {
     firstColumnSize: boolean | GridSize,
-    thread: dummyThread
+    thread: Thread
 }
 
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
@@ -37,11 +29,51 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
     } = props;
     const classes = useStyles();
 
+    //chat....
+    const [open, setOpen] = React.useState(false);
+    const [chatFrom, setChatFrom] = React.useState(false);
+
+    const trigger = (value: boolean) => {
+        setChatFrom(value);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Box bgcolor={"background.dp02"} boxShadow={1} borderRadius={"borderRadius"} pl={1} pr={1} height={40} display="flex" justifyContent="center">
             <Grid container justify={"space-between"} alignItems={"center"}>
                 <Grid item sm={firstColumnSize}>
-                    <Typography variant={"body1"}>{thread.title}</Typography>
+
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                            trigger(true);
+                        }}
+                    >
+                        <Typography variant={"body1"}>{thread.title}</Typography>
+                    </Button>
+
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <b>
+                            <Chat thread={thread}/>
+                        </b>
+
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+
+                    </Dialog>
+
                 </Grid>
                 <Grid item>
                     <Box display="flex" alignItems="center">
