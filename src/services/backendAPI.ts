@@ -7,6 +7,14 @@ class BackendAPI {
     static getCategories = (groupId: number): string => `${basePath}group/${groupId}/category/all`;
     static getThreads = (groupId: number): string => `${basePath}group/${groupId}/thread/all`;
     static GROUP_ALL = `${basePath}group/all`;
+
+    static MIN_USERNAME_CHARS = 1;
+    static MIN_PASSWORD_CHARS = 1;
+    static MIN_EMAIL_CHARS = 1;
+    static MAX_USERNAME_CHARS = 32;
+    static MAX_PASSWORD_CHARS = 128;
+    static MAX_EMAIL_CHARS = 64;
+
 }
 
 export default BackendAPI;

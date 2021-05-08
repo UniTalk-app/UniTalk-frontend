@@ -2,7 +2,6 @@ import * as React from "react";
 import {
     Button,
     Dialog,
-    DialogActions,
     makeStyles,
     Theme,
     createStyles,
@@ -11,8 +10,8 @@ import {
     HowToReg as HowToRegIcon,
     ExitToApp as ExitToAppIcon,
 } from "@material-ui/icons";
-import Login from "./Login";
-import Register from "./Register";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Forms: React.FC = () => {
+const Forms : React.FC = () => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [loginForm, setLoginForm] = React.useState(false);
@@ -44,38 +43,33 @@ const Forms: React.FC = () => {
     return (
         <>
             <Button
-                className={classes.small + " " + classes.margin}
+                className={`${classes.small} ${classes.margin}`}
                 variant="outlined"
                 color="primary"
+                startIcon={<ExitToAppIcon/>}
                 onClick={() => {
                     trigger(true);
                 }}
             >
-                <ExitToAppIcon />
-        Login
+                Login
             </Button>
             <Button
-                className={classes.small + " " + classes.margin}
+                className={`${classes.small} ${classes.margin}`}
                 variant="outlined"
                 color="secondary"
+                startIcon={<HowToRegIcon/>}
                 onClick={() => {
                     trigger(false);
                 }}
             >
-                <HowToRegIcon />
-        Register
+                Register
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <b>{loginForm ? <Login /> : <Register />}</b>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-            Cancel
-                    </Button>
-                </DialogActions>
+                {loginForm ? <LoginForm onClose={handleClose} changeDialog={trigger}/> : <RegisterForm onClose={handleClose} changeDialog={trigger}/>}
             </Dialog>
         </>
     );
