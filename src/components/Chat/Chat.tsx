@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     FormControlLabel,
@@ -10,11 +11,10 @@ import {
     createStyles,
     Grid
 } from "@material-ui/core";
-
 import { FormikErrors, Form, Field, Formik } from "formik";
 import ChatService from "services/chat.service";
-import * as SockJS from "sockjs-client";
-import { Client, Message } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,34 +43,72 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const socket=new SockJS();
-const client = new Client({brokerURL: "/app/topic/"});
-
-console.log(client.brokerURL);
-
-type ThreadProps = {
+type ThreadProps =
+{
     thread: Thread
 }
 
-interface FormValues {
+interface FormValues
+{
     content: string;
 }
 
-const validate = (values: FormValues) => {
+const validate = (values: FormValues) =>
+{
     const errors: FormikErrors<FormValues> = {};
 
-    if (!values.content) {
+    if (!values.content)
+    {
         errors.content = "Required";
     }
 
     return errors;
 };
 
-const Chat: React.FC<ThreadProps> = (props) => {
+let stompClient : any;
+const Chat: React.FC<ThreadProps> = (props) =>
+{
     const classes = useStyles();
     const {
         thread
     } = props;
+
+    useEffect(() => {
+        connect();
+    }, []);
+
+    const connect = () => {
+        const socket = new SockJS("http://localhost:8080/websocket");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+    };
+
+    const onConnected = () => {
+        stompClient.subscribe(
+            "/topic/room/" + thread.thread_id,
+            onMessageReceived
+        );
+    };
+
+    const onError = (err : any) => {
+        console.log(err);
+    };
+
+    const onMessageReceived = (msg : any) => {
+        console.log("received message");
+    };
+
+    const sendMessage = (msg : any) => {
+        if (msg.trim() !== "")
+        {
+            const message = {
+                content: msg,
+                sender: "aaa",
+                timestamp: new Date(),
+            };
+            stompClient.send("/chat/room/"+thread.thread_id, {}, JSON.stringify(message));
+        }
+    };
 
     return (
         <Container>
@@ -89,7 +127,7 @@ const Chat: React.FC<ThreadProps> = (props) => {
                 }}
                 validate={validate}
                 onSubmit={(values) => {
-                    ChatService.send(values.content,"1");
+                    sendMessage(values.content);
                 }}
             >
                 {
