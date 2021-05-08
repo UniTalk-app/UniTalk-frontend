@@ -1,7 +1,6 @@
 import axios from "axios";
 import BackendAPI from "./backendAPI";
 import mainDataService from "./mainData.service";
-
 const API_URL = BackendAPI.AUTH;
 
 class AuthService {
@@ -14,7 +13,7 @@ class AuthService {
                 await mainDataService.getData();
             }
 
-            return response.data;
+            return response.status;
         } catch (e) {
             console.log(e);
         }
@@ -24,14 +23,21 @@ class AuthService {
         localStorage.removeItem("user");
     }
 
-    register(data: {
+    async register(data: {
     username: string;
     email: string;
     password: string;
     firstName: string;
     lastName: string;
   }) {
-        return axios.post(API_URL + "register", data);
+        try {
+            const response = await axios.post(API_URL + "register", data);
+            
+            return response.status;
+            
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     getCurrentUser() {

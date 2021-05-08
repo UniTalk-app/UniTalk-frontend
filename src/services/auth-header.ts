@@ -11,6 +11,6 @@ export default function authHeader(): Headers{
             Authorization: `Bearer ${token}`,
         };
     }else{
-        return { };
+        return {};
     }
 }

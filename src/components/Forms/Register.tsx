@@ -7,9 +7,11 @@ import {
     makeStyles,
     Theme,
     createStyles,
+    Snackbar
 } from "@material-ui/core";
 import { FormikErrors, Form, Field, Formik } from "formik";
 import AuthService from "services/auth.service";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -82,8 +84,30 @@ const validate = (values: FormValues) => {
     return errors;
 };
 
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+
+
 const Register : React.FC = () => {
     const classes = useStyles();
+    
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = (status: number | undefined) => {
+        console.log(status);
+        if(status==200){
+            setOpen(true);
+        }
+    };
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpen(false);
+    };
     return (
         <Container>
             <Typography component="h1" variant="h3" className={classes.header}>
@@ -98,8 +122,9 @@ const Register : React.FC = () => {
                     email: "",
                 }}
                 validate={validate}
-                onSubmit={(values) => {
-                    AuthService.register(values);
+                onSubmit={async (values) => {
+                    const status = await AuthService.register(values);
+                    handleClick(status);
                 }}
             > 
                 {
@@ -205,6 +230,11 @@ const Register : React.FC = () => {
                             <Button type="submit" fullWidth variant="contained" color="primary">
             Sign Up
                             </Button>
+                            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success">
+                                successfully registered
+                                </Alert>
+                            </Snackbar>
                         </Form>
                     )
                 }

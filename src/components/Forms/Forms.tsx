@@ -14,6 +14,7 @@ import {
 import Login from "./Login";
 import Register from "./Register";
 
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         small: {
@@ -43,40 +44,43 @@ const Forms: React.FC = () => {
 
     return (
         <>
-            <Button
-                className={classes.small + " " + classes.margin}
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                    trigger(true);
-                }}
-            >
-                <ExitToAppIcon />
+            
+            <>
+                <Button
+                    className={classes.small + " " + classes.margin}
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                        trigger(true);
+                    }}
+                >
+                    <ExitToAppIcon />
         Login
-            </Button>
-            <Button
-                className={classes.small + " " + classes.margin}
-                variant="outlined"
-                color="secondary"
-                onClick={() => {
-                    trigger(false);
-                }}
-            >
-                <HowToRegIcon />
+                </Button>
+                <Button
+                    className={classes.small + " " + classes.margin}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                        trigger(false);
+                    }}
+                >
+                    <HowToRegIcon />
         Register
-            </Button>
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="form-dialog-title"
-            >
-                <b>{loginForm ? <Login /> : <Register />}</b>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <b>{loginForm ? <Login /> : <Register />}</b>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
             Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </>
         </>
     );
 };

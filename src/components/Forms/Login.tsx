@@ -8,9 +8,11 @@ import {
     makeStyles,
     Theme,
     createStyles,
+    Snackbar
 } from "@material-ui/core";
 import { FormikErrors, Form, Field, Formik } from "formik";
 import AuthService from "services/auth.service";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,9 +62,27 @@ const validate = (values: FormValues) => {
     return errors;
 };
 
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const Login: React.FC = () => {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
 
+    const handleClick = (status: number | undefined) => {
+        console.log(status);
+        if(status==200){
+            setOpen(true);
+        }
+    };
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setOpen(false);
+    };
     return (
         <Container>
             <Typography component="h1" variant="h3" className={classes.header}>
@@ -74,15 +94,16 @@ const Login: React.FC = () => {
                     password: "",
                 }}
                 validate={validate}
-                onSubmit={(values) => {
-                    AuthService.login(values);
+                onSubmit={async (values) => {
+                    const status = await AuthService.login(values);
+                    handleClick(status);
                 }}
             >
                 {
                     (props) => (
                         <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
                             <Typography component="h3" variant="h6" color="primary">
-                        Username
+                                Username
                             </Typography>
                             <Field
                                 className={classes.textField}
@@ -99,7 +120,7 @@ const Login: React.FC = () => {
                             />
                             {props.errors.username ? <>{props.errors.username}</> : null}
                             <Typography component="h3" variant="h6" color="primary">
-            Password
+                                Password
                             </Typography>
                             <Field
                                 className={classes.textField}
@@ -120,8 +141,13 @@ const Login: React.FC = () => {
                                 label="Remember me"
                             />
                             <Button type="submit" fullWidth variant="contained" color="primary">
-            Sign In
+                                Sign In
                             </Button>
+                            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success">
+                                successfully logged in
+                                </Alert>
+                            </Snackbar>
                         </Form>
                     )}
                 
