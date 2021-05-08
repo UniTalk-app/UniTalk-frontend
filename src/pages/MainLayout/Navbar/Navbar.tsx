@@ -7,23 +7,51 @@ import {
     makeStyles,
     Box,
     InputAdornment,
-    Input
+    Input,
+    Avatar,
+    Container,
+    Badge,
+    Theme,
+    withStyles,
+    IconButton,
 } from "@material-ui/core";
 import {  
+    NotificationsActive as NotificationsActiveIcon,
     Search as SearchIcon,
     FilterList as FilterListIcon
 } from "@material-ui/icons";
+import authHeader from "services/auth-header";
 
 import Forms from "components/Forms";
 import Drawer from "../../../components/Drawer/Drawer";
 
-const useStyles = makeStyles(() => createStyles({
+const StyledBadge = withStyles((theme: Theme) =>
+    createStyles({
+        badge: {
+            right: -3,
+            top: 13,
+            border: `2px solid ${theme.palette.background.paper}`,
+            padding: "0 4px",
+        },
+    }),
+)(Badge);
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
     authButtons: {
         marginLeft: "auto"
     },
     searchBar: {
         position: "absolute",
         left: "40%"
+    },
+    mainBox: {
+        display: "flex"
+    },
+    avatar:{
+        left: theme.spacing(1),
+        top: theme.spacing(1),
+        width: theme.spacing(4),
+        height: theme.spacing(4),
     }
 }));
 
@@ -47,7 +75,18 @@ const Navbar: React.FC = () => {
                     />
                 </Box>
                 <Box className={classes.authButtons}>
-                    <Forms />    
+                    {authHeader()==={}?( 
+                        <Forms />  
+                    ):(
+                        <Container className={classes.mainBox}>
+                            <IconButton aria-label="cart">
+                                <StyledBadge badgeContent={4} color="secondary">
+                                    <NotificationsActiveIcon/>
+                                </StyledBadge>
+                            </IconButton>
+                            <Avatar className={classes.avatar}>H</Avatar>
+                        </Container>
+                    )}  
                 </Box>
             </Toolbar>
         </AppBar>
