@@ -16,28 +16,30 @@ class MainData {
 
     getData = async (): Promise<void> => {
         try{
+            const headers = {
+                ...authHeader()
+            };
             const groupData = await axios.get(BackendAPI.GROUP_ALL, {
-                headers: authHeader()
+                headers
             }); 
             
             this.__groups = groupData.data._embedded.groupList;
 
             if(this.__groups.length){
-                const categoriesData = await axios.get(BackendAPI.getCategories(this.__groups[0].group_id), {
-                    headers: authHeader()
+                const groupId = this.__groups[0].group_id;
+                const categoriesData = await axios.get(BackendAPI.getCategories(groupId), {
+                    headers
                 }); 
                 this.__categories = categoriesData.data._embedded.categoryList;
                 
-                const threadsData = await axios.get(BackendAPI.getThreads(this.__groups[0].group_id), {
-                    headers: authHeader()
+                const threadsData = await axios.get(BackendAPI.getThreads(groupId), {
+                    headers
                 });
                 this.__threads = threadsData.data._embedded.threadList;
 
             }
 
-            if(this.__onChangeCb){
-                this.__onChangeCb();
-            }
+            this.__onChangeCb && this.__onChangeCb();
         } catch(err) {
             console.error(err);
         }
