@@ -5,6 +5,7 @@ import BackendAPI from "./backendAPI";
 class MainData {
     constructor(
         private __groups: Group[] = [],
+        private __owngroups: Group[] = [],
         private __categories: Category[] = [], 
         private __threads: Thread[] = [],
         private __onChangeCb: () => void = () => { /* */ }
@@ -21,6 +22,11 @@ class MainData {
             }); 
             this.__groups = groupData.data._embedded.groupList;
             
+            const ownGroups = await axios.get(BackendAPI.getGroups, {
+                headers: authHeader()
+            }); 
+            this.__owngroups = ownGroups.data._embedded.groupList;
+
             if(this.__groups.length){
                 const categoriesData = await axios.get(BackendAPI.getCategories(this.__groups[0].group_id), {
                     headers: authHeader()
@@ -52,6 +58,9 @@ class MainData {
 
     get threads() {
         return this.__threads;
+    }
+    get owngroups(){
+        return this.__owngroups;
     }
 }
 

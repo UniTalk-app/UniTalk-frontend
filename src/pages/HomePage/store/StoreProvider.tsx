@@ -10,6 +10,7 @@ const store: MainPageStoreData = {
     getData: MainDataService.getData,
     categories: () => MainDataService.categories,
     threads: () => MainDataService.threads,
+    owngroups: () => MainDataService.owngroups,
     subscribeToServiceChange: MainDataService.subscribeToServiceChange
 };
 

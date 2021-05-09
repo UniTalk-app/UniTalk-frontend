@@ -3,7 +3,6 @@ import {
     Typography, 
     AppBar, 
     Toolbar,
-    IconButton,
     createStyles, 
     makeStyles,
     Box,
@@ -15,9 +14,10 @@ import {
     Search as SearchIcon,
     FilterList as FilterListIcon
 } from "@material-ui/icons";
-
+import Drawer from "../../../components/Drawer/Drawer";
 import Forms from "components/Forms";
 
+import { useMainData } from "../../HomePage/store/StoreProvider";
 const useStyles = makeStyles(() => createStyles({
     authButtons: {
         marginLeft: "auto"
@@ -30,14 +30,15 @@ const useStyles = makeStyles(() => createStyles({
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
+    const {
+        owngroups,
+    } = useMainData();
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
-                <IconButton edge="start" color="inherit">
-                    <MenuIcon />
-                </IconButton>
+                <Drawer owngroups={owngroups()}/>
                 <Typography variant="h5" noWrap>
-            UniTalk
+                    UniTalk
                 </Typography>
                 <Box className={classes.searchBar}>
                     <Input
