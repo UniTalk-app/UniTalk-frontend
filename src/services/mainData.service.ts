@@ -31,13 +31,13 @@ class MainData {
             this.__owngroups = ownGroups.data._embedded.groupList;
 
             if(this.__groups.length){
-                const groupId = this.__groups[0].group_id;
-                const categoriesData = await axios.get(BackendAPI.getCategories(groupId), {
+                //const groupId = this.__groups[0].group_id;
+                const categoriesData = await axios.get(BackendAPI.getCategories(this.__groups[0].groupId), {
                     headers
                 }); 
                 this.__categories = categoriesData.data._embedded.categoryList;
                 
-                const threadsData = await axios.get(BackendAPI.getThreads(groupId), {
+                const threadsData = await axios.get(BackendAPI.getThreads(this.__groups[0].groupId), {
                     headers
                 });
                 this.__threads = threadsData.data._embedded.threadList;
