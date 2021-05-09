@@ -60,18 +60,12 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                     <Dialog
                         open={open}
                         onClose={handleClose}
-                        aria-labelledby="form-dialog-title"
+                        aria-labelledby="max-width-dialog-title"
+                        fullWidth={true}
+                        maxWidth = {"md"}
+                        color={"background.dp02"}
                     >
-                        <b>
-                            <Chat thread={thread}/>
-                        </b>
-
-                        <DialogActions>
-                            <Button onClick={handleClose} color="primary">
-                                Cancel
-                            </Button>
-                        </DialogActions>
-
+                        <Chat thread={thread}/>
                     </Dialog>
 
                 </Grid>
