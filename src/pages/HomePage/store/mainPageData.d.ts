@@ -20,7 +20,7 @@ type Category = {
 }
 
 type Group = {
-    ["group_id"]: number;
+    groupId: number;
     groupName:string;
 }
 

@@ -10,7 +10,6 @@ import {
     Input
 } from "@material-ui/core";
 import { 
-    Menu as MenuIcon, 
     Search as SearchIcon,
     FilterList as FilterListIcon
 } from "@material-ui/icons";
