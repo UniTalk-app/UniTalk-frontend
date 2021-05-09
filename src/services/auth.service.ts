@@ -8,7 +8,6 @@ class AuthService {
     async login(data: { username: string; password: string }) {
         try {
             const response = await axios.post(API_URL + "login", data);
-
             if (response.data.token) {
                 localStorage.setItem("user", response.data.token);
                 await mainDataService.getData();
@@ -32,10 +31,6 @@ class AuthService {
     lastName: string;
   }) {
         return axios.post(API_URL + "register", data);
-    }
-
-    getCurrentUser() {
-        return JSON.parse(localStorage.getItem("user") || "{}");
     }
 }
 
