@@ -1,6 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import {
+    Box,
+    GridSize,
+    Divider,
     Button,
     FormControlLabel,
     Checkbox,
@@ -9,36 +12,40 @@ import {
     makeStyles,
     Theme,
     createStyles,
-    Grid
+    Grid,
+    TextField
 } from "@material-ui/core";
 import { FormikErrors, Form, Field, Formik } from "formik";
-import ChatService from "services/chat.service";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        big: {
-            width: theme.spacing(35),
-            height: theme.spacing(35),
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginTop: theme.spacing(3),
-            padding: theme.spacing(3),
-        },
-        margin: {
-            marginRight: theme.spacing(3),
-            height: theme.spacing(3),
-            width:"100%"
-        },
         textField: {
-            marginBottom: theme.spacing(3),
-            height: theme.spacing(3),
             width:"100%"
         },
         header:{
             textAlign: "center",
-            marginTop: theme.spacing(1),
+        },
+        grid:{
+            alignItems: "center",
+        },
+        bold: {
+            textAlign: "center",
+            fontWeight: 600
+        },
+        messageBox:{
+            overflowY: "scroll",
+            overflowX: "auto",
+            height: "330px",
+        },
+        image: {
+            display: "block",
+            alignItems: "center",
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "19%",
+            textAlign: "center"
         }
     })
 );
@@ -52,6 +59,8 @@ interface FormValues
 {
     content: string;
 }
+
+let bIsShiftDown=false;
 
 const validate = (values: FormValues) =>
 {
@@ -70,7 +79,7 @@ const Chat: React.FC<ThreadProps> = (props) =>
 {
     const classes = useStyles();
     const {
-        thread
+        thread,
     } = props;
 
     useEffect(() => {
@@ -111,50 +120,159 @@ const Chat: React.FC<ThreadProps> = (props) =>
     };
 
     return (
-        <Container>
+        <Box bgcolor={"background.dp02"}>
 
-            <Typography component="h1" variant="h3" className={classes.header}>
-                {thread.title}
-            </Typography>
+            <Box mt={1} pl={3} pr={3} pb={1} >
+                <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                    <Grid item >
+                        <Typography variant="h5" color="textPrimary" className={classes.header}>{thread.title} </Typography>
+                    </Grid>
+                    <Grid item >
+                        <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                    </Grid>
+                </Grid>
+            </Box>
 
-            <Grid container direction={"column"} spacing={1}>
+            <Divider/>
 
-            </Grid>
+            <Box mt={4} pl={4} pr={4} >
+                <Grid container direction={"column"} spacing={1}>
+                    <img  className={classes.image} src={process.env.PUBLIC_URL + "logo192.png"} />
+                    <Typography variant={"h5"} className={classes.bold} >
+                        Beginning of everything!
+                    </Typography>
 
-            <Formik
-                initialValues={{
-                    content: "",
-                }}
-                validate={validate}
-                onSubmit={(values) => {
-                    sendMessage(values.content);
-                }}
-            >
-                {
-                    (props) => (
-                        <Form noValidate onSubmit={props.handleSubmit} className={classes.big}>
-                            <Field
-                                className={classes.textField}
+                    <Typography color="textSecondary" className={classes.header}>
+                        Write Something!
+                    </Typography>
 
-                                variant="outlined"
-                                required
-                                id="content"
-                                label="Content"
-                                name="content"
-                                autoComplete="content"
-                                onChange={props.handleChange}
-                                value={props.values.content}
-                                autoFocus
-                            />
+                    <Divider />
+                </Grid>
+            </Box>
 
-                            <Button type="submit" fullWidth variant="contained" color="primary">
-                               Send Message
-                            </Button>
+            <Box mt={1} pl={10} pr={10} className={classes.messageBox}>
+                <Grid container direction={"column"} >
 
-                        </Form>
-                    )}
-            </Formik>
-        </Container>
+                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary">
+                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary">
+                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary">
+                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary">
+                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        </Grid>
+                        <Grid item >
+                            <Typography variant={"body2"} color="textPrimary">
+                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Box>
+
+            <Box mt={10} pb={5} pl={5} pr={5}>
+                <Formik
+                    initialValues={{
+                        content: "",
+                    }}
+                    validate={validate}
+                    onSubmit={(values,actions) => {
+                        sendMessage(values.content);
+                        actions.resetForm();
+                    }}
+                >
+                    {
+                        (props) => (
+                            <Form noValidate
+                                onKeyDown={(e:any) => {
+                                    if (e.key === "Shift"  ) {
+                                        console.log("shift enter");
+                                        bIsShiftDown=true;
+                                    }
+                                    if (e.key === "Enter" && bIsShiftDown === false) {
+                                        e.preventDefault();
+                                        props.handleSubmit();
+                                        console.log("enter");
+                                    }
+                                }}
+                                onKeyUp={(e:any)=>{
+                                    if(e.key==="Shift"){
+                                        bIsShiftDown=false;
+                                    }
+                                }}
+                            >
+                                <TextField
+                                    className={classes.textField}
+                                    id="content"
+                                    label="Enter to send. Shift + Enter to add new line"
+                                    name="content"
+                                    autoComplete="content"
+                                    onChange={props.handleChange}
+                                    value={props.values.content}
+                                    autoFocus
+                                    multiline
+                                    rows={4}
+                                    variant="filled"
+                                />
+
+                            </Form>
+                        )}
+                </Formik>
+            </Box>
+        </Box>
     );
 };
 
