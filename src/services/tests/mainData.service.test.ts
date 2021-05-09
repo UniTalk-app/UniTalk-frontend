@@ -13,6 +13,7 @@ const server = setupServer(
                     ["_embedded"]: {
                         groupList: [
                             {
+                                // eslint-disable-next-line camelcase
                                 group_id: 1,
                                 name: "group1"
                             }
@@ -81,7 +82,7 @@ describe("MainData service", () => {
         expect(MainData.groups).toHaveLength(1);
         expect(MainData.categories).toHaveLength(1);
         expect(MainData.threads).toHaveLength(1);
-     });
+    });
 
     it("calls subscription function after calling the endpoint", async () => {
         const mockFn = jest.fn();
