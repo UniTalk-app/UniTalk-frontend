@@ -1,7 +1,8 @@
 type MainPageStoreData = {
     getData: () => void;
     categories: () => Category[];
-    threads: () => Thread[]; 
+    threads: () => Thread[];
+    owngroups: () =>Group[];
     subscribeToServiceChange: (cb: () => void) => void;
 }
 
@@ -20,4 +21,7 @@ type Category = {
 
 type Group = {
     ["group_id"]: number;
+    groupName:string;
 }
+
+

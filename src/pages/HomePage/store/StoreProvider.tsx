@@ -6,6 +6,7 @@ const store: MainPageStoreData = {
     // we need to create functions here, because the MainDataService.categories & threads are immutable
     categories: () => MainDataService.categories,
     threads: () => MainDataService.threads,
+    owngroups: () => MainDataService.owngroups,
     subscribeToServiceChange: MainDataService.subscribeToServiceChange
 };
 
