@@ -19,8 +19,9 @@ class MainData {
             const groupData = await axios.get(BackendAPI.GROUP_ALL, {
                 headers: authHeader()
             }); 
-            this.__groups = groupData.data._embedded.groupList;
             
+            this.__groups = groupData.data._embedded.groupList;
+
             if(this.__groups.length){
                 const categoriesData = await axios.get(BackendAPI.getCategories(this.__groups[0].group_id), {
                     headers: authHeader()
