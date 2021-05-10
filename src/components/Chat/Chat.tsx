@@ -55,6 +55,12 @@ type ThreadProps =
     thread: Thread
 }
 
+type Message = {
+    content: string,
+    sender: string,
+    timestamp: string,
+}
+
 interface FormValues
 {
     content: string;
@@ -82,6 +88,8 @@ const Chat: React.FC<ThreadProps> = (props) =>
         thread,
     } = props;
 
+    const [messages, setMessages] = useState([] as Array<Message>);
+
     useEffect(() => {
         connect();
     }, []);
@@ -94,7 +102,7 @@ const Chat: React.FC<ThreadProps> = (props) =>
 
     const onConnected = () => {
         stompClient.subscribe(
-            "/topic/room/" + thread.thread_id,
+            "/topic/room/" + thread.threadId,
             onMessageReceived
         );
     };
@@ -103,20 +111,23 @@ const Chat: React.FC<ThreadProps> = (props) =>
         console.log(err);
     };
 
-    const onMessageReceived = (msg : any) => {
-        console.log("received message");
+    const onMessageReceived = (msg :any) =>{
+        const newMsg = {
+            content: JSON.parse(msg.body).content,
+            sender: JSON.parse(msg.body).sender,
+            timestamp: JSON.parse(msg.body).timestamp,
+        };
+
+        setMessages(p =>[...p,newMsg]);
     };
 
-    const sendMessage = (msg : any) => {
-        if (msg.trim() !== "")
-        {
-            const message = {
-                content: msg,
-                sender: "aaa",
-                timestamp: new Date(),
-            };
-            stompClient.send("/chat/room/"+thread.thread_id, {}, JSON.stringify(message));
-        }
+    const sendMessage = (msg : any) =>{
+        const message = {
+            content: msg,
+            sender: "aaa",
+            timestamp: new Date(),
+        };
+        stompClient.send("/chat/room/"+thread.threadId, {}, JSON.stringify(message));
     };
 
     return (
@@ -151,76 +162,24 @@ const Chat: React.FC<ThreadProps> = (props) =>
             </Box>
 
             <Box mt={1} pl={10} pr={10} className={classes.messageBox}>
-                <Grid container direction={"column"} >
+                {messages.map( (msg) => (
+                    <Grid container direction={"column"}  key={msg.sender+ msg.timestamp} >
 
-                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary">
-                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
+                        <Grid container direction={"row"} spacing={1} className={classes.grid}>
+                            <Grid item >
+                                <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.sender}</Typography>
+                            </Grid>
+                            <Grid item >
+                                <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.timestamp}</Typography>
+                            </Grid>
                         </Grid>
                         <Grid item >
                             <Typography variant={"body2"} color="textPrimary">
-                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                {msg.content}
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary">
-                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary">
-                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction={"row"} spacing={1} className={classes.grid} >
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary" className={classes.bold}>Msg sender</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"caption"} color="textSecondary" className={classes.header}>msg timestamp</Typography>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary">
-                                MSGCONTENT Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                ))}
             </Box>
 
             <Box mt={10} pb={5} pl={5} pr={5}>
