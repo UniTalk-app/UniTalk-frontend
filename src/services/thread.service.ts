@@ -4,11 +4,16 @@ const basePath = "http://localhost:8080/api/";
 
 class ThreadService {
     async createThread( data:{
-        name: string,
-        idGroup: number
+        catId: number,
+        creationTimestamp:number,
+        creatorId: number,
+        lastReplyAuthorId: number,
+        lastReplyTimestamp: number,
+        title: string,
+        groupId: number
     }){
         try {
-            const response = await axios.post(basePath + "1/thread", data);
+            const response = await axios.post(basePath + "group/1/thread", data);
 
             return response.data;
         } catch (e) {

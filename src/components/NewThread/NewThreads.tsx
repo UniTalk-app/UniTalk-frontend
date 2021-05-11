@@ -50,7 +50,15 @@ const NewThreads: React.FC = () => {
     const getInfo = () => {
         // send data to backend
         console.log(info);
-        ThreadService.createThread({name: info,idGroup: 1});
+        ThreadService.createThread({
+            catId: 1,
+            creationTimestamp: Date.now(),
+            creatorId: 1,
+            lastReplyAuthorId: 0,
+            lastReplyTimestamp: Date.now(),
+            title: info,
+            groupId: 1
+        });
         setOpen(!open);
     };
 
