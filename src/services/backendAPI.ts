@@ -6,6 +6,7 @@ class BackendAPI {
     static AUTH = `${basePath}auth/`;
     static getCategories = (groupId: number): string => `${basePath}group/${groupId}/category/all`;
     static getThreads = (groupId: number): string => `${basePath}group/${groupId}/thread/all`;
+    static getMessages = (threadId: number): string => `${basePath}room/${threadId}/msg`;
     static GROUP_ALL = `${basePath}group/all`;
 
     static MIN_USERNAME_CHARS = 1;

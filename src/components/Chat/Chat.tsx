@@ -18,6 +18,7 @@ import {
 import { FormikErrors, Form, Field, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import ChatService from "services/chatData.service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -81,6 +82,8 @@ const validate = (values: FormValues) =>
 };
 
 let stompClient : any;
+let socket : any;
+
 const Chat: React.FC<ThreadProps> = (props) =>
 {
     const classes = useStyles();
@@ -92,12 +95,34 @@ const Chat: React.FC<ThreadProps> = (props) =>
 
     useEffect(() => {
         connect();
-    }, []);
+        loadMessages();
+
+        return function cleanup() {
+            stompClient.disconnect();
+            socket.close();
+        };
+    },[]);
+
+    const loadMessages=()=>{
+        const msgs=ChatService.messages(Number(thread.threadId));
+        msgs.then(function(msg : any){
+            msg.map(function(message : any){
+                const newMessage = {
+                    content: message.content,
+                    sender: message.senderUsername,
+                    timestamp: message.sendingTimestamp
+                };
+
+                setMessages(p =>[...p,newMessage]);
+            });
+        });
+    };
 
     const connect = () => {
-        const socket = new SockJS("http://localhost:8080/websocket");
+        socket = new SockJS("http://localhost:8080/websocket");
         stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
+        stompClient.autoReconnect=false;
     };
 
     const onConnected = () => {
@@ -114,8 +139,8 @@ const Chat: React.FC<ThreadProps> = (props) =>
     const onMessageReceived = (msg :any) =>{
         const newMsg = {
             content: JSON.parse(msg.body).content,
-            sender: JSON.parse(msg.body).sender,
-            timestamp: JSON.parse(msg.body).timestamp,
+            sender: JSON.parse(msg.body).senderUsername,
+            timestamp: JSON.parse(msg.body).sendingTimestamp,
         };
 
         setMessages(p =>[...p,newMsg]);
@@ -124,8 +149,7 @@ const Chat: React.FC<ThreadProps> = (props) =>
     const sendMessage = (msg : any) =>{
         const message = {
             content: msg,
-            sender: "aaa",
-            timestamp: new Date(),
+            senderUsername: "username",
         };
         stompClient.send("/chat/room/"+thread.threadId, {}, JSON.stringify(message));
     };
