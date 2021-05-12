@@ -9,14 +9,14 @@ import {
     InputAdornment,
     Input
 } from "@material-ui/core";
-import { 
+import {  
     Search as SearchIcon,
     FilterList as FilterListIcon
 } from "@material-ui/icons";
-import Drawer from "../../../components/Drawer/Drawer";
-import Forms from "components/Forms";
 
-import { useMainData } from "../../HomePage/store/StoreProvider";
+import Forms from "components/Forms";
+import Drawer from "../../../components/Drawer/Drawer";
+
 const useStyles = makeStyles(() => createStyles({
     authButtons: {
         marginLeft: "auto"
@@ -29,15 +29,15 @@ const useStyles = makeStyles(() => createStyles({
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
-    const {
-        usergroups: usergroups,
-    } = useMainData();
+    
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
-                <Drawer groups={usergroups()}/>
+                <Drawer groups={[
+                    {groupName:"gr1 INFS II",["group_id"]:1},{groupName:"gr2 INFS III",["group_id"]:2}
+                ]}/> 
                 <Typography variant="h5" noWrap>
-                    UniTalk
+            UniTalk
                 </Typography>
                 <Box className={classes.searchBar}>
                     <Input

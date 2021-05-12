@@ -8,8 +8,6 @@ import {
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
 import LatestThreads from "../../components/LatestThreads";
-
-
 import { StoreProvider, useMainData } from "./store/StoreProvider";
 
 const useStyles = makeStyles(() => createStyles({
@@ -22,7 +20,7 @@ const HomePage: React.FC = () => {
     const classes = useStyles();
     const {
         threads,
-        categories,
+        categories
     } = useMainData();
     return (
         <StoreProvider>
