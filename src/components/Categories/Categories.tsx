@@ -11,7 +11,7 @@ import {
     Tabs,
     TableRow
 } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+import NewCategory from "../NewCategory/NewCategory";
 
 const useStyles = makeStyles(() => createStyles({
     root: {
@@ -30,6 +30,9 @@ const useStyles = makeStyles(() => createStyles({
         borderRadius: "8px",
         margin: "0 0 13px 0",
     }, 
+    buttonNew:{
+        height: "23px",
+    },
 }));
 
 type CategListProps = {
@@ -42,9 +45,6 @@ const Categories: React.FC<CategListProps> = (props) => {
         categories
     } = props;
 
-    const plusClicked= () => {
-        console.info("Plus clicked");
-    };
     const classes = useStyles();
 
     return (
@@ -53,8 +53,8 @@ const Categories: React.FC<CategListProps> = (props) => {
                 <Box flexGrow={1} ml={3}>
                     <Typography variant="h6">Categories</Typography>
                 </Box>
-                <Box mr={2}>
-                    <AddCircleIcon onClick={plusClicked}></AddCircleIcon>
+                <Box className={`${classes.buttonNew}`}>
+                    <NewCategory/>
                 </Box>                
             </Box>
             <Divider />
