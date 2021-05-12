@@ -30,13 +30,13 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
-type GruopsListProps = {
-    owngroups: Array<Group>
+type GroupsListProps = {
+    groups: Array<Group>
 }
 
-const TemporaryDrawer: React.FC <GruopsListProps> = (props)=>{
+const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
     const {
-        owngroups: categories
+        groups
     } = props;
     
     const classes = useStyles();
@@ -60,7 +60,7 @@ const TemporaryDrawer: React.FC <GruopsListProps> = (props)=>{
         <Box
             className={classes.list}
             role="presentation"
-            onClick={toggleDrawer(false)}
+            //onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
         >
             <Box>
@@ -68,11 +68,11 @@ const TemporaryDrawer: React.FC <GruopsListProps> = (props)=>{
                     <Typography variant="h6">Manage</Typography>
                 </Box>
                 <List>
-                    <ListItem button >
+                    <ListItem  button >
                         <ListItemText primary={"Create new group"} />
                         <Box mr={2}>{<AddCircleIcon />}</Box>
                     </ListItem>
-                    <ListItem button >
+                    <ListItem  button >
                         <ListItemText primary={"Edit groups"} />
                         <Box mr={2}>{<CreateIcon /> }</Box>
                     </ListItem>
@@ -86,9 +86,9 @@ const TemporaryDrawer: React.FC <GruopsListProps> = (props)=>{
                     <Typography variant="h6">Groups</Typography>
                 </Box>
                 <List>
-                    {categories.map((owngroups) => (
-                        <ListItem button key={owngroups.groupName}>
-                            <Typography variant="body1">{owngroups.groupName}</Typography>
+                    {groups.map((groups) => (
+                        <ListItem button key={groups.groupName}>
+                            <Typography variant="body1">{groups.groupName}</Typography>
                         </ListItem>
                     ))}
                 </List>

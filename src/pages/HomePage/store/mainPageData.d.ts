@@ -2,7 +2,7 @@ type MainPageStoreData = {
     getData: () => void;
     categories: () => Category[];
     threads: () => Thread[];
-    owngroups: () =>Group[];
+    usergroups: () =>Group[];
     subscribeToServiceChange: (cb: () => void) => void;
 }
 

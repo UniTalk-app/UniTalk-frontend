@@ -30,12 +30,12 @@ const useStyles = makeStyles(() => createStyles({
 const Navbar: React.FC = () => {
     const classes = useStyles();
     const {
-        owngroups,
+        usergroups: usergroups,
     } = useMainData();
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
-                <Drawer owngroups={owngroups()}/>
+                <Drawer groups={usergroups()}/>
                 <Typography variant="h5" noWrap>
                     UniTalk
                 </Typography>
