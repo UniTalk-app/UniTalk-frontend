@@ -20,6 +20,7 @@ const useStyles = makeStyles(() => createStyles({
 
 console.log(authHeader());
 const HomePage: React.FC = () => {
+    const loggedIn = authHeader();
     const classes = useStyles();
     const {
         threads,
@@ -27,7 +28,7 @@ const HomePage: React.FC = () => {
     } = useMainData();
     return (
         <StoreProvider>
-            {authHeader()==={}?( 
+            {(Object.keys(loggedIn).length === 0)?( 
                 <Container className={classes.mainBox}>
                     <Lock/>
                 </Container>

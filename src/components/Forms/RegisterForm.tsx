@@ -9,16 +9,22 @@ import {
     Grid,
     Divider,
     Link,
+    Snackbar
 } from "@material-ui/core";
 import { useFormik } from "formik";
 import AuthService from "services/auth.service";
 import * as Yup from "yup";
 import BackendAPI from "services/backendAPI";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 type RegisterFormProps = {
     onClose: () => void,
     changeDialog: (b: boolean) => void,
 };
+
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const RegisterForm : React.FC<RegisterFormProps> = (props) => {
     const { onClose, changeDialog } = props;
@@ -53,11 +59,26 @@ const RegisterForm : React.FC<RegisterFormProps> = (props) => {
                 .max(BackendAPI.MAX_USERNAME_CHARS)
                 .required(),
         }),
-        onSubmit: (values) => {
-            AuthService.register(values);
+        onSubmit: async (values) => {
+            const status = await AuthService.register(values);
+            handleClick(status);
         }
     });
+    const [open, setOpen] = React.useState(false);
 
+    const handleClick = (status: number | undefined) => {
+        console.log(status);
+        if(status==200){
+            setOpen(true);
+        }
+    };
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setOpen(false);
+    };
     return (
         <Box p={2}>
             <form onSubmit={formik.handleSubmit}>
@@ -168,6 +189,11 @@ const RegisterForm : React.FC<RegisterFormProps> = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
+                <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">
+                        successfully registered
+                    </Alert>
+                </Snackbar>
             </form>
         </Box>
     );
