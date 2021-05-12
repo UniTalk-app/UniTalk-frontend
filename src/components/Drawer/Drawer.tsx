@@ -68,11 +68,11 @@ const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
                     <Typography variant="h6">Manage</Typography>
                 </Box>
                 <List>
-                    <ListItem  button >
+                    <ListItem button >
                         <ListItemText primary={"Create new group"} />
                         <Box mr={2}>{<AddCircleIcon />}</Box>
                     </ListItem>
-                    <ListItem  button >
+                    <ListItem button >
                         <ListItemText primary={"Edit groups"} />
                         <Box mr={2}>{<CreateIcon /> }</Box>
                     </ListItem>
