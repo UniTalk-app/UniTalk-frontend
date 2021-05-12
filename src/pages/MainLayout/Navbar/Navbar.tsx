@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
     Typography, 
+    Grow,
     AppBar, 
     Toolbar,
     IconButton,
@@ -14,15 +15,25 @@ import {
     Badge,
     Theme,
     withStyles,
+    Button,
+    Popper,
+    MenuItem,
+    MenuList,
+    Paper,
+    ClickAwayListener,
+    Divider
 } from "@material-ui/core";
 import { 
     NotificationsActive as NotificationsActiveIcon,
     Menu as MenuIcon, 
     Search as SearchIcon,
-    FilterList as FilterListIcon
+    FilterList as FilterListIcon,
+    AccountBox as AccountBoxIcon,
+    Settings as SettingsIcon,
+    ExitToApp as ExitToAppIcon,
 } from "@material-ui/icons";
 import authHeader from "services/auth-header";
-
+import AuthService from "services/auth.service";
 import Forms from "components/Forms";
 
 const StyledBadge = withStyles((theme: Theme) =>
@@ -48,16 +59,41 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         display: "flex"
     },
     avatar:{
-        left: theme.spacing(1),
-        top: theme.spacing(1),
+        marginRight: theme.spacing(1),
         width: theme.spacing(4),
         height: theme.spacing(4),
+    },
+    list:{
+        marginRight: theme.spacing(1),
     }
 }));
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
-    console.log(authHeader());
+
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
+
+    const handleClose = (event: React.MouseEvent<EventTarget>) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+    function handleListKeyDown(event: React.KeyboardEvent) {
+        if (event.key === "Tab") {
+            event.preventDefault();
+            setOpen(false);
+        }
+    }
+
+    const loggedIn = authHeader();
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
@@ -75,7 +111,8 @@ const Navbar: React.FC = () => {
                     />
                 </Box>
                 <Box className={classes.authButtons}>
-                    {authHeader()==={}?( 
+                    {console.log(Object.keys(loggedIn).length === 0)}
+                    {(Object.keys(loggedIn).length === 0)?( 
                         <Forms />  
                     ):(
                         <Container className={classes.mainBox}>
@@ -84,7 +121,15 @@ const Navbar: React.FC = () => {
                                     <NotificationsActiveIcon/>
                                 </StyledBadge>
                             </IconButton>
-                            <Avatar className={classes.avatar}>H</Avatar>
+                            <Button
+                                ref={anchorRef}
+                                aria-controls={open ? "menu-list-grow" : undefined}
+                                aria-haspopup="true"
+                                onClick={handleToggle}
+                            >
+                                <Avatar className={classes.avatar}>H</Avatar>
+                            </Button>
+                            
                         </Container>
                     )}  
                 </Box>

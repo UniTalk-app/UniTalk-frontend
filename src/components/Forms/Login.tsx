@@ -73,6 +73,7 @@ const Login: React.FC = () => {
         console.log(status);
         if(status==200){
             setOpen(true);
+            window.location.reload(false);
         }
     };
 

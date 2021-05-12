@@ -5,12 +5,11 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.58",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^13.1.3",
     "@types/jest": "^26.0.15",
-    "@types/node": "^14.14.41",
+    "@types/node": "^15.0.1",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.0",
     "axios": "^0.21.1",
@@ -20,13 +19,16 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "hook:precommit": "lint-staged",
+    "eject": "react-scripts eject",
+    "typecheck": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +54,8 @@
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
     "eslint": "^7.24.0",
-    "eslint-plugin-react": "^7.23.2"
+    "msw": "^0.28.2",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0"
   }
 }
