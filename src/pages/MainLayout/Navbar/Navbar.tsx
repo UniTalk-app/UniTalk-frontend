@@ -3,20 +3,19 @@ import {
     Typography, 
     AppBar, 
     Toolbar,
-    IconButton,
     createStyles, 
     makeStyles,
     Box,
     InputAdornment,
     Input
 } from "@material-ui/core";
-import { 
-    Menu as MenuIcon, 
+import {  
     Search as SearchIcon,
     FilterList as FilterListIcon
 } from "@material-ui/icons";
 
 import Forms from "components/Forms";
+import Drawer from "../../../components/Drawer/Drawer";
 
 const useStyles = makeStyles(() => createStyles({
     authButtons: {
@@ -30,12 +29,13 @@ const useStyles = makeStyles(() => createStyles({
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
+    
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
-                <IconButton edge="start" color="inherit">
-                    <MenuIcon />
-                </IconButton>
+                <Drawer groups={[
+                    {groupName:"gr1 INFS II",["group_id"]:1},{groupName:"gr2 INFS III",["group_id"]:2}
+                ]}/> 
                 <Typography variant="h5" noWrap>
             UniTalk
                 </Typography>
