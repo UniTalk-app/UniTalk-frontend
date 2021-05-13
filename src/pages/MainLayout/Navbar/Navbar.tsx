@@ -129,7 +129,28 @@ const Navbar: React.FC = () => {
                             >
                                 <Avatar className={classes.avatar}>H</Avatar>
                             </Button>
-                            
+                            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                                {({ TransitionProps, placement }) => (
+                                    <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
+                                        <Paper>
+                                            <ClickAwayListener onClickAway={handleClose}>
+                                                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                                    <MenuItem onClick={handleClose}><Avatar className={classes.avatar}>H</Avatar>rafi</MenuItem>
+                                                    <Divider />
+                                                    <MenuItem onClick={handleClose}><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
+                                                    <MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem>
+                                                    <MenuItem onClick={(e) => {
+                                                        AuthService.logout();
+                                                        handleClose(e);
+                                                        window.location.reload(false);
+                                                    }}
+                                                    ><ExitToAppIcon className={classes.list}/>Log out</MenuItem>
+                                                </MenuList>
+                                            </ClickAwayListener>
+                                        </Paper>
+                                    </Grow>
+                                )}
+                            </Popper>
                         </Container>
                     )}  
                 </Box>
