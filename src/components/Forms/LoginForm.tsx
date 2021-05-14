@@ -9,25 +9,21 @@ import {
     Grid,
     Divider,
     Link,
-    Snackbar
 } from "@material-ui/core";
 import { useFormik } from "formik";
 import AuthService from "services/auth.service";
 import * as Yup from "yup";
 import BackendAPI from "services/backendAPI";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { useSnackbar } from "notistack";
 
 type LoginFormProps = {
     onClose: () => void,
     changeDialog: (b: boolean) => void,
 };
 
-function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 const LoginForm : React.FC<LoginFormProps> = (props) => {
     const { onClose, changeDialog } = props;
+    const { enqueueSnackbar } = useSnackbar();
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -48,23 +44,31 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
             handleClick(status);
         }
     });
-    const [open, setOpen] = React.useState(false);
 
     const handleClick = (status: number | undefined) => {
         console.log(status);
         if(status==200){
-            setOpen(true);
+            const message = "Successfully logged in!";
+            enqueueSnackbar(message, {
+                variant: "success",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
             window.location.reload(false);
+        }else{
+            const message = "Error";
+            enqueueSnackbar(message, {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
         }
     };
 
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
-        setOpen(false);
-    };
     return (
         <Box p={2}>
             <form onSubmit={formik.handleSubmit}>
@@ -132,11 +136,6 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                                successfully logged in
-                    </Alert>
-                </Snackbar>
             </form>
         </Box>
     );
