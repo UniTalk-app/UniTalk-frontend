@@ -8,6 +8,7 @@ class BackendAPI {
     static getThreads = (groupId: number): string => `${basePath}group/${groupId}/thread/all`;
     static getMessages = (threadId: number): string => `${basePath}room/${threadId}/msg`;
     static GROUP_ALL = `${basePath}group/all`;
+    static WEB_SOCKET = "http://localhost:8080/websocket";
 
     static MIN_USERNAME_CHARS = 1;
     static MIN_PASSWORD_CHARS = 1;

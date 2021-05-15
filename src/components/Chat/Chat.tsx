@@ -16,6 +16,7 @@ import Stomp from "stompjs";
 import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import BackendAPI from "services/backendAPI";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -78,8 +79,8 @@ const validate = (values: FormValues) =>{
     return errors;
 };
 
-let stompClient : any;
-let socket : any;
+let stompClient : Stomp.Client;
+let socket : WebSocket;
 
 const Chat: React.FC<ChatProps> = (props) =>{
     const classes = useStyles();
@@ -94,16 +95,15 @@ const Chat: React.FC<ChatProps> = (props) =>{
         loadMessages();
 
         return function cleanup() {
-            stompClient.disconnect();
+            stompClient.disconnect(onDisconnect);
             socket.close();
         };
     },[]);
 
     const connect = () => {
-        socket = new SockJS("http://localhost:8080/websocket");
+        socket = new SockJS(BackendAPI.WEB_SOCKET);
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
-        stompClient.autoReconnect=false;
+        stompClient.connect({}, onConnected, (error) => console.log(error));
     };
 
     const onConnected = () => {
@@ -113,11 +113,12 @@ const Chat: React.FC<ChatProps> = (props) =>{
         );
     };
 
-    const onError = (err : string) => {
-        console.log(err);
+    const onDisconnect = () => {
+        console.log("Disconnected");
     };
 
-    const onMessageReceived = (msg :any) =>{
+    const onMessageReceived = (msg :Stomp.Frame) =>{
+        console.log(msg);
         const date=new Date(JSON.parse(msg.body).sendingTimestamp);
         const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
         date.getHours().toString() +":"+ date.getMinutes().toString();
@@ -132,6 +133,8 @@ const Chat: React.FC<ChatProps> = (props) =>{
     };
 
     const sendMessage = (msg : string) =>{
+        if( !/\S/.test(msg))return;
+
         const message = {
             content: msg,
             senderUsername: "username",
@@ -157,7 +160,6 @@ const Chat: React.FC<ChatProps> = (props) =>{
             });
         });
     };
-
 
     return (
         <Box bgcolor={"background.dp02"}>
@@ -195,8 +197,8 @@ const Chat: React.FC<ChatProps> = (props) =>{
                     </Box>
 
                     <Box mt={2} pl={8} pr={8} >
-                        {messages.map( (msg) => (
-                            <Grid container direction={"column"}  key={msg.senderUsername+ msg.sendingTimestamp} >
+                        {messages.map( (msg,index) => (
+                            <Grid container direction={"column"}  key={index} >
 
                                 <Grid container direction={"row"} spacing={1} className={classes.grid}>
                                     <Grid item >
