@@ -63,7 +63,7 @@ const NewThreads: React.FC = () => {
     };
 
     return (
-        <Container>
+        <>
             <Button
                 variant="contained"
                 color="primary"
@@ -112,7 +112,7 @@ const NewThreads: React.FC = () => {
                     </Grid>
                 </DialogActions>
             </Dialog>
-        </Container>
+        </>
     );
 };
 
