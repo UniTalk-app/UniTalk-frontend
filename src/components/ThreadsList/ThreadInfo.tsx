@@ -1,5 +1,5 @@
 import * as React from "react";
-import {    Button,Dialog, DialogActions,Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
+import { Dialog,Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
@@ -48,11 +48,9 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
 
     //chat....
     const [open, setOpen] = React.useState(false);
-    const [chatFrom, setChatFrom] = React.useState(false);
 
     const trigger = (value: boolean) => {
-        setChatFrom(value);
-        setOpen(true);
+        setOpen(value);
     };
 
     const handleClose = () => {

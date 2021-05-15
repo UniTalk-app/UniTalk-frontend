@@ -1,28 +1,23 @@
 import * as React from "react";
-import { useEffect, useState,  useRef } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
-    GridSize,
     Divider,
     Button,
-    FormControlLabel,
-    Checkbox,
     Typography,
-    Container,
     makeStyles,
-    Theme,
     createStyles,
     Grid,
     TextField
 } from "@material-ui/core";
-import { FormikErrors, Form, Field, Formik } from "formik";
+import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         textField: {
             width:"100%"
@@ -57,31 +52,26 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-type ChatProps =
-{
+type ChatProps ={
     onClose: () => void,
     thread: Thread
 }
 
 type Message = {
     content: string,
-    sender: string,
-    timestamp: string,
+    senderUsername: string,
+    sendingTimestamp: string,
 }
 
-interface FormValues
-{
+interface FormValues{
     content: string;
 }
 
 let bIsShiftDown=false;
 
-const validate = (values: FormValues) =>
-{
+const validate = (values: FormValues) =>{
     const errors: FormikErrors<FormValues> = {};
-
-    if (!values.content)
-    {
+    if (!values.content){
         errors.content = "Required";
     }
 
@@ -91,8 +81,7 @@ const validate = (values: FormValues) =>
 let stompClient : any;
 let socket : any;
 
-const Chat: React.FC<ChatProps> = (props) =>
-{
+const Chat: React.FC<ChatProps> = (props) =>{
     const classes = useStyles();
     const {
         onClose,
@@ -135,14 +124,14 @@ const Chat: React.FC<ChatProps> = (props) =>
 
         const newMsg = {
             content: JSON.parse(msg.body).content,
-            sender: JSON.parse(msg.body).senderUsername,
-            timestamp: dateStr,
+            senderUsername: JSON.parse(msg.body).senderUsername,
+            sendingTimestamp: dateStr,
         };
 
         setMessages(p =>[...p,newMsg]);
     };
 
-    const sendMessage = (msg : any) =>{
+    const sendMessage = (msg : string) =>{
         const message = {
             content: msg,
             senderUsername: "username",
@@ -152,16 +141,16 @@ const Chat: React.FC<ChatProps> = (props) =>
 
     const loadMessages=()=>{
         const messagesPromise=ChatService.messages(Number(thread.threadId));
-        messagesPromise.then(function(messages : any){
-            messages.map(function(message : any){
+        messagesPromise.then(function(messages : Message[]){
+            messages.map(function(message : Message){
                 const date=new Date(message.sendingTimestamp);
                 const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
                 date.getHours().toString() +":"+ date.getMinutes().toString();
 
                 const newMessage = {
                     content: message.content,
-                    sender: message.senderUsername,
-                    timestamp: dateStr,
+                    senderUsername: message.senderUsername,
+                    sendingTimestamp: dateStr,
                 };
 
                 setMessages(p =>[...p,newMessage]);
@@ -207,14 +196,14 @@ const Chat: React.FC<ChatProps> = (props) =>
 
                     <Box mt={2} pl={8} pr={8} >
                         {messages.map( (msg) => (
-                            <Grid container direction={"column"}  key={msg.sender+ msg.timestamp} >
+                            <Grid container direction={"column"}  key={msg.senderUsername+ msg.sendingTimestamp} >
 
                                 <Grid container direction={"row"} spacing={1} className={classes.grid}>
                                     <Grid item >
-                                        <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.sender}</Typography>
+                                        <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
                                     </Grid>
                                     <Grid item >
-                                        <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.timestamp}</Typography>
+                                        <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
                                     </Grid>
                                 </Grid>
                                 <Grid item >

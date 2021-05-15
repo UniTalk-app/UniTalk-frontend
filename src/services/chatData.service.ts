@@ -2,12 +2,6 @@ import axios from "axios";
 import authHeader from "./auth-header";
 import BackendAPI from "./backendAPI";
 
-type Message = {
-    content: string,
-    sender: string,
-    timestamp: string,
-}
-
 class ChatData {
 
     messages = async(id: number) =>{
