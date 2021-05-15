@@ -1,6 +1,5 @@
 import axios from "axios";
 import BackendAPI from "./backendAPI";
-const basePath = "http://localhost:8080/api/";
 
 class ThreadService {
     async createThread( data:{
