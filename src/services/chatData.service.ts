@@ -19,12 +19,10 @@ class ChatData {
             headers
         });
 
-        console.log(messageData.data._embedded ===undefined );
         if(messageData.data._embedded ===undefined )
             return [];
         return messageData.data._embedded.messageDtoList;
     }
-
 }
 
 export default new ChatData();

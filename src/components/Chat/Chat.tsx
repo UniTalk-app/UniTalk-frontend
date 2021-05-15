@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState,  useRef } from "react";
 import {
     Box,
     GridSize,
@@ -19,6 +19,8 @@ import { FormikErrors, Form, Field, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import ChatService from "services/chatData.service";
+import ScrollableFeed from "react-scrollable-feed";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,23 +38,28 @@ const useStyles = makeStyles((theme: Theme) =>
             fontWeight: 600
         },
         messageBox:{
-            overflowY: "scroll",
-            overflowX: "auto",
-            height: "330px",
+            height: "590px",
         },
         image: {
             display: "block",
             alignItems: "center",
             marginLeft: "auto",
             marginRight: "auto",
-            width: "19%",
+            width: "50%",
             textAlign: "center"
+        },
+        message:{
+            wordWrap: "break-word",
+            width:"700px",
+            whiteSpace: "pre-line",
+            paddingLeft:20,
         }
     })
 );
 
-type ThreadProps =
+type ChatProps =
 {
+    onClose: () => void,
     thread: Thread
 }
 
@@ -84,13 +91,13 @@ const validate = (values: FormValues) =>
 let stompClient : any;
 let socket : any;
 
-const Chat: React.FC<ThreadProps> = (props) =>
+const Chat: React.FC<ChatProps> = (props) =>
 {
     const classes = useStyles();
     const {
-        thread,
+        onClose,
+        thread
     } = props;
-
     const [messages, setMessages] = useState([] as Array<Message>);
 
     useEffect(() => {
@@ -102,21 +109,6 @@ const Chat: React.FC<ThreadProps> = (props) =>
             socket.close();
         };
     },[]);
-
-    const loadMessages=()=>{
-        const msgs=ChatService.messages(Number(thread.threadId));
-        msgs.then(function(msg : any){
-            msg.map(function(message : any){
-                const newMessage = {
-                    content: message.content,
-                    sender: message.senderUsername,
-                    timestamp: message.sendingTimestamp
-                };
-
-                setMessages(p =>[...p,newMessage]);
-            });
-        });
-    };
 
     const connect = () => {
         socket = new SockJS("http://localhost:8080/websocket");
@@ -137,10 +129,14 @@ const Chat: React.FC<ThreadProps> = (props) =>
     };
 
     const onMessageReceived = (msg :any) =>{
+        const date=new Date(JSON.parse(msg.body).sendingTimestamp);
+        const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
+        date.getHours().toString() +":"+ date.getMinutes().toString();
+
         const newMsg = {
             content: JSON.parse(msg.body).content,
             sender: JSON.parse(msg.body).senderUsername,
-            timestamp: JSON.parse(msg.body).sendingTimestamp,
+            timestamp: dateStr,
         };
 
         setMessages(p =>[...p,newMsg]);
@@ -154,11 +150,34 @@ const Chat: React.FC<ThreadProps> = (props) =>
         stompClient.send("/chat/room/"+thread.threadId, {}, JSON.stringify(message));
     };
 
+    const loadMessages=()=>{
+        const messagesPromise=ChatService.messages(Number(thread.threadId));
+        messagesPromise.then(function(messages : any){
+            messages.map(function(message : any){
+                const date=new Date(message.sendingTimestamp);
+                const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
+                date.getHours().toString() +":"+ date.getMinutes().toString();
+
+                const newMessage = {
+                    content: message.content,
+                    sender: message.senderUsername,
+                    timestamp: dateStr,
+                };
+
+                setMessages(p =>[...p,newMessage]);
+            });
+        });
+    };
+
+
     return (
         <Box bgcolor={"background.dp02"}>
 
             <Box mt={1} pl={3} pr={3} pb={1} >
                 <Grid container direction={"row"} spacing={1} className={classes.grid} >
+                    <Grid item >
+                        <Button onClick={onClose}> <ArrowBackIcon/></Button>
+                    </Grid>
                     <Grid item >
                         <Typography variant="h5" color="textPrimary" className={classes.header}>{thread.title} </Typography>
                     </Grid>
@@ -166,44 +185,47 @@ const Chat: React.FC<ThreadProps> = (props) =>
                         <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
                     </Grid>
                 </Grid>
+                <Divider  />
             </Box>
 
-            <Divider/>
-
-            <Box mt={4} pl={4} pr={4} >
-                <Grid container direction={"column"} spacing={1}>
-                    <img  className={classes.image} src={process.env.PUBLIC_URL + "logo192.png"} />
-                    <Typography variant={"h5"} className={classes.bold} >
-                        Beginning of everything!
-                    </Typography>
-
-                    <Typography color="textSecondary" className={classes.header}>
-                        Write Something!
-                    </Typography>
-
-                    <Divider />
-                </Grid>
-            </Box>
-
-            <Box mt={1} pl={10} pr={10} className={classes.messageBox}>
-                {messages.map( (msg) => (
-                    <Grid container direction={"column"}  key={msg.sender+ msg.timestamp} >
-
-                        <Grid container direction={"row"} spacing={1} className={classes.grid}>
-                            <Grid item >
-                                <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.sender}</Typography>
-                            </Grid>
-                            <Grid item >
-                                <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.timestamp}</Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid item >
-                            <Typography variant={"body2"} color="textPrimary">
-                                {msg.content}
+            <Box mt={4} className={classes.messageBox}>
+                <ScrollableFeed>
+                    <Box pl={8} pr={8}>
+                        <Grid container direction={"column"} spacing={1}>
+                            <img  className={classes.image} src={process.env.PUBLIC_URL + "pluto-sign-up.png"} />
+                            <Typography variant={"h5"} className={classes.bold} >
+                                Beginning of everything!
                             </Typography>
+
+                            <Typography color="textSecondary" className={classes.header}>
+                                Write Something!
+                            </Typography>
+
+                            <Divider />
                         </Grid>
-                    </Grid>
-                ))}
+                    </Box>
+
+                    <Box mt={2} pl={8} pr={8} >
+                        {messages.map( (msg) => (
+                            <Grid container direction={"column"}  key={msg.sender+ msg.timestamp} >
+
+                                <Grid container direction={"row"} spacing={1} className={classes.grid}>
+                                    <Grid item >
+                                        <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.sender}</Typography>
+                                    </Grid>
+                                    <Grid item >
+                                        <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.timestamp}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid item >
+                                    <Typography className={classes.message} display={"block"}  variant={"body2"} color="textPrimary">
+                                        {msg.content}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        ))}
+                    </Box>
+                </ScrollableFeed>
             </Box>
 
             <Box mt={10} pb={5} pl={5} pr={5}>
@@ -249,6 +271,7 @@ const Chat: React.FC<ThreadProps> = (props) =>
                                     multiline
                                     rows={4}
                                     variant="filled"
+                                    inputProps={{ maxLength: 512 }}
                                 />
 
                             </Form>
