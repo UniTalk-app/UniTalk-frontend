@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState,KeyboardEvent } from "react";
 import {
     Box,
     Divider,
@@ -8,7 +8,7 @@ import {
     makeStyles,
     createStyles,
     Grid,
-    TextField
+    TextField,
 } from "@material-ui/core";
 import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
@@ -113,7 +113,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
         );
     };
 
-    const onError = (err : any) => {
+    const onError = (err : string) => {
         console.log(err);
     };
 
@@ -231,7 +231,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
                     {
                         (props) => (
                             <Form noValidate
-                                onKeyDown={(e:any) => {
+                                onKeyDown={(e:KeyboardEvent) => {
                                     if (e.key === "Shift"  ) {
                                         console.log("shift enter");
                                         bIsShiftDown=true;
@@ -242,7 +242,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
                                         console.log("enter");
                                     }
                                 }}
-                                onKeyUp={(e:any)=>{
+                                onKeyUp={(e:KeyboardEvent)=>{
                                     if(e.key==="Shift"){
                                         bIsShiftDown=false;
                                     }
