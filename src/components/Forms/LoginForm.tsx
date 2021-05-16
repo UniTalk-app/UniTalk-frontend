@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import AuthService from "services/auth.service";
 import * as Yup from "yup";
 import BackendAPI from "services/backendAPI";
+import { useSnackbar } from "notistack";
 
 type LoginFormProps = {
     onClose: () => void,
@@ -22,6 +23,7 @@ type LoginFormProps = {
 
 const LoginForm : React.FC<LoginFormProps> = (props) => {
     const { onClose, changeDialog } = props;
+    const { enqueueSnackbar } = useSnackbar();
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -37,10 +39,35 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
                 .max(BackendAPI.MAX_PASSWORD_CHARS)
                 .required()
         }),
-        onSubmit: (values) => {
-            AuthService.login(values);
+        onSubmit: async (values) => {
+            const status = await AuthService.login(values);
+            handleClick(status);
         }
     });
+
+    const handleClick = (status: number | undefined) => {
+        console.log(status);
+        if(status==200){
+            const message = "Successfully logged in!";
+            enqueueSnackbar(message, {
+                variant: "success",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
+            window.location.reload(false);
+        }else{
+            const message = "Error";
+            enqueueSnackbar(message, {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
+        }
+    };
 
     return (
         <Box p={2}>

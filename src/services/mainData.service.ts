@@ -23,10 +23,10 @@ class MainData {
                 headers
             }); 
             
-            this.__groups = groupData.data._embedded.groupList;
+            this.__groups = groupData.data;
 
             if(this.__groups.length){
-                const groupId = this.__groups[0].group_id;
+                const groupId = this.__groups[0].groupId;
                 const categoriesData = await axios.get(BackendAPI.getCategories(groupId), {
                     headers
                 }); 

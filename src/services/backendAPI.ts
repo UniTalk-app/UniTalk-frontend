@@ -7,6 +7,9 @@ class BackendAPI {
     static getCategories = (groupId: number): string => `${basePath}group/${groupId}/category/all`;
     static getThreads = (groupId: number): string => `${basePath}group/${groupId}/thread/all`;
     static getMessages = (threadId: number): string => `${basePath}room/${threadId}/msg`;
+    static createThread = (groupId: number): string => `${basePath}group/${groupId}/thread`;
+    static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
+    static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
     static GROUP_ALL = `${basePath}group/all`;
     static WEB_SOCKET = "http://localhost:8080/websocket";
 

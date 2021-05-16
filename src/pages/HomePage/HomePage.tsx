@@ -8,7 +8,9 @@ import {
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
 import LatestThreads from "../../components/LatestThreads";
-import { StoreProvider, useMainData } from "./store/StoreProvider";
+import Lock from "../../components/Lock";
+import { useMainData } from "./store/StoreProvider";
+import authHeader from "services/auth-header";
 
 const useStyles = makeStyles(() => createStyles({
     mainBox: {
@@ -16,30 +18,41 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
+
+
 const HomePage: React.FC = () => {
+    const loggedIn = authHeader();
     const classes = useStyles();
     const {
         threads,
-        categories
+        categories,
     } = useMainData();
-    return (
-        <StoreProvider>
-            <Container className={classes.mainBox}>
-                <Box width="20%">
-                    <Categories categories={categories()}/>
-                    <Box mt={4}>
-                        <LatestThreads  latestthreads={[
-                            {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
-                            {name:"Juwenalia",comments:"143"}
-                        ]} />
-                    </Box>        
-                </Box>
 
-                <Box width="80%" m={10}>
-                    <ThreadsList threads={threads()} />
-                </Box>
-            </Container>
-        </StoreProvider>
+
+    return (
+        <>
+            {(Object.keys(loggedIn).length === 0)?( 
+                <Container className={classes.mainBox}>
+                    <Lock/>
+                </Container>
+            ) : (
+                <Container className={classes.mainBox}>
+                    <Box width="20%">
+                        <Categories categories={categories()}/>
+                        <Box mt={4}>
+                            <LatestThreads  latestthreads={[
+                                {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
+                                {name:"Juwenalia",comments:"143"}
+                            ]} />
+                        </Box>        
+                    </Box>
+
+                    <Box width="80%" m={10}>
+                        <ThreadsList threads={threads()}/>
+                    </Box>
+                </Container>
+            )}
+        </>
     );
 };
 
