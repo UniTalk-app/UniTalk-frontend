@@ -7,6 +7,8 @@ class BackendAPI {
     static getCategories = (groupId: number): string => `${basePath}group/${groupId}/category/all`;
     static getThreads = (groupId: number): string => `${basePath}group/${groupId}/thread/all`;
     static createThread = (groupId: number): string => `${basePath}group/${groupId}/thread`;
+    static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
+    static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
     static GROUP_ALL = `${basePath}group/all`;
 
     static MIN_USERNAME_CHARS = 1;
