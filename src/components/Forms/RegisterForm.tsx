@@ -8,12 +8,13 @@ import {
     Box,
     Grid,
     Divider,
-    Link,
+    Link
 } from "@material-ui/core";
 import { useFormik } from "formik";
 import AuthService from "services/auth.service";
 import * as Yup from "yup";
 import BackendAPI from "services/backendAPI";
+import { useSnackbar } from "notistack";
 
 type RegisterFormProps = {
     onClose: () => void,
@@ -22,6 +23,7 @@ type RegisterFormProps = {
 
 const RegisterForm : React.FC<RegisterFormProps> = (props) => {
     const { onClose, changeDialog } = props;
+    const { enqueueSnackbar } = useSnackbar();
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -53,11 +55,37 @@ const RegisterForm : React.FC<RegisterFormProps> = (props) => {
                 .max(BackendAPI.MAX_USERNAME_CHARS)
                 .required(),
         }),
-        onSubmit: (values) => {
-            AuthService.register(values);
+        onSubmit: async (values) => {
+            const status = await AuthService.register(values);
+            handleClick(status);
         }
     });
 
+    const handleClick = (status: number | undefined) => {
+        console.log(status);
+        if(status==200){
+            const message = "Successfully register!";
+            enqueueSnackbar(message, {
+                variant: "success",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
+            window.location.reload(false);
+        }else{
+            const message = "Error";
+            enqueueSnackbar(message, {
+                variant: "error",
+                anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },
+            });
+        }
+    };
+
+    
     return (
         <Box p={2}>
             <form onSubmit={formik.handleSubmit}>
