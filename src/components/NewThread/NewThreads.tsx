@@ -3,12 +3,12 @@ import {
     Dialog,
     DialogActions,
     Button,
-    Typography,
     TextField,
     makeStyles,
     Theme,
     createStyles,
-    Grid,
+    DialogTitle,
+    DialogContent,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ThreadService from "../../services/thread.service";
@@ -72,43 +72,32 @@ const NewThreads: React.FC = () => {
                     trigger();
                 }}
             >
-            Create thread
+                Create thread
             </Button>
             <Dialog
                 open={open}
                 onClose={trigger}
                 aria-labelledby="form-dialog-title"
             >
+                <DialogTitle>New thread</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        className={classes.txtField}
+                        autoComplete="off"
+                        id="name"
+                        label="Name"
+                        rowsMax={1}
+                        variant="outlined"
+                        onChange={handleChange}
+                    />
+                </DialogContent>
                 <DialogActions>
-                    <Grid className={classes.padding}>
-                        <Typography component="h5" variant="h5" className={classes.header}>
-                        new thread
-                        </Typography>
-                        <TextField
-                            className={classes.txtField}
-                            autoComplete="off"
-                            id="name"
-                            label="Name"
-                            rowsMax={1}
-                            variant="outlined"
-                            onChange={handleChange}
-                        />
-                        {/* <TextField
-                            className={classes.txtField + " " + classes.input}
-                            id="text"
-                            label="Description"
-                            multiline
-                            rowsMax={10}
-                            variant="outlined"
-                            InputProps={{ classes: { input: classes.input } }}
-                        /> */}
-                        <Grid>
-                            <Button onClick={trigger} color="primary">
-                Cancel
-                            </Button>
-                            <Button onClick={getInfo} color="primary">Confirm</Button>
-                        </Grid>
-                    </Grid>
+                    <Button onClick={trigger} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={getInfo} color="primary" variant="contained">
+                        Confirm
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

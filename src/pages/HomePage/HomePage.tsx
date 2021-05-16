@@ -9,7 +9,7 @@ import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
 import LatestThreads from "../../components/LatestThreads";
 import Lock from "../../components/Lock";
-import { StoreProvider, useMainData } from "./store/StoreProvider";
+import { useMainData } from "./store/StoreProvider";
 import authHeader from "services/auth-header";
 
 const useStyles = makeStyles(() => createStyles({
@@ -18,16 +18,19 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
-console.log(authHeader());
+
+
 const HomePage: React.FC = () => {
     const loggedIn = authHeader();
     const classes = useStyles();
     const {
         threads,
-        categories
+        categories,
     } = useMainData();
+
+
     return (
-        <StoreProvider>
+        <>
             {(Object.keys(loggedIn).length === 0)?( 
                 <Container className={classes.mainBox}>
                     <Lock/>
@@ -45,12 +48,11 @@ const HomePage: React.FC = () => {
                     </Box>
 
                     <Box width="80%" m={10}>
-                        <ThreadsList threads={threads()} />
+                        <ThreadsList threads={threads()}/>
                     </Box>
                 </Container>
             )}
-                
-        </StoreProvider>
+        </>
     );
 };
 

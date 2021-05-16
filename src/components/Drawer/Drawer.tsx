@@ -8,15 +8,20 @@ import { makeStyles,
     ListItem,
     ListItemText,
     Typography, 
-    createStyles,   
+    createStyles,
+    Button, 
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CreateIcon from "@material-ui/icons/Create";
 import CallReceivedIcon from "@material-ui/icons/CallReceived";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import { 
+    ExitToApp,
     Menu as MenuIcon, 
 } from "@material-ui/icons";
+import JoinDialog from "./JoinDialog";
+import { useMainData } from "../../pages/HomePage/store/StoreProvider";
+import ConfirmDialog from "./ConfirmDialog";
 
 const useStyles = makeStyles(() => createStyles({
     list:{
@@ -30,19 +35,20 @@ const useStyles = makeStyles(() => createStyles({
     }
 }));
 
-type GroupsListProps = {
-    groups: Array<Group>
-}
 
-const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
-    const {
-        groups
-    } = props;
-    
+const TemporaryDrawer: React.FC = () => {    
+
     const classes = useStyles();
     const [state, setState] = React.useState({
         left: false, 
     });
+    const [openJoinDialog, setOpenJoinDialog] = React.useState(false);
+    const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+    const [groupIdToDelete, setGroupIdToDelete] = React.useState(-1);
+
+    const {
+        groups,
+    } = useMainData();
 
     const toggleDrawer = ( open: boolean) => (
         event: React.KeyboardEvent | React.MouseEvent,
@@ -56,11 +62,27 @@ const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
         setState({ ...state, ["left"]: open });
     };
 
+    const handleOpenJoinDialog = () => {
+        setOpenJoinDialog(true);
+    };
+
+    const handleCloseJoinDialog = () => {
+        setOpenJoinDialog(false);
+    };
+
+    const handleOpenConfirmDialog = (groupId: number) => {
+        setGroupIdToDelete(groupId);
+        setOpenConfirmDialog(true);
+    };
+
+    const handleCloseConfirmDialog = () => {
+        setOpenConfirmDialog(false);
+    };
+
     const list = () => (
         <Box
             className={classes.list}
             role="presentation"
-            //onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
         >
             <Box>
@@ -70,15 +92,15 @@ const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
                 <List>
                     <ListItem button >
                         <ListItemText primary={"Create new group"} />
-                        <Box mr={2}>{<AddCircleIcon />}</Box>
+                        <Box mr={2} display="flex" justifyContent="center">{<AddCircleIcon />}</Box>
                     </ListItem>
                     <ListItem button >
                         <ListItemText primary={"Edit groups"} />
-                        <Box mr={2}>{<CreateIcon /> }</Box>
+                        <Box mr={2} display="flex" justifyContent="center">{<CreateIcon /> }</Box>
                     </ListItem>
-                    <ListItem button >
+                    <ListItem button onClick={handleOpenJoinDialog}>
                         <ListItemText primary={"Join new group"} />
-                        <Box  mr={2}> { <CallReceivedIcon />}</Box> 
+                        <Box  mr={2} display="flex" justifyContent="center"> { <CallReceivedIcon />}</Box> 
                     </ListItem>
                 </List>
                 <Divider />
@@ -86,10 +108,15 @@ const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
                     <Typography variant="h6">Groups</Typography>
                 </Box>
                 <List>
-                    {groups.map((groups) => (
-                        <ListItem button key={groups.groupName}>
-                            <Typography variant="body1">{groups.groupName}</Typography>
-                        </ListItem>
+                    {groups().map((group) => (
+                        <Box display="flex" key={group.groupId}>
+                            <ListItem button onClick={() => console.log(group.groupId)}>
+                                <Typography variant="body1">{group.groupName}</Typography>
+                            </ListItem>
+                            <Button onClick={() => handleOpenConfirmDialog(group.groupId)}>
+                                <ExitToApp />
+                            </Button>
+                        </Box>
                     ))}
                 </List>
             </Box>
@@ -116,6 +143,8 @@ const TemporaryDrawer: React.FC <GroupsListProps> = (props)=>{
 
     return (
         <Box>
+            <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog}/>   
+            <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete}/>   
             <Box key={"left"}>
                 <IconButton edge="start" color="inherit" onClick={toggleDrawer( true)}>
                     <MenuIcon/>
