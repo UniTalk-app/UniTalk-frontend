@@ -7,6 +7,7 @@ type MainPageStoreData = {
 }
 
 type Thread = {
+    threadId: string,
     title: string;
     author: string;
     lastReply: string;
