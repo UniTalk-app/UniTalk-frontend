@@ -22,7 +22,6 @@ import {
 import JoinDialog from "./JoinDialog";
 import { useMainData } from "../../pages/HomePage/store/StoreProvider";
 import ConfirmDialog from "./ConfirmDialog";
-import useForceUpdate from "../../hooks/ForceUpdate/ForceUpdate";
 
 const useStyles = makeStyles(() => createStyles({
     list:{
@@ -49,10 +48,7 @@ const TemporaryDrawer: React.FC = () => {
 
     const {
         groups,
-        getData
     } = useMainData();
-    
-    const forceUpdate = useForceUpdate();
 
     const toggleDrawer = ( open: boolean) => (
         event: React.KeyboardEvent | React.MouseEvent,
@@ -82,14 +78,6 @@ const TemporaryDrawer: React.FC = () => {
     const handleCloseConfirmDialog = () => {
         setOpenConfirmDialog(false);
     };
-
-    const updateGroupsList = async () => {
-        await getData();
-    };
-    
-    React.useEffect(() => {
-        updateGroupsList();
-    });
 
     const list = () => (
         <Box
@@ -155,8 +143,8 @@ const TemporaryDrawer: React.FC = () => {
 
     return (
         <Box>
-            <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog} forceUpdate={forceUpdate}/>   
-            <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete} forceUpdate={forceUpdate}/>   
+            <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog}/>   
+            <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete}/>   
             <Box key={"left"}>
                 <IconButton edge="start" color="inherit" onClick={toggleDrawer( true)}>
                     <MenuIcon/>

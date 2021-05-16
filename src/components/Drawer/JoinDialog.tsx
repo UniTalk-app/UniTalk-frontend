@@ -5,17 +5,18 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { useFormik } from "formik";
 import { useSnackbar } from "notistack";
 import groupService from "services/group.service";
+import { useMainData } from "pages/HomePage/store/StoreProvider";
 
 
 type JoinDialogProps = {
     open: boolean;
     onClose: () => void;
-    forceUpdate: () => void;
 }
 
 const JoinDialog : React.FC<JoinDialogProps> = (props) => {
-    const {open, onClose, forceUpdate} = props;
+    const { open, onClose } = props;
     const { enqueueSnackbar } = useSnackbar();
+    const { getData } = useMainData();
     
     const formik = useFormik({
         initialValues: {
@@ -35,7 +36,7 @@ const JoinDialog : React.FC<JoinDialogProps> = (props) => {
                             vertical: "bottom",
                             horizontal: "center",
                         },});
-                        forceUpdate();
+                        getData();
                         onClose();
                     }
                 })
