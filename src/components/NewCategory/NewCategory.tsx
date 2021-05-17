@@ -90,7 +90,7 @@ const NewCategory: React.FC = () => {
 
     return (
         <Container>
-            <AddCircleIcon onClick={trigger}></AddCircleIcon>
+            <AddCircleIcon data-testid="new-category-btn" onClick={trigger}></AddCircleIcon>
             <Dialog
                 open={open}
                 onClose={trigger}
