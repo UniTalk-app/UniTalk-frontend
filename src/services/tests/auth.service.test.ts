@@ -1,5 +1,5 @@
 import { setupServer } from "msw/node";
-import { rest } from "msw";
+import { rest, RestRequest } from "msw";
 import AuthService from "../auth.service";
 import BackendAPI from "../backendAPI";
 import mainDataService from "../mainData.service";
@@ -7,7 +7,7 @@ import mainDataService from "../mainData.service";
 const server = setupServer(
     rest.post(
         BackendAPI.AUTH + "login",
-        (req, res, ctx) => {
+        (req: RestRequest<{username: string}>, res, ctx) => {
             if(req.body.username === "admin"){ 
                 return res(
                     ctx.json({
