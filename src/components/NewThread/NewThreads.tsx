@@ -9,9 +9,17 @@ import {
     createStyles,
     DialogTitle,
     DialogContent,
+    FormControl,
+    Select,
+    InputLabel,
+    MenuItem
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ThreadService from "../../services/thread.service";
+import { useSnackbar } from "notistack";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import mainDataService from "services/mainData.service";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,10 +39,32 @@ const useStyles = makeStyles((theme: Theme) =>
         input: {
             minHeight: theme.spacing(20),
         },
+        combo: {
+            width: "100%",
+        }
     })
 );
 
 const NewThreads: React.FC = () => {
+    const {enqueueSnackbar} = useSnackbar();
+    // combobox
+    const categoriesList = mainDataService.categories;
+    const [categories, setCategories] = React.useState<string | number>("");
+    const [openCombo, setOpenCombo] = React.useState(false);
+
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setCategories(event.target.value as string);
+    };
+
+    const handleClose = () => {
+        setOpenCombo(false);
+    };
+
+    const handleOpen = () => {
+        setOpenCombo(true);
+    };
+    
+    //
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -42,24 +72,48 @@ const NewThreads: React.FC = () => {
         setOpen(!open);
     };
 
-    const [info, setInfo] = React.useState("");
-    const handleChange= (event:React.ChangeEvent<HTMLInputElement>) => {
-        setInfo(event.target.value);
-    };
-    const getInfo = () => {
-        // send data to backend
-        console.log(info);
-        ThreadService.createThread({
-            catId: 1,
-            creationTimestamp: Date.now(),
-            creatorId: 1,
-            lastReplyAuthorId: 0,
-            lastReplyTimestamp: Date.now(),
-            title: info,
-            groupId: 1
-        });
-        setOpen(!open);
-    };
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+        },
+        validationSchema: Yup.object({
+            name: Yup
+                .string()
+                .required()
+                .min(1)
+        }),
+        onSubmit: (values) => {
+            console.log(values);
+            ThreadService.createThread({
+                catId: 1,
+                creationTimestamp: Date.now(),
+                creatorId: 1,
+                lastReplyAuthorId: 0,
+                lastReplyTimestamp: Date.now(),
+                title: values.name,
+                groupId: 1
+            })
+                .then(response => {
+                    if (response) {
+                        enqueueSnackbar("Added new thread!", {variant: "success", anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                        },});
+                        trigger();
+                    }
+                })
+                .catch(error => {
+                    let message = "Unknown error";
+                    if (error.response) {
+                        message = error.response.data.message;
+                    }
+                    enqueueSnackbar(message, {variant: "error", anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                    },});
+                });
+        }
+    });
 
     return (
         <>
@@ -68,9 +122,7 @@ const NewThreads: React.FC = () => {
                 color="primary"
                 startIcon={<AddIcon />}
                 size="small"
-                onClick={() => {
-                    trigger();
-                }}
+                onClick={trigger}
             >
                 Create thread
             </Button>
@@ -79,26 +131,52 @@ const NewThreads: React.FC = () => {
                 onClose={trigger}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle>New thread</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        className={classes.txtField}
-                        autoComplete="off"
-                        id="name"
-                        label="Name"
-                        rowsMax={1}
-                        variant="outlined"
-                        onChange={handleChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={trigger} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={getInfo} color="primary" variant="contained">
-                        Confirm
-                    </Button>
-                </DialogActions>
+                <form onSubmit={formik.handleSubmit}>
+                    <DialogTitle>New thread</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            className={classes.txtField}
+                            autoComplete="off"
+                            id="name"
+                            label="Name"
+                            rowsMax={1}
+                            color="primary"
+                            variant="outlined"
+                            onChange={formik.handleChange}
+                            error={formik.touched.name && formik.errors.name ? true : false}
+                            helperText={(formik.touched.name && formik.errors.name) ?? false}
+                        />
+                    </DialogContent>
+                    <DialogContent>
+                        <FormControl variant="outlined" className={classes.combo}>
+                            <InputLabel id="demo-simple-select-outlined-label">categories</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                open={openCombo}
+                                onClose={handleClose}
+                                onOpen={handleOpen}
+                                value={categories ? categories : ""}
+                                onChange={handleChange}
+                                label="categories"
+                            >
+                                <MenuItem  key={0} value="All">
+                                    All
+                                </MenuItem >
+                                {categoriesList.map(cat => (
+                                    <MenuItem  key={categoriesList.indexOf(cat)}
+                                        value={cat.name}>
+                                        {cat.name}
+                                    </MenuItem >
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={trigger} color="primary">Cancel</Button>
+                        <Button type="submit" variant="contained" color="primary">Confirm</Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </>
     );
