@@ -1,17 +1,17 @@
 import * as React from "react";
 import { 
-    render, 
     screen, 
     cleanup,
     fireEvent
 } from "@testing-library/react";
 import NewCategory from "../NewCategory";
+import { renderWithProviders } from "utils";
 
 afterEach(cleanup);
 
 describe("<NewCategory />", () => {
     it("Renders <NewCategory /> component", async () => {
-        const {findByTestId} = render(<NewCategory />);
+        const {findByTestId} = renderWithProviders(<NewCategory />);
         
         const iconButton = await findByTestId("new-category-btn");
 
