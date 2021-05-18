@@ -146,7 +146,7 @@ const TemporaryDrawer: React.FC = () => {
             <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog}/>   
             <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete}/>   
             <Box key={"left"}>
-                <IconButton edge="start" color="inherit" onClick={toggleDrawer( true)}>
+                <IconButton edge="start" color="inherit" onClick={toggleDrawer( true)} data-testId="drawerToogleOn">
                     <MenuIcon/>
                 </IconButton>
                 <Drawer anchor={"left"} open={state["left"]} onClose={toggleDrawer (false)}>

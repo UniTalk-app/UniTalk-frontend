@@ -10,6 +10,7 @@ import {
 import HomePage from "pages/HomePage";
 import MainLayout from "pages/MainLayout";
 import { StoreProvider } from "pages/HomePage/store/StoreProvider";
+import { SnackbarProvider } from "notistack";
 
 // @todo separate to other file
 const routes = [
@@ -21,22 +22,24 @@ const routes = [
 
 const App : React.FC = () => {
     return (
-        <StyleProvider>
-            <StoreProvider>
-                <CssBaseline />
-                <MainLayout>
-                    <Router>
-                        <Switch>
-                            {
-                                routes.map(({path, Component}) => (
-                                    <Route path={path} key={path}><Component /></Route>
-                                ))
-                            }
-                        </Switch>
-                    </Router>
-                </MainLayout>
-            </StoreProvider>
-        </StyleProvider>
+        <SnackbarProvider maxSnack={2}>
+            <StyleProvider>
+                <StoreProvider>
+                    <CssBaseline />
+                    <MainLayout>
+                        <Router>
+                            <Switch>
+                                {
+                                    routes.map(({path, Component}) => (
+                                        <Route path={path} key={path}><Component /></Route>
+                                    ))
+                                }
+                            </Switch>
+                        </Router>
+                    </MainLayout>
+                </StoreProvider>
+            </StyleProvider>
+        </SnackbarProvider>
     );
 };
 
