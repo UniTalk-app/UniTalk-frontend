@@ -16,7 +16,7 @@ import CategoryService from "../../services/category.service";
 import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-//import { useMainData } from "pages/HomePage/store/StoreProvider";
+import storeSubject from "store/store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,9 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-//const { getData } = useMainData();
-
-const NewCategory: React.FC = () => {
+const NewCategoryDialog: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -71,7 +69,7 @@ const NewCategory: React.FC = () => {
                             vertical: "bottom",
                             horizontal: "center",
                         },});
-                        //getData();
+                        storeSubject.updateStore();
                         trigger();
                     }
                 })
@@ -110,6 +108,7 @@ const NewCategory: React.FC = () => {
                             onChange={formik.handleChange}
                             error={formik.touched.name && formik.errors.name ? true : false}
                             helperText={(formik.touched.name && formik.errors.name) ?? false}
+                            autoFocus
                         />
                     </DialogContent>
                     <DialogActions>
@@ -122,4 +121,4 @@ const NewCategory: React.FC = () => {
     );
 };
 
-export default NewCategory;
+export default NewCategoryDialog;

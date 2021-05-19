@@ -35,7 +35,6 @@ import authHeader from "services/auth-header";
 import AuthService from "services/auth.service";
 import Forms from "components/Forms";
 import Drawer from "../../../components/Drawer/Drawer";
-import { StoreProvider } from "../../HomePage/store/StoreProvider";
 
 
 const StyledBadge = withStyles((theme: Theme) =>
@@ -72,8 +71,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
-    
-
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
@@ -98,67 +95,64 @@ const Navbar: React.FC = () => {
 
     const loggedIn = authHeader();
     return (
-        <StoreProvider>
-            <AppBar position="sticky" color="default">
-                <Toolbar>
-                    <Drawer /> 
-                    <Typography variant="h5" noWrap>
-                UniTalk
-                    </Typography>
-                    <Box className={classes.searchBar}>
-                        <Input
-                            placeholder="Search…"
-                            startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
-                            endAdornment={<InputAdornment position="end"><FilterListIcon /></InputAdornment>}
-                        />
-                    </Box>
-                    <Box className={classes.authButtons}>
-                        {console.log(Object.keys(loggedIn).length === 0)}
-                        {(Object.keys(loggedIn).length === 0)?( 
-                            <Forms />  
-                        ):(
-                            <Container className={classes.mainBox}>
-                                <IconButton aria-label="cart">
-                                    <StyledBadge badgeContent={4} color="secondary">
-                                        <NotificationsActiveIcon/>
-                                    </StyledBadge>
-                                </IconButton>
-                                <Button
-                                    ref={anchorRef}
-                                    aria-controls={open ? "menu-list-grow" : undefined}
-                                    aria-haspopup="true"
-                                    onClick={handleToggle}
-                                >
-                                    <Avatar className={classes.avatar}>H</Avatar>
-                                </Button>
-                                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                                    {({ TransitionProps, placement }) => (
-                                        <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
-                                            <Paper>
-                                                <ClickAwayListener onClickAway={handleClose}>
-                                                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                                        <MenuItem onClick={handleClose}><Avatar className={classes.avatar}>H</Avatar>rafi</MenuItem>
-                                                        <Divider />
-                                                        <MenuItem onClick={handleClose}><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
-                                                        <MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem>
-                                                        <MenuItem onClick={(e) => {
-                                                            AuthService.logout();
-                                                            handleClose(e);
-                                                            window.location.reload(false);
-                                                        }}
-                                                        ><ExitToAppIcon className={classes.list}/>Log out</MenuItem>
-                                                    </MenuList>
-                                                </ClickAwayListener>
-                                            </Paper>
-                                        </Grow>
-                                    )}
-                                </Popper>
-                            </Container>
-                        )}  
-                    </Box>
-                </Toolbar>
-            </AppBar>
-        </StoreProvider>
+        <AppBar position="sticky" color="default">
+            <Toolbar>
+                <Drawer /> 
+                <Typography variant="h5" noWrap>
+            UniTalk
+                </Typography>
+                <Box className={classes.searchBar}>
+                    <Input
+                        placeholder="Search…"
+                        startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+                        endAdornment={<InputAdornment position="end"><FilterListIcon /></InputAdornment>}
+                    />
+                </Box>
+                <Box className={classes.authButtons}>
+                    {(Object.keys(loggedIn).length === 0)?( 
+                        <Forms />  
+                    ):(
+                        <Container className={classes.mainBox}>
+                            <IconButton aria-label="cart">
+                                <StyledBadge badgeContent={4} color="secondary">
+                                    <NotificationsActiveIcon/>
+                                </StyledBadge>
+                            </IconButton>
+                            <Button
+                                ref={anchorRef}
+                                aria-controls={open ? "menu-list-grow" : undefined}
+                                aria-haspopup="true"
+                                onClick={handleToggle}
+                            >
+                                <Avatar className={classes.avatar}>H</Avatar>
+                            </Button>
+                            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                                {({ TransitionProps, placement }) => (
+                                    <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
+                                        <Paper>
+                                            <ClickAwayListener onClickAway={handleClose}>
+                                                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                                    <MenuItem onClick={handleClose}><Avatar className={classes.avatar}>H</Avatar>rafi</MenuItem>
+                                                    <Divider />
+                                                    <MenuItem onClick={handleClose}><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
+                                                    <MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem>
+                                                    <MenuItem onClick={(e) => {
+                                                        AuthService.logout();
+                                                        handleClose(e);
+                                                        window.location.reload(false);
+                                                    }}
+                                                    ><ExitToAppIcon className={classes.list}/>Log out</MenuItem>
+                                                </MenuList>
+                                            </ClickAwayListener>
+                                        </Paper>
+                                    </Grow>
+                                )}
+                            </Popper>
+                        </Container>
+                    )}  
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 };
 

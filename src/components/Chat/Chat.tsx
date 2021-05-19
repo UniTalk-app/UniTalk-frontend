@@ -17,6 +17,7 @@ import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import BackendAPI from "services/backendAPI";
+import { Thread } from "store/store";
 
 const useStyles = makeStyles(() =>
     createStyles({

@@ -9,8 +9,9 @@ import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
 import LatestThreads from "../../components/LatestThreads";
 import Lock from "../../components/Lock";
-import { useMainData } from "./store/StoreProvider";
 import authHeader from "services/auth-header";
+import { useStore } from "store/storeProvider";
+
 
 const useStyles = makeStyles(() => createStyles({
     mainBox: {
@@ -23,11 +24,7 @@ const useStyles = makeStyles(() => createStyles({
 const HomePage: React.FC = () => {
     const loggedIn = authHeader();
     const classes = useStyles();
-    const {
-        threads,
-        categories,
-    } = useMainData();
-
+    const appData = useStore();
 
     return (
         <>
@@ -38,7 +35,7 @@ const HomePage: React.FC = () => {
             ) : (
                 <Container className={classes.mainBox}>
                     <Box width="20%">
-                        <Categories categories={categories()}/>
+                        <Categories categories={appData.categories}/>
                         <Box mt={4}>
                             <LatestThreads  latestthreads={[
                                 {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
@@ -48,7 +45,7 @@ const HomePage: React.FC = () => {
                     </Box>
 
                     <Box width="80%" m={10}>
-                        <ThreadsList threads={threads()}/>
+                        <ThreadsList threads={appData.threads}/>
                     </Box>
                 </Container>
             )}

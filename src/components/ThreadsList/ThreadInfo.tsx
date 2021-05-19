@@ -6,6 +6,7 @@ import {
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
 import Chat from "../Chat/Chat";
+import { Thread } from "store/store";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     small: {

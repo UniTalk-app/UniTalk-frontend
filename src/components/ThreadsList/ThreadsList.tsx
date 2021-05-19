@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "../NewThread/NewThreads";
+import { Thread } from "store/store";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -98,14 +99,12 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
             <Box mt={1}>
                 <Grid container direction={"column"} spacing={1}>
                     {threads.map((value) => (
-                        <>
-                            <Grid item>
-                                {ThreadInfo({
-                                    firstColumnSize: firstColumnSize,
-                                    thread: value,
-                                })}
-                            </Grid>
-                        </>
+                        <Grid item key={value.threadId}>
+                            {ThreadInfo({
+                                firstColumnSize: firstColumnSize,
+                                thread: value,
+                            })}
+                        </Grid>
                     ))}
                 </Grid>
             </Box>

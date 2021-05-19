@@ -5,13 +5,13 @@ import {
     cleanup,
     fireEvent
 } from "@testing-library/react";
-import NewCategory from "../NewCategory";
+import NewCategoryDialog from "../NewCategoryDialog";
 
 afterEach(cleanup);
 
 describe("<NewCategory />", () => {
     it("Renders <NewCategory /> component", async () => {
-        const {findByTestId} = render(<NewCategory />);
+        const {findByTestId} = render(<NewCategoryDialog />);
         
         const iconButton = await findByTestId("new-category-btn");
 

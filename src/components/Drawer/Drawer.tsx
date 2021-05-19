@@ -20,8 +20,9 @@ import {
     Menu as MenuIcon, 
 } from "@material-ui/icons";
 import JoinDialog from "./JoinDialog";
-import { useMainData } from "../../pages/HomePage/store/StoreProvider";
 import ConfirmDialog from "./ConfirmDialog";
+import { useStore } from "store/storeProvider";
+import storeSubject from "store/store";
 
 const useStyles = makeStyles(() => createStyles({
     list:{
@@ -46,9 +47,6 @@ const TemporaryDrawer: React.FC = () => {
     const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
     const [groupIdToDelete, setGroupIdToDelete] = React.useState(-1);
 
-    const {
-        groups,
-    } = useMainData();
 
     const toggleDrawer = ( open: boolean) => (
         event: React.KeyboardEvent | React.MouseEvent,
@@ -79,6 +77,8 @@ const TemporaryDrawer: React.FC = () => {
         setOpenConfirmDialog(false);
     };
 
+    const appData = useStore();
+
     const list = () => (
         <Box
             className={classes.list}
@@ -108,9 +108,9 @@ const TemporaryDrawer: React.FC = () => {
                     <Typography variant="h6">Groups</Typography>
                 </Box>
                 <List>
-                    {groups().map((group) => (
+                    {appData.groups.map((group) => (
                         <Box display="flex" key={group.groupId}>
-                            <ListItem button onClick={() => console.log(group.groupId)}>
+                            <ListItem button onClick={() => storeSubject.setCurrentGroupId(group.groupId)}>
                                 <Typography variant="body1">{group.groupName}</Typography>
                             </ListItem>
                             <Button onClick={() => handleOpenConfirmDialog(group.groupId)}>

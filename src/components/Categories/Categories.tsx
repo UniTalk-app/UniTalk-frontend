@@ -11,7 +11,8 @@ import {
     Tabs,
     TableRow
 } from "@material-ui/core";
-import NewCategory from "../NewCategory/NewCategory";
+import NewCategoryDialog from "./NewCategoryDialog";
+import { Category } from "store/store";
 
 const useStyles = makeStyles(() => createStyles({
     root: {
@@ -54,7 +55,7 @@ const Categories: React.FC<CategListProps> = (props) => {
                     <Typography variant="h6">Categories</Typography>
                 </Box>
                 <Box className={`${classes.buttonNew}`}>
-                    <NewCategory/>
+                    <NewCategoryDialog/>
                 </Box>                
             </Box>
             <Divider />

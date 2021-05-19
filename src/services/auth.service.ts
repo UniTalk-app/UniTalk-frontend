@@ -1,6 +1,6 @@
 import axios from "axios";
+import storeSubject from "store/store";
 import BackendAPI from "./backendAPI";
-import mainDataService from "./mainData.service";
 const API_URL = BackendAPI.AUTH;
 
 class AuthService {
@@ -9,7 +9,7 @@ class AuthService {
             const response = await axios.post(API_URL + "login", data);
             if (response.data.token) {
                 localStorage.setItem("user", response.data.token);
-                await mainDataService.getData();
+                await storeSubject.updateStore();
             }
 
             return response.status;
