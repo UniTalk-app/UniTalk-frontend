@@ -6,14 +6,29 @@ import {
     Grid,
     Typography,
     GridSize,
+    Dialog,
+    createStyles,
+    Theme,
+    makeStyles,
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
-import NewThreads from "../NewThread/NewThreads";
+import NewThreads from "./NewThreadsDialog";
 import { Thread } from "store/store";
+import Chat from "components/Chat";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
 };
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+    small: {
+        width: theme.spacing(3),
+        height: theme.spacing(3)
+    },
+    margin: {
+        marginRight: theme.spacing(0.3)
+    },
+}));
 
 const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     const { threads } = props;
@@ -27,7 +42,6 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
         "Options",
     ];
 
-  
     const headerElement = (
         sm: boolean | GridSize,
         color: "textPrimary" | "textSecondary",
@@ -50,8 +64,25 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
         console.info("Oldest chip clicked");
     };
 
+    const classes = useStyles();
+    const [openChat, setOpenChat] = React.useState(false);
+    const handleOpenChat = () => setOpenChat(true);
+    const handleCloseChat = () => setOpenChat(false);
+    const [selectedThread, setSelectedThread] = React.useState<Thread>({} as Thread);
+
     return (
         <Box>
+            <Dialog
+                open={openChat}
+                onClose={handleCloseChat}
+                aria-labelledby="max-width-dialog-title"
+                fullWidth={true}
+                maxWidth = {"md"}
+                color={"background.dp02"}
+            >
+                <Chat onClose={handleCloseChat} threadId={selectedThread.threadId} threadTitle={selectedThread.title} />
+            </Dialog>
+
             <Box display="flex" alignItems="center" mb={1.5}>
                 <Box flexGrow={1}>
                     <Typography variant="h5">All</Typography>
@@ -103,6 +134,9 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                             {ThreadInfo({
                                 firstColumnSize: firstColumnSize,
                                 thread: value,
+                                handleOpenChat: handleOpenChat,
+                                setSelectedThread: setSelectedThread,
+                                classes: classes
                             })}
                         </Grid>
                     ))}

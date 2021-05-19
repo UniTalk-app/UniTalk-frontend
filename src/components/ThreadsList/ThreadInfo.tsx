@@ -1,67 +1,36 @@
 import * as React from "react";
-import { Dialog,Avatar, Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
+import { Avatar, Box, Grid, GridSize, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
-import Chat from "../Chat/Chat";
 import { Thread } from "store/store";
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-    small: {
-        width: theme.spacing(3),
-        height: theme.spacing(3)
-    },
-    margin: {
-        marginRight: theme.spacing(0.3)
-    },
-    dialogPaper: {
-        minHeight: "100vh",
-        maxHeight: "100vh",
-    },
-    buttonThread: {
-        width: "100%",
-        height: "40px",
-        display:"flex",
-        backgroundColor:"background.dp02",
-        padding: "1",
-    },
-    boxThread: {
-        width: "100%",
-        height: "40px",
-        display:"flex",
-        justifyContent:"center",
-    },
-}));
+import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 
 type ThreadInfoProps = {
     firstColumnSize: boolean | GridSize,
-    thread: Thread
+    thread: Thread,
+    handleOpenChat: () => void,
+    setSelectedThread: (thread: Thread) => void,
+    classes: ClassNameMap<"margin" | "small">
 }
 
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
     const {
         firstColumnSize,
-        thread
+        thread,
+        handleOpenChat,
+        setSelectedThread,
+        classes,
     } = props;
-    const classes = useStyles();
-
-    //chat....
-    const [open, setOpen] = React.useState(false);
-
-    const trigger = (value: boolean) => {
-        setOpen(value);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
 
     return (
         <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} width={"100%"} height={"40px"} pl={1} pr={1} display={"flex"}
-            justifyContent={"center"} onClick={() => {trigger(true);}}>
+            justifyContent={"center"} onClick={() => {
+                setSelectedThread(thread);
+                handleOpenChat();
+            }}>
             <Grid container justify={"space-between"} alignItems={"center"}>
                 <Grid item sm={firstColumnSize}>
                     <Typography variant={"body1"}>{thread.title}</Typography>
@@ -90,17 +59,6 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                     <DeleteIcon fontSize={"small"} />
                 </Grid>
             </Grid>
-            <Dialog
-                className={ classes.dialogPaper}
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="max-width-dialog-title"
-                fullWidth={true}
-                maxWidth = {"md"}
-                color={"background.dp02"}
-            >
-                <Chat onClose={handleClose} thread={thread}/>
-            </Dialog>
         </Box>
     );
 };

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState,KeyboardEvent } from "react";
+import { useEffect, useState, KeyboardEvent } from "react";
 import {
     Box,
     Divider,
@@ -17,24 +17,23 @@ import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import BackendAPI from "services/backendAPI";
-import { Thread } from "store/store";
 
 const useStyles = makeStyles(() =>
     createStyles({
         textField: {
-            width:"100%"
+            width: "100%"
         },
-        header:{
+        header: {
             textAlign: "center",
         },
-        grid:{
+        grid: {
             alignItems: "center",
         },
         bold: {
             textAlign: "center",
             fontWeight: 600
         },
-        messageBox:{
+        messageBox: {
             height: "590px",
         },
         image: {
@@ -45,18 +44,19 @@ const useStyles = makeStyles(() =>
             width: "50%",
             textAlign: "center"
         },
-        message:{
+        message: {
             wordWrap: "break-word",
-            width:"700px",
+            width: "700px",
             whiteSpace: "pre-line",
-            paddingLeft:20,
+            paddingLeft: 20,
         }
     })
 );
 
-type ChatProps ={
+type ChatProps = {
     onClose: () => void,
-    thread: Thread
+    threadId: string,
+    threadTitle: string
 }
 
 type Message = {
@@ -65,29 +65,30 @@ type Message = {
     sendingTimestamp: string,
 }
 
-interface FormValues{
+interface FormValues {
     content: string;
 }
 
-let bIsShiftDown=false;
+let bIsShiftDown = false;
 
-const validate = (values: FormValues) =>{
+const validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
-    if (!values.content){
+    if (!values.content) {
         errors.content = "Required";
     }
 
     return errors;
 };
 
-let stompClient : Stomp.Client;
-let socket : WebSocket;
+let stompClient: Stomp.Client;
+let socket: WebSocket;
 
-const Chat: React.FC<ChatProps> = (props) =>{
+const Chat: React.FC<ChatProps> = (props) => {
     const classes = useStyles();
     const {
         onClose,
-        thread
+        threadId,
+        threadTitle
     } = props;
     const [messages, setMessages] = useState([] as Array<Message>);
 
@@ -99,7 +100,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
             stompClient.disconnect(onDisconnect);
             socket.close();
         };
-    },[]);
+    }, []);
 
     const connect = () => {
         socket = new SockJS(BackendAPI.WEB_SOCKET);
@@ -109,7 +110,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
 
     const onConnected = () => {
         stompClient.subscribe(
-            "/topic/room/" + thread.threadId,
+            "/topic/room/" + threadId,
             onMessageReceived
         );
     };
@@ -118,11 +119,11 @@ const Chat: React.FC<ChatProps> = (props) =>{
         console.log("Disconnected");
     };
 
-    const onMessageReceived = (msg :Stomp.Frame) =>{
+    const onMessageReceived = (msg: Stomp.Frame) => {
         console.log(msg);
-        const date=new Date(JSON.parse(msg.body).sendingTimestamp);
-        const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
-        date.getHours().toString() +":"+ date.getMinutes().toString();
+        const date = new Date(JSON.parse(msg.body).sendingTimestamp);
+        const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
+            date.getHours().toString() + ":" + date.getMinutes().toString();
 
         const newMsg = {
             content: JSON.parse(msg.body).content,
@@ -130,26 +131,26 @@ const Chat: React.FC<ChatProps> = (props) =>{
             sendingTimestamp: dateStr,
         };
 
-        setMessages(p =>[...p,newMsg]);
+        setMessages(p => [...p, newMsg]);
     };
 
-    const sendMessage = (msg : string) =>{
-        if( !/\S/.test(msg))return;
+    const sendMessage = (msg: string) => {
+        if (!/\S/.test(msg)) return;
 
         const message = {
             content: msg,
             senderUsername: "username",
         };
-        stompClient.send("/chat/room/"+thread.threadId, {}, JSON.stringify(message));
+        stompClient.send("/chat/room/" + threadId, {}, JSON.stringify(message));
     };
 
-    const loadMessages=()=>{
-        const messagesPromise=ChatService.messages(Number(thread.threadId));
-        messagesPromise.then(function(messages : Message[]){
-            messages.map(function(message : Message){
-                const date=new Date(message.sendingTimestamp);
-                const dateStr=date.getDate().toString() +"."+ date.getMonth().toString() +"."+ date.getFullYear().toString() +" "+
-                date.getHours().toString() +":"+ date.getMinutes().toString();
+    const loadMessages = () => {
+        const messagesPromise = ChatService.messages(Number(threadId));
+        messagesPromise.then(function (messages: Message[]) {
+            messages.map(function (message: Message) {
+                const date = new Date(message.sendingTimestamp);
+                const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
+                    date.getHours().toString() + ":" + date.getMinutes().toString();
 
                 const newMessage = {
                     content: message.content,
@@ -157,34 +158,33 @@ const Chat: React.FC<ChatProps> = (props) =>{
                     sendingTimestamp: dateStr,
                 };
 
-                setMessages(p =>[...p,newMessage]);
+                setMessages(p => [...p, newMessage]);
             });
         });
     };
 
     return (
         <Box bgcolor={"background.dp02"}>
-
             <Box mt={1} pl={3} pr={3} pb={1} >
                 <Grid container direction={"row"} spacing={1} className={classes.grid} >
                     <Grid item >
-                        <Button onClick={onClose}> <ArrowBackIcon/></Button>
+                        <Button onClick={onClose}> <ArrowBackIcon /></Button>
                     </Grid>
                     <Grid item >
-                        <Typography variant="h5" color="textPrimary" className={classes.header}>{thread.title} </Typography>
+                        <Typography variant="h5" color="textPrimary" className={classes.header}>{threadTitle} </Typography>
                     </Grid>
                     <Grid item >
-                        <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                        <Typography variant={"caption"} color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
                     </Grid>
                 </Grid>
-                <Divider  />
+                <Divider />
             </Box>
 
             <Box mt={4} className={classes.messageBox}>
                 <ScrollableFeed>
                     <Box pl={8} pr={8}>
                         <Grid container direction={"column"} spacing={1}>
-                            <img  className={classes.image} src={process.env.PUBLIC_URL + "pluto-sign-up.png"} />
+                            <img className={classes.image} src={process.env.PUBLIC_URL + "pluto-sign-up.png"} />
                             <Typography variant={"h5"} className={classes.bold} >
                                 Beginning of everything!
                             </Typography>
@@ -198,8 +198,8 @@ const Chat: React.FC<ChatProps> = (props) =>{
                     </Box>
 
                     <Box mt={2} pl={8} pr={8} >
-                        {messages.map( (msg,index) => (
-                            <Grid container direction={"column"}  key={index} >
+                        {messages.map((msg, index) => (
+                            <Grid container direction={"column"} key={index} >
 
                                 <Grid container direction={"row"} spacing={1} className={classes.grid}>
                                     <Grid item >
@@ -210,7 +210,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
                                     </Grid>
                                 </Grid>
                                 <Grid item >
-                                    <Typography className={classes.message} display={"block"}  variant={"body2"} color="textPrimary">
+                                    <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
                                         {msg.content}
                                     </Typography>
                                 </Grid>
@@ -226,7 +226,7 @@ const Chat: React.FC<ChatProps> = (props) =>{
                         content: "",
                     }}
                     validate={validate}
-                    onSubmit={(values,actions) => {
+                    onSubmit={(values, actions) => {
                         sendMessage(values.content);
                         actions.resetForm();
                     }}
@@ -234,10 +234,10 @@ const Chat: React.FC<ChatProps> = (props) =>{
                     {
                         (props) => (
                             <Form noValidate
-                                onKeyDown={(e:KeyboardEvent) => {
-                                    if (e.key === "Shift"  ) {
+                                onKeyDown={(e: KeyboardEvent) => {
+                                    if (e.key === "Shift") {
                                         console.log("shift enter");
-                                        bIsShiftDown=true;
+                                        bIsShiftDown = true;
                                     }
                                     if (e.key === "Enter" && bIsShiftDown === false) {
                                         e.preventDefault();
@@ -245,9 +245,9 @@ const Chat: React.FC<ChatProps> = (props) =>{
                                         console.log("enter");
                                     }
                                 }}
-                                onKeyUp={(e:KeyboardEvent)=>{
-                                    if(e.key==="Shift"){
-                                        bIsShiftDown=false;
+                                onKeyUp={(e: KeyboardEvent) => {
+                                    if (e.key === "Shift") {
+                                        bIsShiftDown = false;
                                     }
                                 }}
                             >

@@ -19,7 +19,7 @@ import ThreadService from "../../services/thread.service";
 import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import mainDataService from "services/mainData.service";
+import storeSubject from "store/store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,10 +47,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NewThreads: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
-    // combobox
-    const categoriesList = mainDataService.categories;
     const [categories, setCategories] = React.useState<string | number>("");
     const [openCombo, setOpenCombo] = React.useState(false);
+    const appData = storeSubject.getAppData();
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setCategories(event.target.value as string);
@@ -64,7 +63,6 @@ const NewThreads: React.FC = () => {
         setOpenCombo(true);
     };
     
-    //
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -99,6 +97,7 @@ const NewThreads: React.FC = () => {
                             vertical: "bottom",
                             horizontal: "center",
                         },});
+                        storeSubject.updateStore();
                         trigger();
                     }
                 })
@@ -163,8 +162,8 @@ const NewThreads: React.FC = () => {
                                 <MenuItem  key={0} value="All">
                                     All
                                 </MenuItem >
-                                {categoriesList.map(cat => (
-                                    <MenuItem  key={categoriesList.indexOf(cat)}
+                                {appData.categories.map(cat => (
+                                    <MenuItem  key={cat.name}
                                         value={cat.name}>
                                         {cat.name}
                                     </MenuItem >
