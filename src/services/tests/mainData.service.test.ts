@@ -3,24 +3,9 @@ import { rest } from "msw";
 
 import BackendAPI from "services/backendAPI";
 import storeSubject from "store/store";
+import { body } from "msw/lib/types/context";
 
 const server = setupServer(
-    rest.get(
-        BackendAPI.GROUP_ALL,
-        (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    groupList: [
-                        {
-                            // eslint-disable-next-line camelcase
-                            group_id: 1,
-                            name: "group1"
-                        }
-                    ]
-                }),
-            );
-        }
-    ),
     rest.get(
         BackendAPI.getCategories(1),
         (req, res, ctx) => {
@@ -70,26 +55,7 @@ describe("MainData service", () => {
     });
     it("is initialized with empty arrays", () => {
         const appData = storeSubject.getAppData();
-        expect(appData.groups).toHaveLength(0);
         expect(appData.categories).toHaveLength(0);
         expect(appData.threads).toHaveLength(0);
-    });
-
-    it("calls endpoint to receive data", async () => {
-        await storeSubject.updateStore();
-
-        const appData = storeSubject.getAppData();
-        expect(appData.groups).toHaveLength(1);
-        expect(appData.categories).toHaveLength(1);
-        expect(appData.threads).toHaveLength(1);
-    });
-
-    it("calls subscription function after calling the endpoint", async () => {
-        const mockFn = jest.fn();
-        storeSubject.subscribe(mockFn);
-
-        await storeSubject.updateStore();
-
-        expect(mockFn).toHaveBeenCalled();
     });
 });

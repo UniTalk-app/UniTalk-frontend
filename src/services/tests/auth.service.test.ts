@@ -2,7 +2,6 @@ import { setupServer } from "msw/node";
 import { rest } from "msw";
 import AuthService from "../auth.service";
 import BackendAPI from "../backendAPI";
-import mainDataService from "../mainData.service";
 
 const server = setupServer(
     rest.post<{username: string}>(
@@ -50,13 +49,11 @@ describe("AuthService", () => {
 
     it("login stores token when success", async () => {
         jest.spyOn(Storage.prototype, "setItem");
-        jest.spyOn(mainDataService, "getData").mockResolvedValue();
         await AuthService.login({
             username: "admin",
             password: "a",
         });
         expect(Storage.prototype.setItem).toHaveBeenCalled();
         expect(Storage.prototype.setItem).toHaveBeenLastCalledWith("user", "abcd");
-        expect(mainDataService.getData).toHaveBeenCalled();
     });
 });
