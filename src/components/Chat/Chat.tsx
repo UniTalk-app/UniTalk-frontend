@@ -4,21 +4,35 @@ import {
     Box,
     Divider,
     Button,
+    DialogActions,
     Typography,
     makeStyles,
+    InputAdornment,
+    Input,
     createStyles,
     Grid,
     TextField,
+    Avatar,
+    Theme,
 } from "@material-ui/core";
 import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import {
+    ArrowBack as ArrowBackIcon,
+    Search as SearchIcon,
+    FilterList as FilterListIcon,
+    Error as ErrorIcon,
+} from "@material-ui/icons/";
+import {
+    deepOrange,
+} from "@material-ui/core/colors/";
+
 import BackendAPI from "services/backendAPI";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
             width: "100%"
@@ -26,15 +40,12 @@ const useStyles = makeStyles(() =>
         header: {
             textAlign: "center",
         },
-        grid: {
-            alignItems: "center",
-        },
         bold: {
             textAlign: "center",
             fontWeight: 600
         },
-        messageBox: {
-            height: "590px",
+        messageBox:{
+            height: "60vh",
         },
         image: {
             display: "block",
@@ -48,15 +59,17 @@ const useStyles = makeStyles(() =>
             wordWrap: "break-word",
             width: "700px",
             whiteSpace: "pre-line",
-            paddingLeft: 20,
-        }
+        },
+        orange: {
+            color: theme.palette.getContrastText(deepOrange[500]),
+            backgroundColor: deepOrange[500],
+        },
     })
 );
 
-type ChatProps = {
-    onClose: () => void,
-    threadId: string,
-    threadTitle: string
+type ChatProps ={
+    trigger: () => void,
+    thread: Thread
 }
 
 type Message = {
@@ -80,8 +93,14 @@ const validate = (values: FormValues) => {
     return errors;
 };
 
-let stompClient: Stomp.Client;
-let socket: WebSocket;
+const getDataString= ( date : Date) =>{
+    const options = {day: "2-digit",  month: "2-digit" ,year: "numeric" ,hour:"2-digit",minute : "2-digit"}as const;
+    const dataStr = date.toLocaleDateString("de-DE",options);
+    return dataStr;
+};
+
+let stompClient : Stomp.Client;
+let socket : WebSocket;
 
 const Chat: React.FC<ChatProps> = (props) => {
     const classes = useStyles();
@@ -119,16 +138,11 @@ const Chat: React.FC<ChatProps> = (props) => {
         console.log("Disconnected");
     };
 
-    const onMessageReceived = (msg: Stomp.Frame) => {
-        console.log(msg);
-        const date = new Date(JSON.parse(msg.body).sendingTimestamp);
-        const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
-            date.getHours().toString() + ":" + date.getMinutes().toString();
-
+    const onMessageReceived = (msg :Stomp.Frame) =>{
         const newMsg = {
             content: JSON.parse(msg.body).content,
             senderUsername: JSON.parse(msg.body).senderUsername,
-            sendingTimestamp: dateStr,
+            sendingTimestamp: getDataString(new Date(JSON.parse(msg.body).sendingTimestamp)),
         };
 
         setMessages(p => [...p, newMsg]);
@@ -144,18 +158,14 @@ const Chat: React.FC<ChatProps> = (props) => {
         stompClient.send("/chat/room/" + threadId, {}, JSON.stringify(message));
     };
 
-    const loadMessages = () => {
-        const messagesPromise = ChatService.messages(Number(threadId));
-        messagesPromise.then(function (messages: Message[]) {
-            messages.map(function (message: Message) {
-                const date = new Date(message.sendingTimestamp);
-                const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
-                    date.getHours().toString() + ":" + date.getMinutes().toString();
-
+    const loadMessages=()=>{
+        const messagesPromise=ChatService.messages(Number(thread.threadId));
+        messagesPromise.then(function(messages : Message[]){
+            messages.map(function(message : Message){
                 const newMessage = {
                     content: message.content,
                     senderUsername: message.senderUsername,
-                    sendingTimestamp: dateStr,
+                    sendingTimestamp: getDataString(new Date(message.sendingTimestamp)),
                 };
 
                 setMessages(p => [...p, newMessage]);
@@ -164,20 +174,36 @@ const Chat: React.FC<ChatProps> = (props) => {
     };
 
     return (
-        <Box bgcolor={"background.dp02"}>
-            <Box mt={1} pl={3} pr={3} pb={1} >
-                <Grid container direction={"row"} spacing={1} className={classes.grid} >
+        <Box bgcolor={"background.dp02"} height={"100%"}>
+
+            <Box pl={3} pr={3} >
+                <Grid container direction="row" spacing={1} justify="space-between" alignItems="center">
                     <Grid item >
-                        <Button onClick={onClose}> <ArrowBackIcon /></Button>
+                        <Grid container direction="row" spacing={1} justify="flex-start" alignItems="center">
+                            <Grid item>
+                                <DialogActions>
+                                    <Button onClick={trigger}>
+                                        <ArrowBackIcon/>
+                                    </Button>
+                                </DialogActions>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h5" color="textPrimary" className={classes.header}>{thread.title} </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item >
-                        <Typography variant="h5" color="textPrimary" className={classes.header}>{threadTitle} </Typography>
-                    </Grid>
-                    <Grid item >
-                        <Typography variant={"caption"} color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                        <Input
+                            placeholder="Search…"
+                            startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+                            endAdornment={<InputAdornment position="end"><FilterListIcon /></InputAdornment>}
+                        />
                     </Grid>
                 </Grid>
-                <Divider />
+                <Divider/>
             </Box>
 
             <Box mt={4} className={classes.messageBox}>
@@ -198,21 +224,27 @@ const Chat: React.FC<ChatProps> = (props) => {
                     </Box>
 
                     <Box mt={2} pl={8} pr={8} >
-                        {messages.map((msg, index) => (
-                            <Grid container direction={"column"} key={index} >
-
-                                <Grid container direction={"row"} spacing={1} className={classes.grid}>
-                                    <Grid item >
-                                        <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
+                        {messages.map( (msg,index) => (
+                            <Grid container direction={"column"}  key={index} justify="center" alignItems="stretch">
+                                <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
+                                    <Grid item>
+                                        <Avatar src={process.env.PUBLIC_URL + "pluto-sign-up.png"} className={classes.orange}>
+                                            User first letter
+                                        </Avatar>
                                     </Grid>
                                     <Grid item >
-                                        <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
+                                        <Grid container direction={"row"} spacing={1} alignItems="center">
+                                            <Grid item >
+                                                <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
+                                            </Grid>
+                                            <Grid item >
+                                                <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Typography className={classes.message} display={"block"}  variant={"body2"} color="textPrimary">
+                                            {msg.content}
+                                        </Typography>
                                     </Grid>
-                                </Grid>
-                                <Grid item >
-                                    <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
-                                        {msg.content}
-                                    </Typography>
                                 </Grid>
                             </Grid>
                         ))}
