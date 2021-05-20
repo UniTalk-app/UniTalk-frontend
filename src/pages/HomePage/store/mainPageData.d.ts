@@ -11,7 +11,7 @@ type Thread = {
     title: string;
     author: string;
     lastReply: string;
-    replyTime: string;
+    lastReplyTimestamp: string;
     creationTime: string;
 }
 
