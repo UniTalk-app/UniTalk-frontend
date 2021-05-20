@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import groupService from "services/group.service";
-import { useMainData } from "pages/HomePage/store/StoreProvider";
+import storeSubject from "store/store";
 
 
 type ConfirmDialogProps = {
@@ -15,7 +15,6 @@ type ConfirmDialogProps = {
 const ConfirmDialog : React.FC<ConfirmDialogProps> = (props) => {
     const {open, onClose, groupId} = props;
     const { enqueueSnackbar } = useSnackbar();
-    const { getData } = useMainData();
 
     const leaveGroup = () => {
         groupService.leaveGroup(groupId)
@@ -25,7 +24,7 @@ const ConfirmDialog : React.FC<ConfirmDialogProps> = (props) => {
                         vertical: "bottom",
                         horizontal: "center",
                     },});
-                    getData();
+                    storeSubject.updateStore();
                     onClose();
                 }
             })

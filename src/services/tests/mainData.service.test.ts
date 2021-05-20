@@ -1,26 +1,11 @@
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 
-import MainData from "../mainData.service";
 import BackendAPI from "services/backendAPI";
+import storeSubject from "store/store";
+import { body } from "msw/lib/types/context";
 
 const server = setupServer(
-    rest.get(
-        BackendAPI.GROUP_ALL,
-        (req, res, ctx) => {
-            return res(
-                ctx.json({
-                    groupList: [
-                        {
-                            // eslint-disable-next-line camelcase
-                            group_id: 1,
-                            name: "group1"
-                        }
-                    ]
-                }),
-            );
-        }
-    ),
     rest.get(
         BackendAPI.getCategories(1),
         (req, res, ctx) => {
@@ -69,25 +54,8 @@ describe("MainData service", () => {
         server.close();
     });
     it("is initialized with empty arrays", () => {
-        expect(MainData.groups).toHaveLength(0);
-        expect(MainData.categories).toHaveLength(0);
-        expect(MainData.threads).toHaveLength(0);
-    });
-
-    it("calls endpoint to receive data", async () => {
-        await MainData.getData();
-
-        //expect(MainData.groups).toHaveLength(1);
-        //expect(MainData.categories).toHaveLength(1);
-        //expect(MainData.threads).toHaveLength(1);
-    });
-
-    it("calls subscription function after calling the endpoint", async () => {
-        const mockFn = jest.fn();
-        MainData.subscribeToServiceChange(mockFn);
-
-        await MainData.getData();
-
-        expect(mockFn).toHaveBeenCalled();
+        const appData = storeSubject.getAppData();
+        expect(appData.categories).toHaveLength(0);
+        expect(appData.threads).toHaveLength(0);
     });
 });

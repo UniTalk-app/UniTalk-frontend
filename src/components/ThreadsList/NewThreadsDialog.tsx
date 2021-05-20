@@ -4,23 +4,27 @@ import {
     DialogActions,
     Button,
     TextField,
-    Container,
     makeStyles,
     Theme,
     createStyles,
     DialogTitle,
     DialogContent,
+    FormControl,
+    Select,
+    InputLabel,
+    MenuItem
 } from "@material-ui/core";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import CategoryService from "../../services/category.service";
+import AddIcon from "@material-ui/icons/Add";
+import ThreadService from "../../services/thread.service";
 import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-//import { useMainData } from "pages/HomePage/store/StoreProvider";
+import storeSubject from "store/store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         padding: {
+            //height: theme.spacing(45),
             margin: theme.spacing(5),
         },
         header: {
@@ -35,13 +39,30 @@ const useStyles = makeStyles((theme: Theme) =>
         input: {
             minHeight: theme.spacing(20),
         },
+        combo: {
+            width: "100%",
+        }
     })
 );
 
-//const { getData } = useMainData();
-
-const NewCategory: React.FC = () => {
+const NewThreads: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
+    const [categories, setCategories] = React.useState<string | number>("");
+    const [openCombo, setOpenCombo] = React.useState(false);
+    const appData = storeSubject.getAppData();
+
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setCategories(event.target.value as string);
+    };
+
+    const handleClose = () => {
+        setOpenCombo(false);
+    };
+
+    const handleOpen = () => {
+        setOpenCombo(true);
+    };
+    
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -61,17 +82,22 @@ const NewCategory: React.FC = () => {
         }),
         onSubmit: (values) => {
             console.log(values);
-            CategoryService.createCategory({
-                name: values.name,
-                creationTimestamp: Date.now()
+            ThreadService.createThread({
+                catId: 1,
+                creationTimestamp: Date.now(),
+                creatorId: 1,
+                lastReplyAuthorId: 0,
+                lastReplyTimestamp: Date.now(),
+                title: values.name,
+                groupId: 1
             })
                 .then(response => {
                     if (response) {
-                        enqueueSnackbar("Added new category!", {variant: "success", anchorOrigin: {
+                        enqueueSnackbar("Added new thread!", {variant: "success", anchorOrigin: {
                             vertical: "bottom",
                             horizontal: "center",
                         },});
-                        //getData();
+                        storeSubject.updateStore();
                         trigger();
                     }
                 })
@@ -89,15 +115,23 @@ const NewCategory: React.FC = () => {
     });
 
     return (
-        <Container>
-            <AddCircleIcon data-testid="new-category-btn" onClick={trigger}></AddCircleIcon>
+        <>
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                size="small"
+                onClick={trigger}
+            >
+                Create thread
+            </Button>
             <Dialog
                 open={open}
                 onClose={trigger}
                 aria-labelledby="form-dialog-title"
             >
                 <form onSubmit={formik.handleSubmit}>
-                    <DialogTitle>new category</DialogTitle>
+                    <DialogTitle>New thread</DialogTitle>
                     <DialogContent>
                         <TextField
                             className={classes.txtField}
@@ -112,14 +146,39 @@ const NewCategory: React.FC = () => {
                             helperText={(formik.touched.name && formik.errors.name) ?? false}
                         />
                     </DialogContent>
+                    <DialogContent>
+                        <FormControl variant="outlined" className={classes.combo}>
+                            <InputLabel id="demo-simple-select-outlined-label">categories</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                open={openCombo}
+                                onClose={handleClose}
+                                onOpen={handleOpen}
+                                value={categories ? categories : ""}
+                                onChange={handleChange}
+                                label="categories"
+                            >
+                                <MenuItem  key={0} value="All">
+                                    All
+                                </MenuItem >
+                                {appData.categories.map(cat => (
+                                    <MenuItem  key={cat.name}
+                                        value={cat.name}>
+                                        {cat.name}
+                                    </MenuItem >
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </DialogContent>
                     <DialogActions>
                         <Button onClick={trigger} color="primary">Cancel</Button>
                         <Button type="submit" variant="contained" color="primary">Confirm</Button>
                     </DialogActions>
                 </form>
             </Dialog>
-        </Container>
+        </>
     );
 };
 
-export default NewCategory;
+export default NewThreads;
