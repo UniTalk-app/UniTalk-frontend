@@ -21,7 +21,9 @@ import {
     MenuList,
     Paper,
     ClickAwayListener,
-    Divider
+    Divider,
+    ListItem,
+    ListItemText,
 } from "@material-ui/core";
 import {  
     NotificationsActive as NotificationsActiveIcon,
@@ -69,8 +71,26 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     }
 }));
 
-const Navbar: React.FC = () => {
+
+// Just for testing purpose
+type dummyNotif = {
+    name: string,
+    comments:string,
+}
+
+type NotifListProps = {
+    notifications: Array<dummyNotif>
+}
+const Navbar: React.FC<NotifListProps> = (props) => {
     const classes = useStyles();
+    const {
+        notifications
+    } = props;
+    let counter = 0;
+    // eslint-disable-next-line
+    for (const obj of notifications) 
+        counter++;
+
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
@@ -85,13 +105,25 @@ const Navbar: React.FC = () => {
 
         setOpen(false);
     };
-
+   
     function handleListKeyDown(event: React.KeyboardEvent) {
         if (event.key === "Tab") {
             event.preventDefault();
             setOpen(false);
         }
     }
+    
+    const [openNotification, setOpenNotification] = React.useState(false);
+    const anchorRefNotification = React.useRef<HTMLButtonElement>(null);
+    const handleToggleNotification = () => {
+        setOpenNotification((prevOpen) => !prevOpen);
+    };
+    const handleCloseNotification = (event: React.MouseEvent<EventTarget>) => {
+        if (anchorRefNotification.current && anchorRefNotification.current.contains(event.target as HTMLElement)) {
+            return;
+        }
+        setOpenNotification(false);
+    };
 
     const loggedIn = authHeader();
     return (
@@ -99,7 +131,7 @@ const Navbar: React.FC = () => {
             <Toolbar>
                 <Drawer /> 
                 <Typography variant="h5" noWrap>
-            UniTalk
+                UniTalk
                 </Typography>
                 <Box className={classes.searchBar}>
                     <Input
@@ -109,15 +141,46 @@ const Navbar: React.FC = () => {
                     />
                 </Box>
                 <Box className={classes.authButtons}>
+                    {console.log(Object.keys(loggedIn).length === 0)}
                     {(Object.keys(loggedIn).length === 0)?( 
                         <Forms />  
                     ):(
                         <Container className={classes.mainBox}>
-                            <IconButton aria-label="cart">
-                                <StyledBadge badgeContent={4} color="secondary">
-                                    <NotificationsActiveIcon/>
+                            <IconButton ref={anchorRefNotification} onClick={handleToggleNotification}aria-label="cart">
+                                <StyledBadge badgeContent={counter} color="secondary">
+                                    <NotificationsActiveIcon />
                                 </StyledBadge>
                             </IconButton>
+                                    
+                            <Popper style={{width:"13%"}} open={openNotification} anchorEl={anchorRefNotification.current} role={undefined} transition disablePortal>
+                                {({ TransitionProps, placement }) => (
+                                    <Grow {...TransitionProps} style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}>
+                                        <Paper >
+                                            <ClickAwayListener onClickAway={handleCloseNotification}>
+                                                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                                    <ListItem style={{justifyContent:"right"}}>
+                                                        <Typography variant="h6">Notifications</Typography>
+                                                    </ListItem>
+                                                    <Divider />
+                                                    {notifications.map((notifications) => (
+                                                        <Box  key={notifications.name} >
+                                                            <ListItem alignItems="flex-start"onClick={handleCloseNotification}>
+                                                                <Avatar className={classes.avatar}>H</Avatar>
+                                                                <ListItemText
+                                                                    primary={notifications.name}
+                                                                    secondary={notifications.comments}
+                                                                />
+                                                            </ListItem>
+                                                            <Divider variant="middle"/> 
+                                                        </Box>
+                                                    ))}
+                                                </MenuList>
+                                            </ClickAwayListener>
+                                        </Paper>
+                                    </Grow>
+                                )}
+                            </Popper>
+                               
                             <Button
                                 ref={anchorRef}
                                 aria-controls={open ? "menu-list-grow" : undefined}
