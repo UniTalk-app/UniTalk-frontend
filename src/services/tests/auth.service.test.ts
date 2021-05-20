@@ -5,7 +5,7 @@ import BackendAPI from "../backendAPI";
 import mainDataService from "../mainData.service";
 
 const server = setupServer(
-    rest.post(
+    rest.post<{username: string}>(
         BackendAPI.AUTH + "login",
         (req, res, ctx) => {
             if(req.body.username === "admin"){ 

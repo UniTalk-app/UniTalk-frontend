@@ -1,11 +1,10 @@
-import * as React from "react";
-import { render} from "@testing-library/react";
+import { renderWithProviders } from "utils";
 
 import Categories from "../Categories";
 
 describe("Categories", () => {
     test("displays table name", async () => {
-        const { findByText } = render(<Categories categories={[
+        const { findByText } = renderWithProviders(<Categories categories={[
             {name:"Test",creationTime:"Test"}]} />);
             
         const result = await findByText("Categories");

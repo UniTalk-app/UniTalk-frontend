@@ -9,6 +9,7 @@ import {
 
 import HomePage from "pages/HomePage";
 import MainLayout from "pages/MainLayout";
+import { SnackbarProvider } from "notistack";
 
 // @todo separate to other file
 const routes = [
@@ -20,20 +21,22 @@ const routes = [
 
 const App : React.FC = () => {
     return (
-        <StyleProvider>
-            <CssBaseline />
-            <MainLayout>
-                <Router>
-                    <Switch>
-                        {
-                            routes.map(({path, Component}) => (
-                                <Route path={path} key={path}><Component /></Route>
-                            ))
-                        }
-                    </Switch>
-                </Router>
-            </MainLayout>
-        </StyleProvider>
+        <SnackbarProvider maxSnack={2}>
+            <StyleProvider>
+                <CssBaseline />
+                <MainLayout>
+                    <Router>
+                        <Switch>
+                            {
+                                routes.map(({path, Component}) => (
+                                    <Route path={path} key={path}><Component /></Route>
+                                ))
+                            }
+                        </Switch>
+                    </Router>
+                </MainLayout>
+            </StyleProvider>
+        </SnackbarProvider>
     );
 };
 

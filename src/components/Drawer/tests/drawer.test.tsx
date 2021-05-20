@@ -1,18 +1,32 @@
 
-import * as React from "react";
-import { render} from "@testing-library/react";
+import { fireEvent } from "@testing-library/dom";
+
+import { renderWithProviders, mockMainData } from "utils";
 
 import Drawer from "../Drawer";
 
+const mockGroups: Group[] = [
+    {
+        groupId:1,
+        groupName:"Test"
+    }
+];
+
 describe("Drawer", () => {
-    // test("displays element of list", async () => {
-    //     const { findByText } = render(<Drawer groups={[
-    //         {groupId:1,groupName:"Test"}]} />);
+    test("displays element of list", async () => {
+        mockMainData({
+            groups: () => mockGroups
+        });
+
+        const { findByText, findByTestId } = renderWithProviders(<Drawer />);
             
-    //     const name = findByText("Test");
+        const btn = await findByTestId("drawerToogleOn");
 
-    //     expect(name).toBeTruthy();
+        fireEvent.click(btn);
 
-    // });
-  
+        const name = await findByText("Test");
+
+        expect(name).toBeTruthy();
+
+    });
 });

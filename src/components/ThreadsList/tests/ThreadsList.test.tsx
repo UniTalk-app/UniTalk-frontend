@@ -6,7 +6,7 @@ import ThreadsList from "../ThreadsList";
 describe("ThreadsList", () => {
     test("renders ThreadsList", async() => {
         const {findByText} = render(<ThreadsList threads={[
-            {title: "testTitle", author: "testAuthor", lastReply: "testLastReply", replyTime: "testReplyTime", creationTime: "testCreationTime"}
+            {threadId: "123", title: "testTitle", author: "testAuthor", lastReply: "testLastReply", replyTime: "testReplyTime", creationTime: "testCreationTime"}
         ]} />);
 
         const title = await findByText("testTitle");

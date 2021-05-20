@@ -1,6 +1,6 @@
 import axios from "axios";
-import BackendAPI from "./backendAPI";
 import authHeader from "./auth-header";
+import BackendAPI from "./backendAPI";
 
 class ThreadService {
     async createThread( data:{
@@ -13,7 +13,11 @@ class ThreadService {
         groupId: number
     }){
         try {
-            const response = await axios.post(BackendAPI.createThread(data.groupId), data, { headers: authHeader() });
+            const headers = {
+                ...authHeader()
+            };
+
+            const response = await axios.post(BackendAPI.createThread(data.groupId), data, {headers});
             
             return response;
         } catch (e) {
