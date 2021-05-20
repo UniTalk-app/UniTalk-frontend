@@ -1,1 +1,1 @@
-export { renderWithProviders, mockMainData } from "./testHelpers";
+export { renderWithProviders } from "./testHelpers";

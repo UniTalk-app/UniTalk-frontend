@@ -1,8 +1,8 @@
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 
-import MainData from "../mainData.service";
 import BackendAPI from "services/backendAPI";
+import storeSubject from "store/store";
 
 const server = setupServer(
     rest.get(
@@ -69,24 +69,26 @@ describe("MainData service", () => {
         server.close();
     });
     it("is initialized with empty arrays", () => {
-        expect(MainData.groups).toHaveLength(0);
-        expect(MainData.categories).toHaveLength(0);
-        expect(MainData.threads).toHaveLength(0);
+        const appData = storeSubject.getAppData();
+        expect(appData.groups).toHaveLength(0);
+        expect(appData.categories).toHaveLength(0);
+        expect(appData.threads).toHaveLength(0);
     });
 
     it("calls endpoint to receive data", async () => {
-        await MainData.getData();
+        await storeSubject.updateStore();
 
-        //expect(MainData.groups).toHaveLength(1);
-        //expect(MainData.categories).toHaveLength(1);
-        //expect(MainData.threads).toHaveLength(1);
+        const appData = storeSubject.getAppData();
+        expect(appData.groups).toHaveLength(1);
+        expect(appData.categories).toHaveLength(1);
+        expect(appData.threads).toHaveLength(1);
     });
 
     it("calls subscription function after calling the endpoint", async () => {
         const mockFn = jest.fn();
-        MainData.subscribeToServiceChange(mockFn);
+        storeSubject.subscribe(mockFn);
 
-        await MainData.getData();
+        await storeSubject.updateStore();
 
         expect(mockFn).toHaveBeenCalled();
     });
