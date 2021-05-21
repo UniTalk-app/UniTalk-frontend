@@ -86,10 +86,15 @@ const Navbar: React.FC<NotifListProps> = (props) => {
     const {
         notifications
     } = props;
+
+    const notifications1=[...notifications];
     let counter = 0;
-    // eslint-disable-next-line
-    for (const obj of notifications) 
+
+    for (const obj of notifications1){
         counter++;
+        if(obj.name.length >20)
+            obj.name =obj.name.slice(0,17)+"...";
+    }
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -171,7 +176,8 @@ const Navbar: React.FC<NotifListProps> = (props) => {
                                                                     secondary={notifications.comments}
                                                                 />
                                                             </ListItem>
-                                                            <Divider variant="middle"/> 
+                                                            <Divider variant="middle"/>
+
                                                         </Box>
                                                     ))}
                                                 </MenuList>
