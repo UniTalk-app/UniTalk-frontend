@@ -11,6 +11,8 @@ class BackendAPI {
     static createCategory = (groupId: number): string => `${basePath}group/${groupId}/category`;
     static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
     static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
+    static userAvatar = `${basePath}avatar`;
+    
     static GROUP_ALL = `${basePath}group/all`;
     static WEB_SOCKET = "http://localhost:8080/websocket";
 
