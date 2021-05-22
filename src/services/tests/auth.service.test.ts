@@ -1,7 +1,12 @@
 import { setupServer } from "msw/node";
 import { rest } from "msw";
+
+import Role from "store/role";
+
 import AuthService from "../auth.service";
 import BackendAPI from "../backendAPI";
+
+let roles: Role[] = [];
 
 const server = setupServer(
     rest.post<{username: string}>(
@@ -11,7 +16,8 @@ const server = setupServer(
                 return res(
                     ctx.json({
                         status: "success",
-                        token: "abcd"
+                        token: "abcd",
+                        roles
                     }),
                 );
             }
@@ -55,5 +61,23 @@ describe("AuthService", () => {
         });
         expect(Storage.prototype.setItem).toHaveBeenCalled();
         expect(Storage.prototype.setItem).toHaveBeenLastCalledWith("user", "abcd");
+    });
+
+    it("has correct information about user roles", async () => {
+        roles = [Role.user];
+        await AuthService.login({
+            username: "admin",
+            password: "a",
+        });
+
+        expect(AuthService.isSuperUser).toBeFalsy();
+    
+        roles = [Role.moderator];
+        await AuthService.login({
+            username: "admin",
+            password: "a",
+        });
+
+        expect(AuthService.isSuperUser).toBeTruthy();
     });
 });

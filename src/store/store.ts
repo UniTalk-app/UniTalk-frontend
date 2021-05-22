@@ -2,37 +2,10 @@ import axios from "axios";
 import authHeader from "services/auth-header";
 import BackendAPI from "services/backendAPI";
 
-export type StoreObserver = (appData: AppData) => void;
-
-export type AppData = {
-    categories: Category[];
-    threads: Thread[]; 
-    groups: Group[];
-}
-
-export type Thread = {
-    threadId: string,
-    title: string;
-    author: string;
-    lastReply: string;
-    replyTime: string;
-    creationTime: string;
-}
-
-export type Category = {
-    name: string;
-    creationTime: string;
-}
-
-export type Group = {
-    groupId: number;
-    groupName:string;
-}
-
 class StoreSubject {
     private observers: StoreObserver[] = [];
     private appData: AppData = {categories: [], threads: [], groups: []};
-    private currentGroupId = -1;
+    public currentGroupId = -1;
 
     constructor() {
         this.updateStore();
@@ -90,7 +63,6 @@ class StoreSubject {
             observer(appData);
         });
     }
-
 }
 
 const storeSubject = new StoreSubject();

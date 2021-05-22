@@ -5,7 +5,7 @@ import Categories from "../Categories";
 describe("Categories", () => {
     test("displays table name", async () => {
         const { findByText } = renderWithProviders(<Categories categories={[
-            {name:"Test",creationTime:"Test"}]} />);
+            {name:"Test",creationTime:"Test", id: "asd"}]} />);
             
         const result = await findByText("Categories");
         const name = await findByText("Test");

@@ -3,7 +3,6 @@ import { rest } from "msw";
 
 import BackendAPI from "services/backendAPI";
 import storeSubject from "store/store";
-import { body } from "msw/lib/types/context";
 
 const server = setupServer(
     rest.get(
