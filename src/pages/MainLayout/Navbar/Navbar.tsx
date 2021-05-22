@@ -2,6 +2,7 @@ import * as React from "react";
 import {
     Typography, 
     Grow,
+    Dialog,
     AppBar, 
     Toolbar,
     createStyles, 
@@ -35,7 +36,7 @@ import authHeader from "services/auth-header";
 import AuthService from "services/auth.service";
 import Forms from "components/Forms";
 import Drawer from "../../../components/Drawer/Drawer";
-
+import UserProfile from "../../../components/UserProfile/UserProfile";
 
 const StyledBadge = withStyles((theme: Theme) =>
     createStyles({
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const Navbar: React.FC = () => {
     const classes = useStyles();
+    
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
@@ -92,6 +94,16 @@ const Navbar: React.FC = () => {
             setOpen(false);
         }
     }
+
+    const [openProfile, setOpenProfile] = React.useState(false);
+
+    const trigger = () => {
+        setOpenProfile(true);
+    };
+
+    const handleCloseProfile = () => {
+        setOpenProfile(false);
+    };
 
     const loggedIn = authHeader();
     return (
@@ -134,7 +146,11 @@ const Navbar: React.FC = () => {
                                                 <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                                                     <MenuItem onClick={handleClose}><Avatar className={classes.avatar}>H</Avatar>rafi</MenuItem>
                                                     <Divider />
-                                                    <MenuItem onClick={handleClose}><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
+                                                    <MenuItem onClick={ (e) => {
+                                                        handleClose(e);
+                                                        trigger();
+                                                    }}
+                                                    ><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
                                                     <MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem>
                                                     <MenuItem onClick={(e) => {
                                                         AuthService.logout();
@@ -148,6 +164,13 @@ const Navbar: React.FC = () => {
                                     </Grow>
                                 )}
                             </Popper>
+                            <Dialog
+                                open={openProfile}
+                                onClose={handleCloseProfile}
+                                aria-labelledby="form-dialog-title"
+                            >
+                                <UserProfile/>
+                            </Dialog>
                         </Container>
                     )}  
                 </Box>
