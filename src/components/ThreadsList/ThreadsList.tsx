@@ -4,17 +4,23 @@ import {
     Divider,
     Chip,
     Grid,
+    Button,
     Typography,
     GridSize,
     Dialog,
     createStyles,
     Theme,
     makeStyles,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "./NewThreadsDialog";
 import { Thread } from "store/store";
 import Chat from "components/Chat";
+import threadService from "services/thread.service";
+import { useSnackbar } from "notistack";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -75,12 +81,36 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
 
     const classes = useStyles();
     const [openChat, setOpenChat] = React.useState(false);
+    const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
     const handleOpenChat = () => setOpenChat(true);
     const handleCloseChat = () => setOpenChat(false);
+    const handleOpenConfirmDelete = () => setOpenConfirmDelete(true);
+    const handleCloseConfirmDelete = () => setOpenConfirmDelete(false);
     const [selectedThread, setSelectedThread] = React.useState<Thread>({} as Thread);
+    const { enqueueSnackbar } = useSnackbar();
+
+
+    const ConfirmDialog : React.FC = () => {
+        return (
+            <Dialog onClose={handleCloseConfirmDelete} open={openConfirmDelete}>
+                <DialogTitle>Confirm action</DialogTitle>
+                <DialogContent>Are you sure you want to delete thread?</DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseConfirmDelete}>
+                        Cancel
+                    </Button>
+                    <Button color="secondary" variant="contained" onClick={() => threadService.deleteThread(selectedThread.threadId, handleCloseConfirmDelete, enqueueSnackbar)}>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
 
     return (
         <Box>
+            <ConfirmDialog />
+
             <Dialog
                 className={ classes.dialogPaper}
                 open={openChat}
@@ -146,7 +176,8 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                                 thread: value,
                                 handleOpenChat: handleOpenChat,
                                 setSelectedThread: setSelectedThread,
-                                classes: classes
+                                classes: classes,
+                                handleOpenConfirmDelete: handleOpenConfirmDelete
                             })}
                         </Grid>
                     ))}

@@ -13,7 +13,8 @@ type ThreadInfoProps = {
     thread: Thread,
     handleOpenChat: () => void,
     setSelectedThread: (thread: Thread) => void,
-    classes: ClassNameMap<"margin" | "small" | "buttonThread" | "dialogPaper">
+    classes: ClassNameMap<"margin" | "small" | "buttonThread" | "dialogPaper">,
+    handleOpenConfirmDelete: () => void,
 }
 
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
@@ -23,6 +24,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
         handleOpenChat,
         setSelectedThread,
         classes,
+        handleOpenConfirmDelete: handleOpenConfirmDelete,
     } = props;
 
     return (
@@ -67,7 +69,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                             <IconButton onClick={(e) => {e.stopPropagation();}}>
                                 <CreateIcon fontSize={"small"} />
                             </IconButton>
-                            <IconButton onClick={(e) => {e.stopPropagation();}}>
+                            <IconButton onClick={(e) => {e.stopPropagation(); setSelectedThread(thread); handleOpenConfirmDelete();}}>
                                 <DeleteIcon fontSize={"small"} />
                             </IconButton>
                         </Grid>
