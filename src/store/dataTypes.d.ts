@@ -16,7 +16,7 @@ type Thread = {
 }
 
 type Category = {
-    id: string;
+    categoryId: string;
     name: string;
     creationTime: string;
 }

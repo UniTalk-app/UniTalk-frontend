@@ -109,7 +109,7 @@ const Categories: React.FC<CategListProps> = (props) => {
                                         </Button>
                                         {
                                             AuthService.isSuperUser && (
-                                                <Button className={classes.deleteIcon} onClick={() => onDeleteCategory(cat.id)}>
+                                                <Button className={classes.deleteIcon} onClick={() => onDeleteCategory(cat.categoryId)}>
                                                     <DeleteIcon />
                                                 </Button>)
                                         }
