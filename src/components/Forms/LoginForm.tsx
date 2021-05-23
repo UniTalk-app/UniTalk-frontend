@@ -46,7 +46,6 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
     });
 
     const handleClick = (status: number | undefined) => {
-        console.log(status);
         if(status==200){
             const message = "Successfully logged in!";
             enqueueSnackbar(message, {
@@ -56,8 +55,7 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
                     horizontal: "center",
                 },
             });
-            window.location.reload(false);
-        }else{
+        } else{
             const message = "Error";
             enqueueSnackbar(message, {
                 variant: "error",
@@ -67,6 +65,7 @@ const LoginForm : React.FC<LoginFormProps> = (props) => {
                 },
             });
         }
+        onClose();
     };
 
     return (

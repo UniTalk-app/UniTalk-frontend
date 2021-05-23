@@ -1,5 +1,5 @@
 import * as React from "react";
-import storeSubject, { AppData } from "./store";
+import storeSubject from "./store";
 
 export const useStore = () : AppData => {
     const [appData, setAppData] = React.useState<AppData>({categories: [], threads: [], groups: []});

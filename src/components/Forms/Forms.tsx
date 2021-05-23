@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Forms : React.FC = () => {
+type FormsProps = {
+    updateNavbar: () => void;
+}
+
+const Forms : React.FC<FormsProps> = ({updateNavbar}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [loginForm, setLoginForm] = React.useState(false);
@@ -40,6 +44,7 @@ const Forms : React.FC = () => {
 
     const handleClose = () => {
         setOpen(false);
+        updateNavbar();
     };
 
     return (

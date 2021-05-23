@@ -11,6 +11,15 @@ class CategoryService {
         const response = await axios.post(BackendAPI.createCategory(1) , data, { headers });
         return response;
     }
+
+    async deleteCategory(categoryId: string, groupId: number) {
+        const headers = {
+            ...authHeader()
+        };
+
+        const response = await axios.delete(BackendAPI.deleteCategory(groupId, categoryId), { headers });
+        return response;
+    }
 }
 
 export default new CategoryService();

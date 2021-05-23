@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "./NewThreadsDialog";
-import { Thread } from "store/store";
 import Chat from "components/Chat";
 
 type ThreadsListProps = {

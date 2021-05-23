@@ -35,8 +35,8 @@ import {
 import authHeader from "services/auth-header";
 import AuthService from "services/auth.service";
 import Forms from "components/Forms";
-import Drawer from "../../../components/Drawer/Drawer";
-import UserProfile from "../../../components/UserProfile/UserProfile";
+import UserProfile from "components/UserProfile/UserProfile";
+import Drawer from "components/Drawer/Drawer";
 
 const StyledBadge = withStyles((theme: Theme) =>
     createStyles({
@@ -75,6 +75,9 @@ const Navbar: React.FC = () => {
     
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
+    const [, setP] = React.useState(false);
+
+    const forceUpdate = () => setP((a) => !a);
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -122,7 +125,7 @@ const Navbar: React.FC = () => {
                 </Box>
                 <Box className={classes.authButtons}>
                     {(Object.keys(loggedIn).length === 0)?( 
-                        <Forms />  
+                        <Forms updateNavbar={forceUpdate} />  
                     ):(
                         <Container className={classes.mainBox}>
                             <IconButton aria-label="cart">

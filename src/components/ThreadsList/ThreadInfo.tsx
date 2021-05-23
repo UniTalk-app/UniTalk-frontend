@@ -5,7 +5,6 @@ import {
     Delete as DeleteIcon,
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
-import { Thread } from "store/store";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 
 type ThreadInfoProps = {
