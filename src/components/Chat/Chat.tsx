@@ -12,11 +12,10 @@ import {
     FilterList as FilterListIcon,
     FormatBold as FormatBoldIcon,
     FormatItalic as FormatItalicIcon,
-    FormatUnderlined as FormatUnderlinedIcon,
 } from "@material-ui/icons/";
 import { deepOrange,} from "@material-ui/core/colors/";
 import BackendAPI from "services/backendAPI";
-import ReactHtmlParser from "react-html-parser";
+import ReactMarkdown from "react-markdown";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -24,21 +23,12 @@ const useStyles = makeStyles((theme: Theme) =>
             width: "100%",
             background:"#282828",
         },
-        input: {
-            background:"#222222",
-        },
         header: {
             textAlign: "center",
         },
         bold: {
             fontWeight: "bold",
             textAlign: "center",
-        },
-        italic: {
-            fontStyle: "italic"
-        },
-        underline: {
-            textDecorationLine: "underline"
         },
         messageBox:{
             height: "60vh",
@@ -95,55 +85,6 @@ const getDataString= ( date : Date) =>{
     const options = {day: "2-digit",  month: "2-digit" ,year: "numeric" ,hour:"2-digit",minute : "2-digit"}as const;
     const dataStr = date.toLocaleDateString("de-DE",options);
     return dataStr;
-};
-
-const getFormattedText=(text:string)=>{
-    let index=text.search("_");
-    while(index!=-1)
-    {
-        const index2=text.substring(index+1).search("_");
-        if(index2==-1)
-        {
-            break;
-        }
-
-        text=text.replace("_","<ins>");
-        text=text.replace("_","</ins>");
-
-        index=text.search("_");
-    }
-
-    index=text.search("##");
-    while(index!=-1)
-    {
-        const index2=text.substring(index+1).search("##");
-        if(index2==-1)
-        {
-            break;
-        }
-
-        text=text.replace("##","<strong>");
-        text=text.replace("##","</strong>");
-
-        index=text.search("##");
-    }
-
-    index=text.search("#");
-    while(index!=-1)
-    {
-        const index2=text.substring(index+1).search("#");
-        if(index2==-1)
-        {
-            break;
-        }
-
-        text=text.replace("#","<i>");
-        text=text.replace("#","</i>");
-
-        index=text.search("#");
-    }
-
-    return text;
 };
 
 let stompClient : Stomp.Client;
@@ -268,7 +209,7 @@ const Chat: React.FC<ChatProps> = (props) => {
 
                     <Box mt={2} pl={4} pr={4} >
                         {messages.map( (msg,index) => (
-                            <Grid container direction={"column"} key={index} spacing={3} justify="space-evenly" alignItems="stretch">
+                            <Grid container direction={"column"} key={index} spacing={1} justify="space-evenly" alignItems="stretch">
                                 <Grid item>
                                     <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
                                         <Grid item>
@@ -285,8 +226,10 @@ const Chat: React.FC<ChatProps> = (props) => {
                                                     <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
                                                 </Grid>
                                             </Grid>
-                                            <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
-                                                {ReactHtmlParser(getFormattedText(msg.content))}
+                                            <Typography className={classes.message} variant={"body2"} >
+                                                <ReactMarkdown>
+                                                    {msg.content}
+                                                </ReactMarkdown>
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -346,14 +289,11 @@ const Chat: React.FC<ChatProps> = (props) => {
                                         }}
                                     />
                                     <FormHelperText variant="filled" filled={true}>
-                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"##");}}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"**");}}>
                                             <FormatBoldIcon fontSize={"small"} />
                                         </IconButton>
-                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"#");}}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"*");}}>
                                             <FormatItalicIcon fontSize={"small"} />
-                                        </IconButton>
-                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"_");}}>
-                                            <FormatUnderlinedIcon fontSize={"small"} />
                                         </IconButton>
                                     </FormHelperText>
                                 </Box>
