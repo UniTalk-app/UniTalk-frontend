@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconButton,Container,Dialog,Avatar,Button,DialogActions,Box, createStyles, Grid, GridSize, makeStyles, Theme, Typography} from "@material-ui/core";
+import { IconButton,Avatar,Button,Box, Grid, GridSize, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
@@ -7,7 +7,6 @@ import {
 } from "@material-ui/icons";
 import { Thread } from "store/store";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
-import Chat from "../Chat/Chat";
 
 type ThreadInfoProps = {
     firstColumnSize: boolean | GridSize,

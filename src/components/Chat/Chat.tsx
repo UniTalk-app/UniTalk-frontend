@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState, KeyboardEvent } from "react";
-import {withStyles,OutlinedInput,FormControl,InputLabel,FilledInput,FormHelperText,Box,Divider, Button,DialogActions, Typography,makeStyles,InputAdornment,Input,createStyles,Grid,TextField,Avatar, Theme,IconButton} from "@material-ui/core";
+import {FormHelperText,Box,Divider, Typography,makeStyles,InputAdornment,Input,createStyles,Grid,TextField,Avatar, Theme,IconButton} from "@material-ui/core";
 import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
@@ -10,13 +10,13 @@ import {
     ArrowBack as ArrowBackIcon,
     Search as SearchIcon,
     FilterList as FilterListIcon,
-    Error as ErrorIcon,
     FormatBold as FormatBoldIcon,
     FormatItalic as FormatItalicIcon,
     FormatUnderlined as FormatUnderlinedIcon,
 } from "@material-ui/icons/";
 import { deepOrange,} from "@material-ui/core/colors/";
 import BackendAPI from "services/backendAPI";
+import ReactHtmlParser from "react-html-parser";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,8 +31,14 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: "center",
         },
         bold: {
+            fontWeight: "bold",
             textAlign: "center",
-            fontWeight: 600
+        },
+        italic: {
+            fontStyle: "italic"
+        },
+        underline: {
+            textDecorationLine: "underline"
         },
         messageBox:{
             height: "60vh",
@@ -89,6 +95,55 @@ const getDataString= ( date : Date) =>{
     const options = {day: "2-digit",  month: "2-digit" ,year: "numeric" ,hour:"2-digit",minute : "2-digit"}as const;
     const dataStr = date.toLocaleDateString("de-DE",options);
     return dataStr;
+};
+
+const getFormattedText=(text:string)=>{
+    let index=text.search("_");
+    while(index!=-1)
+    {
+        const index2=text.substring(index+1).search("_");
+        if(index2==-1)
+        {
+            break;
+        }
+
+        text=text.replace("_","<ins>");
+        text=text.replace("_","</ins>");
+
+        index=text.search("_");
+    }
+
+    index=text.search("##");
+    while(index!=-1)
+    {
+        const index2=text.substring(index+1).search("##");
+        if(index2==-1)
+        {
+            break;
+        }
+
+        text=text.replace("##","<strong>");
+        text=text.replace("##","</strong>");
+
+        index=text.search("##");
+    }
+
+    index=text.search("#");
+    while(index!=-1)
+    {
+        const index2=text.substring(index+1).search("#");
+        if(index2==-1)
+        {
+            break;
+        }
+
+        text=text.replace("#","<i>");
+        text=text.replace("#","</i>");
+
+        index=text.search("#");
+    }
+
+    return text;
 };
 
 let stompClient : Stomp.Client;
@@ -204,11 +259,9 @@ const Chat: React.FC<ChatProps> = (props) => {
                             <Typography variant={"h5"} className={classes.bold} >
                                 Beginning of everything!
                             </Typography>
-
                             <Typography color="textSecondary" className={classes.header}>
                                 Write Something!
                             </Typography>
-
                             <Divider />
                         </Grid>
                     </Box>
@@ -233,7 +286,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                                                 </Grid>
                                             </Grid>
                                             <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
-                                                {msg.content}
+                                                {ReactHtmlParser(getFormattedText(msg.content))}
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -244,7 +297,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                 </ScrollableFeed>
             </Box>
 
-            <Box mt={10} pb={5} pl={5} pr={5}>
+            <Box mt={5} pb={5} pl={10} pr={10}>
                 <Formik
                     initialValues={{
                         content: "",
@@ -275,9 +328,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                                     }
                                 }}
                             >
-
                                 <Box bgcolor={"background.dp04" } border={1} borderColor="grey.600" borderRadius={"borderRadius"}>
-
                                     <TextField
                                         id="content"
                                         label="Enter to send. Shift + Enter to add new line"
@@ -294,15 +345,14 @@ const Chat: React.FC<ChatProps> = (props) => {
                                             maxLength:512,
                                         }}
                                     />
-
                                     <FormHelperText variant="filled" filled={true}>
-                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"##");}}>
                                             <FormatBoldIcon fontSize={"small"} />
                                         </IconButton>
-                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"#");}}>
                                             <FormatItalicIcon fontSize={"small"} />
                                         </IconButton>
-                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"_");}}>
                                             <FormatUnderlinedIcon fontSize={"small"} />
                                         </IconButton>
                                     </FormHelperText>
@@ -314,34 +364,5 @@ const Chat: React.FC<ChatProps> = (props) => {
         </Box>
     );
 };
-/*
-<Box bgcolor={"background.dp04" } boxShadow={1} border={1} borderColor="grey.500" borderRadius={"borderRadius"}>
-                                        <TextField
-                                            className={classes.textField}
-                                            id="content"
-                                            label="Enter to send. Shift + Enter to add new line"
-                                            name="content"
-                                            autoComplete="content"
-                                            onChange={props.handleChange}
-                                            value={props.values.content}
-                                            autoFocus
-                                            multiline
-                                            rows={4}
-                                            variant="outlined"
-                                            inputProps={{ maxLength: 512 }}
-                                        />
-                                                                                <FilledInput
-                                                                                    id="content"
-                                                                                    value={props.values.content}
-                                                                                    onChange={props.handleChange}
-                                                                                    autoFocus multiline rows={4}
-                                                                                    fullWidth={true}
-                                                                                    inputProps={{
-                                                                                        maxLength: 512,
-                                                                                        classes: {
-                                                                                            notchedOutline: classes.notchedOutline
-                                                                                        }
-                                                                                    }}
-                                                                                />**/
 
 export default Chat;
