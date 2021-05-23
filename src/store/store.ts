@@ -13,6 +13,8 @@ class StoreSubject {
 
     public getAppData() {return this.appData;}
 
+    public getCurrentGroupId() {return this.currentGroupId;}
+
     public subscribe(observer: StoreObserver) {
         this.observers.push(observer);
     }

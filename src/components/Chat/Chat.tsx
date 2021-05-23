@@ -1,40 +1,37 @@
 import * as React from "react";
 import { useEffect, useState, KeyboardEvent } from "react";
-import {
-    Box,
-    Divider,
-    Button,
-    Typography,
-    makeStyles,
-    createStyles,
-    Grid,
-    TextField,
-} from "@material-ui/core";
+import {FormHelperText,Box,Divider, Typography,makeStyles,InputAdornment,Input,createStyles,Grid,TextField,Avatar, Theme,IconButton} from "@material-ui/core";
 import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import ChatService from "services/chatData.service";
 import ScrollableFeed from "react-scrollable-feed";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import {
+    ArrowBack as ArrowBackIcon,
+    Search as SearchIcon,
+    FilterList as FilterListIcon,
+    FormatBold as FormatBoldIcon,
+    FormatItalic as FormatItalicIcon,
+} from "@material-ui/icons/";
+import { deepOrange,} from "@material-ui/core/colors/";
 import BackendAPI from "services/backendAPI";
+import ReactMarkdown from "react-markdown";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
-            width: "100%"
+            width: "100%",
+            background:"#282828",
         },
         header: {
             textAlign: "center",
         },
-        grid: {
-            alignItems: "center",
-        },
         bold: {
+            fontWeight: "bold",
             textAlign: "center",
-            fontWeight: 600
         },
-        messageBox: {
-            height: "590px",
+        messageBox:{
+            height: "60vh",
         },
         image: {
             display: "block",
@@ -48,15 +45,19 @@ const useStyles = makeStyles(() =>
             wordWrap: "break-word",
             width: "700px",
             whiteSpace: "pre-line",
-            paddingLeft: 20,
-        }
+        },
+        orange: {
+            color: theme.palette.getContrastText(deepOrange[500]),
+            backgroundColor: deepOrange[500],
+        },
     })
 );
 
 type ChatProps = {
     onClose: () => void,
     threadId: string,
-    threadTitle: string
+    threadTitle: string,
+    threadDate: string,
 }
 
 type Message = {
@@ -80,15 +81,22 @@ const validate = (values: FormValues) => {
     return errors;
 };
 
-let stompClient: Stomp.Client;
-let socket: WebSocket;
+const getDataString= ( date : Date) =>{
+    const options = {day: "2-digit",  month: "2-digit" ,year: "numeric" ,hour:"2-digit",minute : "2-digit"}as const;
+    const dataStr = date.toLocaleDateString("de-DE",options);
+    return dataStr;
+};
+
+let stompClient : Stomp.Client;
+let socket : WebSocket;
 
 const Chat: React.FC<ChatProps> = (props) => {
     const classes = useStyles();
     const {
         onClose,
         threadId,
-        threadTitle
+        threadTitle,
+        threadDate,
     } = props;
     const [messages, setMessages] = useState([] as Array<Message>);
 
@@ -119,16 +127,11 @@ const Chat: React.FC<ChatProps> = (props) => {
         console.log("Disconnected");
     };
 
-    const onMessageReceived = (msg: Stomp.Frame) => {
-        console.log(msg);
-        const date = new Date(JSON.parse(msg.body).sendingTimestamp);
-        const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
-            date.getHours().toString() + ":" + date.getMinutes().toString();
-
+    const onMessageReceived = (msg :Stomp.Frame) =>{
         const newMsg = {
             content: JSON.parse(msg.body).content,
             senderUsername: JSON.parse(msg.body).senderUsername,
-            sendingTimestamp: dateStr,
+            sendingTimestamp: getDataString(new Date(JSON.parse(msg.body).sendingTimestamp)),
         };
 
         setMessages(p => [...p, newMsg]);
@@ -144,18 +147,14 @@ const Chat: React.FC<ChatProps> = (props) => {
         stompClient.send("/chat/room/" + threadId, {}, JSON.stringify(message));
     };
 
-    const loadMessages = () => {
-        const messagesPromise = ChatService.messages(Number(threadId));
-        messagesPromise.then(function (messages: Message[]) {
-            messages.map(function (message: Message) {
-                const date = new Date(message.sendingTimestamp);
-                const dateStr = date.getDate().toString() + "." + date.getMonth().toString() + "." + date.getFullYear().toString() + " " +
-                    date.getHours().toString() + ":" + date.getMinutes().toString();
-
+    const loadMessages=()=>{
+        const messagesPromise=ChatService.messages(Number(threadId));
+        messagesPromise.then(function(messages : Message[]){
+            messages.map(function(message : Message){
                 const newMessage = {
                     content: message.content,
                     senderUsername: message.senderUsername,
-                    sendingTimestamp: dateStr,
+                    sendingTimestamp: getDataString(new Date(message.sendingTimestamp)),
                 };
 
                 setMessages(p => [...p, newMessage]);
@@ -164,20 +163,33 @@ const Chat: React.FC<ChatProps> = (props) => {
     };
 
     return (
-        <Box bgcolor={"background.dp02"}>
-            <Box mt={1} pl={3} pr={3} pb={1} >
-                <Grid container direction={"row"} spacing={1} className={classes.grid} >
+        <Box bgcolor={"background.dp02"} >
+            <Box pl={3} pr={3} >
+                <Grid container direction="row" spacing={1} justify="space-between" alignItems="center">
                     <Grid item >
-                        <Button onClick={onClose}> <ArrowBackIcon /></Button>
+                        <Grid container direction="row" spacing={1} justify="flex-start" alignItems="center">
+                            <Grid item>
+                                <IconButton onClick={onClose}>
+                                    <ArrowBackIcon/>
+                                </IconButton>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h5" color="textPrimary" className={classes.header}>{threadTitle} </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>{getDataString(new Date(threadDate))}</Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item >
-                        <Typography variant="h5" color="textPrimary" className={classes.header}>{threadTitle} </Typography>
-                    </Grid>
-                    <Grid item >
-                        <Typography variant={"caption"} color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                        <Input
+                            placeholder="Search…"
+                            startAdornment={<InputAdornment position="start"><SearchIcon /></InputAdornment>}
+                            endAdornment={<InputAdornment position="end"><FilterListIcon /></InputAdornment>}
+                        />
                     </Grid>
                 </Grid>
-                <Divider />
+                <Divider/>
             </Box>
 
             <Box mt={4} className={classes.messageBox}>
@@ -188,31 +200,39 @@ const Chat: React.FC<ChatProps> = (props) => {
                             <Typography variant={"h5"} className={classes.bold} >
                                 Beginning of everything!
                             </Typography>
-
                             <Typography color="textSecondary" className={classes.header}>
                                 Write Something!
                             </Typography>
-
                             <Divider />
                         </Grid>
                     </Box>
 
-                    <Box mt={2} pl={8} pr={8} >
-                        {messages.map((msg, index) => (
-                            <Grid container direction={"column"} key={index} >
-
-                                <Grid container direction={"row"} spacing={1} className={classes.grid}>
-                                    <Grid item >
-                                        <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
+                    <Box mt={2} pl={4} pr={4} >
+                        {messages.map( (msg,index) => (
+                            <Grid container direction={"column"} key={index} spacing={1} justify="space-evenly" alignItems="stretch">
+                                <Grid item>
+                                    <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
+                                        <Grid item>
+                                            <Avatar src={process.env.PUBLIC_URL + "pluto-sign-up.png"} className={classes.orange}>
+                                                User first letter
+                                            </Avatar>
+                                        </Grid>
+                                        <Grid item >
+                                            <Grid container direction={"row"} spacing={1} alignItems="center">
+                                                <Grid item >
+                                                    <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
+                                                </Grid>
+                                                <Grid item >
+                                                    <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Typography className={classes.message} variant={"body2"} >
+                                                <ReactMarkdown>
+                                                    {msg.content}
+                                                </ReactMarkdown>
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item >
-                                        <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid item >
-                                    <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
-                                        {msg.content}
-                                    </Typography>
                                 </Grid>
                             </Grid>
                         ))}
@@ -220,7 +240,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                 </ScrollableFeed>
             </Box>
 
-            <Box mt={10} pb={5} pl={5} pr={5}>
+            <Box mt={5} pb={5} pl={10} pr={10}>
                 <Formik
                     initialValues={{
                         content: "",
@@ -251,21 +271,32 @@ const Chat: React.FC<ChatProps> = (props) => {
                                     }
                                 }}
                             >
-                                <TextField
-                                    className={classes.textField}
-                                    id="content"
-                                    label="Enter to send. Shift + Enter to add new line"
-                                    name="content"
-                                    autoComplete="content"
-                                    onChange={props.handleChange}
-                                    value={props.values.content}
-                                    autoFocus
-                                    multiline
-                                    rows={4}
-                                    variant="filled"
-                                    inputProps={{ maxLength: 512 }}
-                                />
-
+                                <Box bgcolor={"background.dp04" } border={1} borderColor="grey.600" borderRadius={"borderRadius"}>
+                                    <TextField
+                                        id="content"
+                                        label="Enter to send. Shift + Enter to add new line"
+                                        name="content"
+                                        autoComplete="content"
+                                        onChange={props.handleChange}
+                                        value={props.values.content}
+                                        fullWidth={true}
+                                        autoFocus
+                                        multiline
+                                        rows={4}
+                                        variant="filled"
+                                        inputProps={{
+                                            maxLength:512,
+                                        }}
+                                    />
+                                    <FormHelperText variant="filled" filled={true}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"**");}}>
+                                            <FormatBoldIcon fontSize={"small"} />
+                                        </IconButton>
+                                        <IconButton onClick={(e) => {e.stopPropagation();props.setFieldValue("content",props.values.content+"*");}}>
+                                            <FormatItalicIcon fontSize={"small"} />
+                                        </IconButton>
+                                    </FormHelperText>
+                                </Box>
                             </Form>
                         )}
                 </Formik>

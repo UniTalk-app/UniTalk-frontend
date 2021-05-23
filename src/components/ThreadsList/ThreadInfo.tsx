@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Avatar, Box, Grid, GridSize, Typography} from "@material-ui/core";
+import { IconButton,Avatar,Button,Box, Grid, GridSize, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
@@ -12,7 +12,8 @@ type ThreadInfoProps = {
     thread: Thread,
     handleOpenChat: () => void,
     setSelectedThread: (thread: Thread) => void,
-    classes: ClassNameMap<"margin" | "small">
+    classes: ClassNameMap<"margin" | "small" | "buttonThread" | "dialogPaper">,
+    handleOpenConfirmDelete: () => void,
 }
 
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
@@ -22,42 +23,58 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
         handleOpenChat,
         setSelectedThread,
         classes,
+        handleOpenConfirmDelete: handleOpenConfirmDelete,
     } = props;
 
     return (
-        <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} width={"100%"} height={"40px"} pl={1} pr={1} display={"flex"}
-            justifyContent={"center"} onClick={() => {
-                setSelectedThread(thread);
-                handleOpenChat();
-            }}>
-            <Grid container justify={"space-between"} alignItems={"center"}>
-                <Grid item sm={firstColumnSize}>
-                    <Typography variant={"body1"}>{thread.title}</Typography>
-                </Grid>
-                <Grid item>
-                    <Box display="flex" alignItems="center">
-                        <Avatar className={classes.small + " " + classes.margin}/>
-                        <Typography variant={"body2"}>{thread.author}</Typography>
-                    </Box>
-                </Grid>
-                <Grid item>
-                    <Box display="flex" alignItems="center">
-                        <Avatar className={classes.small + " " + classes.margin}/>
-                        <Typography variant={"body2"}>{thread.lastReply}</Typography>
-                    </Box>
-                </Grid>
-                <Grid item>
-                    <Typography variant={"body2"}>{thread.replyTime}</Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant={"body2"}>{thread.creationTime}</Typography>
-                </Grid>
-                <Grid item>
-                    <VisibilityIcon fontSize={"small"} />
-                    <CreateIcon fontSize={"small"} />
-                    <DeleteIcon fontSize={"small"} />
-                </Grid>
-            </Grid>
+        <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} height={"40px"}>
+
+            <Button
+                size="small"
+                onClick={() => {
+                    setSelectedThread(thread);
+                    handleOpenChat();
+                }}
+                className={classes.buttonThread}
+                disableElevation
+            >
+                <Box justifyContent={"center"} width={"100%"} display="flex">
+                    <Grid container justify={"space-between"} alignItems={"center"}>
+                        <Grid item sm={firstColumnSize}>
+                            <Typography variant={"body1"}>{thread.title}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Box display="flex" alignItems="center">
+                                <Avatar className={classes.small + " " + classes.margin}/>
+                                <Typography variant={"body2"}>{thread.author}</Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item>
+                            <Box display="flex" alignItems="center">
+                                <Avatar className={classes.small + " " + classes.margin}/>
+                                <Typography variant={"body2"}>{thread.lastReply}</Typography>
+                            </Box>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant={"body2"}>{thread.lastReply}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant={"body2"}>10h</Typography>
+                        </Grid>
+                        <Grid item >
+                            <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                <VisibilityIcon fontSize={"small"} />
+                            </IconButton>
+                            <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                <CreateIcon fontSize={"small"} />
+                            </IconButton>
+                            <IconButton onClick={(e) => {e.stopPropagation(); setSelectedThread(thread); handleOpenConfirmDelete();}}>
+                                <DeleteIcon fontSize={"small"} />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Button>
         </Box>
     );
 };
