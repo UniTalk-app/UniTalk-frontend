@@ -28,12 +28,21 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     margin: {
         marginRight: theme.spacing(0.3)
     },
+    dialogPaper: {
+        minHeight: "100vh",
+        maxHeight: "100vh",
+    },
+    buttonThread: {
+        width: "100%",
+        height: "100%",
+        padding: "1",
+    },
 }));
 
 const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     const { threads } = props;
 
-    const firstColumnSize = 5;
+    const firstColumnSize = 4;
     const headers = [
         "Author",
         "Last replied by",
@@ -73,6 +82,7 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     return (
         <Box>
             <Dialog
+                className={ classes.dialogPaper}
                 open={openChat}
                 onClose={handleCloseChat}
                 aria-labelledby="max-width-dialog-title"
@@ -80,7 +90,7 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                 maxWidth = {"md"}
                 color={"background.dp02"}
             >
-                <Chat onClose={handleCloseChat} threadId={selectedThread.threadId} threadTitle={selectedThread.title} />
+                <Chat onClose={handleCloseChat} threadId={selectedThread.threadId} threadTitle={selectedThread.title} threadDate={selectedThread.creationTimestamp}/>
             </Dialog>
 
             <Box display="flex" alignItems="center" mb={1.5}>

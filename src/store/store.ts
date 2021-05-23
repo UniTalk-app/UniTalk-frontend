@@ -16,7 +16,7 @@ export type Thread = {
     author: string;
     lastReply: string;
     replyTime: string;
-    creationTime: string;
+    creationTimestamp: string;
 }
 
 export type Category = {

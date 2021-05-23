@@ -1,20 +1,6 @@
 import * as React from "react";
 import { useEffect, useState, KeyboardEvent } from "react";
-import {
-    Box,
-    Divider,
-    Button,
-    DialogActions,
-    Typography,
-    makeStyles,
-    InputAdornment,
-    Input,
-    createStyles,
-    Grid,
-    TextField,
-    Avatar,
-    Theme,
-} from "@material-ui/core";
+import {withStyles,OutlinedInput,FormControl,InputLabel,FilledInput,FormHelperText,Box,Divider, Button,DialogActions, Typography,makeStyles,InputAdornment,Input,createStyles,Grid,TextField,Avatar, Theme,IconButton} from "@material-ui/core";
 import { FormikErrors, Form, Formik } from "formik";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
@@ -25,17 +11,21 @@ import {
     Search as SearchIcon,
     FilterList as FilterListIcon,
     Error as ErrorIcon,
+    FormatBold as FormatBoldIcon,
+    FormatItalic as FormatItalicIcon,
+    FormatUnderlined as FormatUnderlinedIcon,
 } from "@material-ui/icons/";
-import {
-    deepOrange,
-} from "@material-ui/core/colors/";
-
+import { deepOrange,} from "@material-ui/core/colors/";
 import BackendAPI from "services/backendAPI";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         textField: {
-            width: "100%"
+            width: "100%",
+            background:"#282828",
+        },
+        input: {
+            background:"#222222",
         },
         header: {
             textAlign: "center",
@@ -67,9 +57,11 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-type ChatProps ={
-    trigger: () => void,
-    thread: Thread
+type ChatProps = {
+    onClose: () => void,
+    threadId: string,
+    threadTitle: string,
+    threadDate: string,
 }
 
 type Message = {
@@ -107,7 +99,8 @@ const Chat: React.FC<ChatProps> = (props) => {
     const {
         onClose,
         threadId,
-        threadTitle
+        threadTitle,
+        threadDate,
     } = props;
     const [messages, setMessages] = useState([] as Array<Message>);
 
@@ -159,7 +152,7 @@ const Chat: React.FC<ChatProps> = (props) => {
     };
 
     const loadMessages=()=>{
-        const messagesPromise=ChatService.messages(Number(thread.threadId));
+        const messagesPromise=ChatService.messages(Number(threadId));
         messagesPromise.then(function(messages : Message[]){
             messages.map(function(message : Message){
                 const newMessage = {
@@ -174,24 +167,21 @@ const Chat: React.FC<ChatProps> = (props) => {
     };
 
     return (
-        <Box bgcolor={"background.dp02"} height={"100%"}>
-
+        <Box bgcolor={"background.dp02"} >
             <Box pl={3} pr={3} >
                 <Grid container direction="row" spacing={1} justify="space-between" alignItems="center">
                     <Grid item >
                         <Grid container direction="row" spacing={1} justify="flex-start" alignItems="center">
                             <Grid item>
-                                <DialogActions>
-                                    <Button onClick={trigger}>
-                                        <ArrowBackIcon/>
-                                    </Button>
-                                </DialogActions>
+                                <IconButton onClick={onClose}>
+                                    <ArrowBackIcon/>
+                                </IconButton>
                             </Grid>
                             <Grid item>
-                                <Typography variant="h5" color="textPrimary" className={classes.header}>{thread.title} </Typography>
+                                <Typography variant="h5" color="textPrimary" className={classes.header}>{threadTitle} </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>20.04.2021</Typography>
+                                <Typography variant={"caption"}  color={"textSecondary"} className={classes.header}>{getDataString(new Date(threadDate))}</Typography>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -223,27 +213,29 @@ const Chat: React.FC<ChatProps> = (props) => {
                         </Grid>
                     </Box>
 
-                    <Box mt={2} pl={8} pr={8} >
+                    <Box mt={2} pl={4} pr={4} >
                         {messages.map( (msg,index) => (
-                            <Grid container direction={"column"}  key={index} justify="center" alignItems="stretch">
-                                <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
-                                    <Grid item>
-                                        <Avatar src={process.env.PUBLIC_URL + "pluto-sign-up.png"} className={classes.orange}>
-                                            User first letter
-                                        </Avatar>
-                                    </Grid>
-                                    <Grid item >
-                                        <Grid container direction={"row"} spacing={1} alignItems="center">
-                                            <Grid item >
-                                                <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
-                                            </Grid>
-                                            <Grid item >
-                                                <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
-                                            </Grid>
+                            <Grid container direction={"column"} key={index} spacing={3} justify="space-evenly" alignItems="stretch">
+                                <Grid item>
+                                    <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
+                                        <Grid item>
+                                            <Avatar src={process.env.PUBLIC_URL + "pluto-sign-up.png"} className={classes.orange}>
+                                                User first letter
+                                            </Avatar>
                                         </Grid>
-                                        <Typography className={classes.message} display={"block"}  variant={"body2"} color="textPrimary">
-                                            {msg.content}
-                                        </Typography>
+                                        <Grid item >
+                                            <Grid container direction={"row"} spacing={1} alignItems="center">
+                                                <Grid item >
+                                                    <Typography variant={"body2"} color="textPrimary" className={classes.bold}>{msg.senderUsername}</Typography>
+                                                </Grid>
+                                                <Grid item >
+                                                    <Typography variant={"caption"} color="textSecondary" className={classes.header}>{msg.sendingTimestamp}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                            <Typography className={classes.message} display={"block"} variant={"body2"} color="textPrimary">
+                                                {msg.content}
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -283,21 +275,38 @@ const Chat: React.FC<ChatProps> = (props) => {
                                     }
                                 }}
                             >
-                                <TextField
-                                    className={classes.textField}
-                                    id="content"
-                                    label="Enter to send. Shift + Enter to add new line"
-                                    name="content"
-                                    autoComplete="content"
-                                    onChange={props.handleChange}
-                                    value={props.values.content}
-                                    autoFocus
-                                    multiline
-                                    rows={4}
-                                    variant="filled"
-                                    inputProps={{ maxLength: 512 }}
-                                />
 
+                                <Box bgcolor={"background.dp04" } border={1} borderColor="grey.600" borderRadius={"borderRadius"}>
+
+                                    <TextField
+                                        id="content"
+                                        label="Enter to send. Shift + Enter to add new line"
+                                        name="content"
+                                        autoComplete="content"
+                                        onChange={props.handleChange}
+                                        value={props.values.content}
+                                        fullWidth={true}
+                                        autoFocus
+                                        multiline
+                                        rows={4}
+                                        variant="filled"
+                                        inputProps={{
+                                            maxLength:512,
+                                        }}
+                                    />
+
+                                    <FormHelperText variant="filled" filled={true}>
+                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                            <FormatBoldIcon fontSize={"small"} />
+                                        </IconButton>
+                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                            <FormatItalicIcon fontSize={"small"} />
+                                        </IconButton>
+                                        <IconButton onClick={(e) => {e.stopPropagation();}}>
+                                            <FormatUnderlinedIcon fontSize={"small"} />
+                                        </IconButton>
+                                    </FormHelperText>
+                                </Box>
                             </Form>
                         )}
                 </Formik>
@@ -305,5 +314,34 @@ const Chat: React.FC<ChatProps> = (props) => {
         </Box>
     );
 };
+/*
+<Box bgcolor={"background.dp04" } boxShadow={1} border={1} borderColor="grey.500" borderRadius={"borderRadius"}>
+                                        <TextField
+                                            className={classes.textField}
+                                            id="content"
+                                            label="Enter to send. Shift + Enter to add new line"
+                                            name="content"
+                                            autoComplete="content"
+                                            onChange={props.handleChange}
+                                            value={props.values.content}
+                                            autoFocus
+                                            multiline
+                                            rows={4}
+                                            variant="outlined"
+                                            inputProps={{ maxLength: 512 }}
+                                        />
+                                                                                <FilledInput
+                                                                                    id="content"
+                                                                                    value={props.values.content}
+                                                                                    onChange={props.handleChange}
+                                                                                    autoFocus multiline rows={4}
+                                                                                    fullWidth={true}
+                                                                                    inputProps={{
+                                                                                        maxLength: 512,
+                                                                                        classes: {
+                                                                                            notchedOutline: classes.notchedOutline
+                                                                                        }
+                                                                                    }}
+                                                                                />**/
 
 export default Chat;
