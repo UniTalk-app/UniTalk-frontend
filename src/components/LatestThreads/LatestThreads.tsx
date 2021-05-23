@@ -37,7 +37,7 @@ const Categories: React.FC<ThreadsListProps> = (props) => {
     const classes = useStyles();
   
     latestthreads2.sort(function(a, b) {
-        return new Date(a.replyTime) < new Date(b.replyTime) ? 1 : -1;
+        return new Date(a.replyTime) > new Date(b.replyTime) ? 1 : -1;
     });
 
     return (
