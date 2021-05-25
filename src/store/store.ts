@@ -5,7 +5,7 @@ import BackendAPI from "services/backendAPI";
 class StoreSubject {
     private observers: StoreObserver[] = [];
     private appData: AppData = {categories: [], threads: [], groups: []};
-    public currentGroupId = -1;
+    public currentGroupId = Number(localStorage.getItem("selectedGroup")) || -1;
 
     constructor() {
         this.updateStore();
@@ -26,6 +26,7 @@ class StoreSubject {
     public setCurrentGroupId(id: number) {
         if (this.currentGroupId !== id) {
             this.currentGroupId = id;
+            localStorage.setItem("selectedGroup", String(id));
             this.updateStore();
         }
     }
