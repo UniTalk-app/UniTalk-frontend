@@ -41,10 +41,9 @@ class StoreSubject {
     
             if (this.appData.groups.filter(g => g.groupId == this.currentGroupId).length != 0) {
                 const categoriesResponse = await axios.get(BackendAPI.getCategories(this.currentGroupId), {headers});
-                this.appData.categories = categoriesResponse.data._embedded.categoryList;
-                
+                this.appData.categories = categoriesResponse.data._embedded?.categoryList || [];
                 const threadsResponse = await axios.get(BackendAPI.getThreads(this.currentGroupId), {headers});
-                this.appData.threads = threadsResponse.data._embedded.threadList;
+                this.appData.threads = threadsResponse.data._embedded?.threadList || [];
             }
             else {
                 this.appData.categories = [];
