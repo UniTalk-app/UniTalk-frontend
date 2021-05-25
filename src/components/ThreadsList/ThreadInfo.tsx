@@ -52,11 +52,11 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                         <Grid item>
                             <Box display="flex" alignItems="center">
                                 <Avatar className={classes.small + " " + classes.margin}/>
-                                <Typography variant={"body2"}>{thread.lastReply}</Typography>
+                                <Typography variant={"body2"}>{thread.lastReplyTimestamp}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
-                            <Typography variant={"body2"}>{thread.lastReply}</Typography>
+                            <Typography variant={"body2"}>{thread.lastReplyTimestamp}</Typography>
                         </Grid>
                         <Grid item>
                             <Typography variant={"body2"}>10h</Typography>

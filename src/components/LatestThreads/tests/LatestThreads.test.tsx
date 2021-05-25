@@ -6,7 +6,7 @@ import LatestThreads from "../LatestThreads";
 describe("LatestThreads", () => {
     test("displays table name", async () => {
         const { findByText } = render(<LatestThreads latestthreads={[
-            {title:"Test",threadId:"1",author:"Tester",creationTimestamp:"0",lastReply:"0",replyTime:"0"}]} />);
+            {title:"Test",threadId:"1",author:"Tester",creationTimestamp:"0",lastReplyTimestamp:"0",replyTime:"0"}]} />);
             
         const result = await findByText("Latest threads");
         const name = await findByText("Test");

@@ -10,7 +10,6 @@ import {
     ListItemText
 } from "@material-ui/core";
 import ForumIcon from "@material-ui/icons/Forum";
-
 const useStyles = makeStyles(() => createStyles({
     root: {
         width: "100%",
@@ -33,9 +32,15 @@ const Categories: React.FC<ThreadsListProps> = (props) => {
     } = props;
     const latestthreads2=[...latestthreads];
     const classes = useStyles();
+  
     latestthreads2.sort(function(a, b) {
-        return new Date(a.replyTime) > new Date(b.replyTime) ? 1 : -1;
+        return new Date(a.lastReplyTimestamp) < new Date(b.lastReplyTimestamp) ? 1 : -1;
     });
+    for (const obj of latestthreads2){
+        obj.lastReplyTimestamp =obj.lastReplyTimestamp.slice(0,19);
+        obj.lastReplyTimestamp=obj.lastReplyTimestamp.replace("T"," ");
+    }
+
     return (
         <Box className={classes.root} bgcolor={"background.dp04"}>
             <Box display="flex"  height="57px" alignItems="center" justifyContent="center">
@@ -54,7 +59,7 @@ const Categories: React.FC<ThreadsListProps> = (props) => {
                                     secondary={
                                         <>
                                             <ForumIcon style={{fontSize:"small", marginRight:"5px"}} />
-                                            {"0 comments"}
+                                            {latestthreads2.lastReplyTimestamp}
                                         </>
                                     }/>
                             </ListItem>
