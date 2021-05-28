@@ -12,6 +12,18 @@ class GroupService {
         const response = await axios.get(BackendAPI.leaveGroup(groupId) , { headers: authHeader() });
         return response;
     }
+
+    async createGroup(data:{
+        name: string,
+        creationTimestamp: number
+    }){
+        try{
+            const response = await axios.post(BackendAPI.createGroup, data, { headers: authHeader() });
+            return response;
+        }catch(e){
+            console.log(e);
+        }
+    }
 }
 
 export default new GroupService();

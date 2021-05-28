@@ -10,6 +10,7 @@ class BackendAPI {
     static createThread = (groupId: number): string => `${basePath}group/${groupId}/thread`;
     static deleteThread = (groupId: number, threadId: number): string => `${basePath}group/${groupId}/thread/${threadId}`;
     static createCategory = (groupId: number): string => `${basePath}group/${groupId}/category`;
+    static createGroup = `${basePath}group/`;
     static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
     static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
     static userAvatar = `${basePath}avatar`;

@@ -20,6 +20,7 @@ import {
     Menu as MenuIcon, 
 } from "@material-ui/icons";
 import JoinDialog from "./JoinDialog";
+import CreateGroupDialog from "./CreateGroupDialog";
 import ConfirmDialog from "./ConfirmDialog";
 import { useStore } from "store/storeProvider";
 import storeSubject from "store/store";
@@ -44,6 +45,7 @@ const TemporaryDrawer: React.FC = () => {
         left: false, 
     });
     const [openJoinDialog, setOpenJoinDialog] = React.useState(false);
+    const [openCreateGroupDialog, setOpenCreateGroupDialog] = React.useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
     const [groupIdToDelete, setGroupIdToDelete] = React.useState(-1);
 
@@ -68,6 +70,15 @@ const TemporaryDrawer: React.FC = () => {
         setOpenJoinDialog(false);
     };
 
+    const handleOpenCreateGroupDialog = () => {
+        setOpenCreateGroupDialog(true);
+    };
+
+    const handleCloseCreateGroupDialog = () => {
+        setOpenCreateGroupDialog(false);
+    };
+
+
     const handleOpenConfirmDialog = (groupId: number) => {
         setGroupIdToDelete(groupId);
         setOpenConfirmDialog(true);
@@ -90,7 +101,7 @@ const TemporaryDrawer: React.FC = () => {
                     <Typography variant="h6">Manage</Typography>
                 </Box>
                 <List>
-                    <ListItem button >
+                    <ListItem button onClick={handleOpenCreateGroupDialog} >
                         <ListItemText primary={"Create new group"} />
                         <Box mr={2} display="flex" justifyContent="center">{<AddCircleIcon />}</Box>
                     </ListItem>
@@ -143,6 +154,7 @@ const TemporaryDrawer: React.FC = () => {
 
     return (
         <Box>
+            <CreateGroupDialog open={openCreateGroupDialog} onClose={handleCloseCreateGroupDialog}/>
             <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog}/>   
             <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete}/>   
             <Box key={"left"}>
