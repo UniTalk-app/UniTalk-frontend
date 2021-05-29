@@ -27,7 +27,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
     } = props;
 
     return (
-        <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} height={"40px"} pl={2}>
+        <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} height={"40px"}>
 
             <Button
                 size="small"
@@ -39,7 +39,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                 disableElevation
                 component={Box}
             >
-                <Box justifyContent={"center"} width={"100%"} display="flex">
+                <Box justifyContent={"center"} width={"100%"} display="flex" ml={2}>
                     <Grid container justify={"space-between"} alignItems={"center"}>
                         <Grid item sm={firstColumnSize}>
                             <Typography variant={"body1"}>{thread.title}</Typography>
