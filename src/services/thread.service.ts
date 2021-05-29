@@ -35,7 +35,7 @@ class ThreadService {
         this.deleteThreadRequest(parseInt(threadId))
             .then(response => {
                 if (response) {
-                    snackbar(response.data.message, {variant: "success", anchorOrigin: {
+                    snackbar(response.data.message || "Sukces", {variant: "success", anchorOrigin: {
                         vertical: "bottom",
                         horizontal: "center",
                     },});

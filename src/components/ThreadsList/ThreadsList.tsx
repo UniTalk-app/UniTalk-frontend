@@ -170,14 +170,13 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                 <Grid container direction={"column"} spacing={1}>
                     {threads.map((value) => (
                         <Grid item key={value.threadId}>
-                            {ThreadInfo({
-                                firstColumnSize: firstColumnSize,
-                                thread: value,
-                                handleOpenChat: handleOpenChat,
-                                setSelectedThread: setSelectedThread,
-                                classes: classes,
-                                handleOpenConfirmDelete: handleOpenConfirmDelete
-                            })}
+                            <ThreadInfo
+                                firstColumnSize={firstColumnSize}
+                                thread={value}
+                                handleOpenChat={handleOpenChat}
+                                setSelectedThread={setSelectedThread}
+                                classes={classes}
+                                handleOpenConfirmDelete={handleOpenConfirmDelete}                            />
                         </Grid>
                     ))}
                 </Grid>
