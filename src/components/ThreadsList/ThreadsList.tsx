@@ -14,12 +14,14 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    TextField,
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "./NewThreadsDialog";
 import Chat from "components/Chat";
 import threadService from "services/thread.service";
 import { useSnackbar } from "notistack";
+import { FormikValues,FormikErrors, Form, Formik } from "formik";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -81,10 +83,13 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     const classes = useStyles();
     const [openChat, setOpenChat] = React.useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
+    const [openEditThread, setOpenEditThread] = React.useState(false);
     const handleOpenChat = () => setOpenChat(true);
     const handleCloseChat = () => setOpenChat(false);
     const handleOpenConfirmDelete = () => setOpenConfirmDelete(true);
     const handleCloseConfirmDelete = () => setOpenConfirmDelete(false);
+    const handleOpenEditThread = () => setOpenEditThread(true);
+    const handleCloseEditThread = () => setOpenEditThread(false);
     const [selectedThread, setSelectedThread] = React.useState<Thread>({} as Thread);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -106,9 +111,74 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
         );
     };
 
+    const EditThreadDialog : React.FC = () => {
+        return (
+            <Dialog onClose={handleCloseEditThread} open={openEditThread}>
+                <DialogTitle>Edit Thread </DialogTitle>
+                <Formik
+                    initialValues={{
+                        title: "",
+                        category: "",
+                    }}
+                    validate={(values:FormikValues)=>{
+                        const errors: FormikErrors<{ title: string;category:string }> = {};
+                        if (!values.title) {
+                            errors.title = "Required";
+                        }
+                        if (!values.category) {
+                            errors.category = "Required";
+                        }
+
+                        return errors;
+                    }}
+                    onSubmit={(values) => {
+                        threadService.updateThread(selectedThread.threadId,values.title,values.category, handleCloseEditThread, enqueueSnackbar);
+                    }}
+                >
+                    {
+                        (props) => (
+                            <Form noValidate>
+                                <DialogContent>
+                                    <TextField
+                                        autoComplete="off"
+                                        id="title"
+                                        label="Title"
+                                        rowsMax={1}
+                                        color="primary"
+                                        variant="outlined"
+                                        onChange={props.handleChange}
+                                        error={props.touched.title && props.errors.title ? true : false}
+                                        helperText={(props.touched.title && props.errors.title) ?? false}
+                                    />
+                                </DialogContent>
+                                <DialogContent>
+                                    <TextField
+                                        autoComplete="off"
+                                        id="category"
+                                        label="Category"
+                                        rowsMax={1}
+                                        color="primary"
+                                        variant="outlined"
+                                        onChange={props.handleChange}
+                                        error={props.touched.category && props.errors.category ? true : false}
+                                        helperText={(props.touched.category && props.errors.category) ?? false}
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleCloseEditThread} color="primary">Cancel </Button>
+                                    <Button type="submit" color="primary" variant="contained" > Yes </Button>
+                                </DialogActions>
+                            </Form>
+                        )}
+                </Formik>
+            </Dialog>
+        );
+    };
+
     return (
         <Box>
             <ConfirmDialog />
+            <EditThreadDialog/>
 
             <Dialog
                 className={ classes.dialogPaper}
@@ -170,13 +240,15 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                 <Grid container direction={"column"} spacing={1}>
                     {threads.map((value) => (
                         <Grid item key={value.threadId}>
-                            <ThreadInfo
-                                firstColumnSize={firstColumnSize}
-                                thread={value}
-                                handleOpenChat={handleOpenChat}
-                                setSelectedThread={setSelectedThread}
-                                classes={classes}
-                                handleOpenConfirmDelete={handleOpenConfirmDelete}                            />
+                            {ThreadInfo({
+                                firstColumnSize: firstColumnSize,
+                                thread: value,
+                                handleOpenChat: handleOpenChat,
+                                setSelectedThread: setSelectedThread,
+                                classes: classes,
+                                handleOpenConfirmDelete: handleOpenConfirmDelete,
+                                handleOpenEditThread: handleOpenEditThread
+                            })}
                         </Grid>
                     ))}
                 </Grid>

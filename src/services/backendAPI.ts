@@ -9,6 +9,7 @@ class BackendAPI {
     static getMessages = (threadId: number): string => `${basePath}room/${threadId}/msg`;
     static createThread = (groupId: number): string => `${basePath}group/${groupId}/thread`;
     static deleteThread = (groupId: number, threadId: number): string => `${basePath}group/${groupId}/thread/${threadId}`;
+    static updateThread = (groupId: number, threadId: number): string => `${basePath}group/${groupId}/thread/${threadId}`;
     static createCategory = (groupId: number): string => `${basePath}group/${groupId}/category`;
     static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
     static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
