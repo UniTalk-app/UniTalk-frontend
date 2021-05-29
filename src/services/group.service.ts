@@ -14,8 +14,7 @@ class GroupService {
     }
 
     async createGroup(data:{
-        name: string,
-        creationTimestamp: number
+        name: string
     }){
         try{
             const response = await axios.post(BackendAPI.createGroup, data, { headers: authHeader() });

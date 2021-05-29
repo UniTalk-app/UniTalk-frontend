@@ -17,8 +17,7 @@ const CreateGroupDialog : React.FC<CreateGroupDialogProps> = (props) => {
     
     const formik = useFormik({
         initialValues: {
-            name: "",
-            creationTimestamp: Date.now(),
+            name: ""
         },
         onSubmit: (values) => {
             groupService.createGroup(values)
