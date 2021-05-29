@@ -39,6 +39,40 @@ class ThreadService {
                 },});
             });
     }
+
+    private async updateThreadRequest(threadId: number,title: string,categoryId: number) {
+        return await axios.put(BackendAPI.updateThread(storeSubject.getCurrentGroupId(), threadId),
+            {title,categoryId},
+            { headers: authHeader() });
+    }
+
+    public updateThread(threadId: string,
+        title: string,
+        categoryId: string,
+        onClose: () => void,
+        snackbar: (message: SnackbarMessage, options?: OptionsObject | undefined) => SnackbarKey) {
+        this.updateThreadRequest(parseInt(threadId),title,parseInt(categoryId))
+            .then(response => {
+                if (response) {
+                    snackbar(response.data.message, {variant: "success", anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                    },});
+                    storeSubject.updateStore();
+                    onClose();
+                }
+            })
+            .catch(error => {
+                let message = "Unknown error";
+                if (error.response) {
+                    message = error.response.data.message;
+                }
+                snackbar(message, {variant: "error", anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "center",
+                },});
+            });
+    }
 }
 
 export default new ThreadService();
