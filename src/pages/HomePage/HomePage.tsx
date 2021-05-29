@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
     const loggedIn = authHeader();
     const classes = useStyles();
     const appData = useStore();
-
+    console.log(appData.threads);
     return (
         <>
             {(Object.keys(loggedIn).length === 0)?( 

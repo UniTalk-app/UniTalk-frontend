@@ -6,6 +6,7 @@ class StoreSubject {
     private observers: StoreObserver[] = [];
     private appData: AppData = {categories: [], threads: [], groups: []};
     public currentGroupId = Number(localStorage.getItem("selectedGroup")) || -1;
+    public currentCategoryId = Number(localStorage.getItem("selectedCategory")) || -1;
 
     constructor() {
         this.updateStore();
@@ -30,7 +31,17 @@ class StoreSubject {
             this.updateStore();
         }
     }
-
+    public setCurrentCategoryId(id: number) {
+        if (this.currentCategoryId !== id) {
+            this.currentCategoryId = id;
+            localStorage.setItem("selectedCategory", String(id));
+            this.updateStore();
+        }
+    }
+    public getCurrentCategory(){
+        return this.currentCategoryId<0? this.appData.categories[0].categoryId : this.currentCategoryId;
+    }
+    
     public async updateStore() {
         try {
             const headers = {
@@ -44,8 +55,16 @@ class StoreSubject {
                 const categoriesResponse = await axios.get(BackendAPI.getCategories(this.currentGroupId), {headers});
                 this.appData.categories = categoriesResponse.data._embedded.categoryList;
                 
-                const threadsResponse = await axios.get(BackendAPI.getThreads(this.currentGroupId), {headers});
-                this.appData.threads = threadsResponse.data._embedded.threadList;
+                if(this.currentCategoryId < 0){
+                    const threadsResponse = await axios.get(BackendAPI.getThreads(this.currentGroupId), {headers});
+                    this.appData.threads = threadsResponse.data._embedded.threadList;
+                }
+                else{
+                    console.log(this.currentCategoryId);
+                    const categ = this.appData.categories.find((el)=>el.categoryId===this.currentCategoryId);
+                    console.log(categ);
+                    this.appData.threads=categ?.threads || [];
+                }
             }
             else {
                 this.appData.categories = [];

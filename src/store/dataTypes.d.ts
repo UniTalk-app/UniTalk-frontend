@@ -16,9 +16,10 @@ type Thread = {
 }
 
 type Category = {
-    categoryId: string;
+    categoryId: number;
     name: string;
     creationTime: string;
+    threads: Thread[];
 }
 
 type Group = {

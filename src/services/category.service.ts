@@ -12,7 +12,7 @@ class CategoryService {
         return response;
     }
 
-    async deleteCategory(categoryId: string, groupId: number) {
+    async deleteCategory(categoryId: number, groupId: number) {
         const headers = {
             ...authHeader()
         };

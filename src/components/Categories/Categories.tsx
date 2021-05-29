@@ -64,7 +64,13 @@ const Categories: React.FC<CategListProps> = (props) => {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
-    const onDeleteCategory = async (catId: string) => {
+    const OnCategThreads = (catId: number)=>{
+        storeSubject.setCurrentCategoryId(catId);
+    };
+    const OnAllThreads = ()=>{
+        storeSubject.setCurrentCategoryId(-1);
+    };
+    const onDeleteCategory = async (catId: number) => {
         if(!confirm("Are you sure?"))return;
         const showSnackbar = (isError = false) => {
             enqueueSnackbar(
@@ -102,9 +108,14 @@ const Categories: React.FC<CategListProps> = (props) => {
                     <Table>
                         <Box m={1.5} >
                             <Tabs orientation="vertical"  aria-label="Vertical tabs example"  style={{scrollbarColor:"transparent transparent"}}> 
+                                <TableRow>
+                                    <Button className={classes.tab} variant="outlined" onClick={() => OnAllThreads()}>
+                                        <Typography variant="body1">All</Typography>
+                                    </Button>
+                                </TableRow>
                                 {categories.map((cat) => (
                                     <TableRow key={cat.name}>
-                                        <Button className={classes.tab} variant="outlined">
+                                        <Button className={classes.tab} variant="outlined" onClick={() => OnCategThreads(cat.categoryId)}>
                                             <Typography variant="body1">{cat.name}</Typography>
                                         </Button>
                                         {

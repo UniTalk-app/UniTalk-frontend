@@ -83,13 +83,13 @@ const NewThreads: React.FC = () => {
         onSubmit: (values) => {
             console.log(values);
             ThreadService.createThread({
-                catId: 1,
+                catId: storeSubject.getCurrentCategory(),
                 creationTimestamp: Date.now(),
                 creatorId: 1,
                 lastReplyAuthorId: 0,
                 lastReplyTimestamp: Date.now(),
                 title: values.name,
-                groupId: 1
+                groupId: storeSubject.currentGroupId<0? storeSubject.getAppData().groups[0].groupId : storeSubject.currentGroupId
             })
                 .then(response => {
                     if (response) {
