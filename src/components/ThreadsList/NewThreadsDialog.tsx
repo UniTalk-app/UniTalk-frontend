@@ -47,21 +47,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NewThreads: React.FC = () => {
     const {enqueueSnackbar} = useSnackbar();
-    const [categories, setCategories] = React.useState<string | number>("");
+    const [categories, setCategories] = React.useState<number>(-1);
     const [openCombo, setOpenCombo] = React.useState(false);
     const appData = storeSubject.getAppData();
 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setCategories(event.target.value as string);
+        setCategories(event.target.value as number);
     };
 
-    const handleClose = () => {
-        setOpenCombo(false);
-    };
-
-    const handleOpen = () => {
-        setOpenCombo(true);
-    };
+    const handleClose = () => setOpenCombo(false);
+    const handleOpen = () => setOpenCombo(true);
     
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -81,16 +76,10 @@ const NewThreads: React.FC = () => {
                 .min(1)
         }),
         onSubmit: (values) => {
-            console.log(values);
             ThreadService.createThread({
-                catId: 1,
-                creationTimestamp: Date.now(),
-                creatorId: 1,
-                lastReplyAuthorId: 0,
-                lastReplyTimestamp: Date.now(),
                 title: values.name,
-                groupId: 1
-            })
+                categoryId: categories
+            }, storeSubject.getCurrentGroupId())
                 .then(response => {
                     if (response) {
                         enqueueSnackbar("Added new thread!", {variant: "success", anchorOrigin: {
@@ -145,13 +134,11 @@ const NewThreads: React.FC = () => {
                             error={formik.touched.name && formik.errors.name ? true : false}
                             helperText={(formik.touched.name && formik.errors.name) ?? false}
                         />
-                    </DialogContent>
-                    <DialogContent>
                         <FormControl variant="outlined" className={classes.combo}>
-                            <InputLabel id="demo-simple-select-outlined-label">categories</InputLabel>
+                            <InputLabel id="demo-simple-select-outlined-label">Categories</InputLabel>
                             <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
+                                labelId="category"
+                                id="category"
                                 open={openCombo}
                                 onClose={handleClose}
                                 onOpen={handleOpen}
@@ -159,12 +146,12 @@ const NewThreads: React.FC = () => {
                                 onChange={handleChange}
                                 label="categories"
                             >
-                                <MenuItem  key={0} value="All">
+                                <MenuItem  key={-1} value={-1}>
                                     All
-                                </MenuItem >
+                                </MenuItem>
                                 {appData.categories.map(cat => (
-                                    <MenuItem  key={cat.name}
-                                        value={cat.name}>
+                                    <MenuItem  key={cat.categoryId}
+                                        value={cat.categoryId}>
                                         {cat.name}
                                     </MenuItem >
                                 ))}

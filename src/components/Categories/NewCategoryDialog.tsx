@@ -60,8 +60,7 @@ const NewCategoryDialog: React.FC = () => {
         onSubmit: (values) => {
             console.log(values);
             CategoryService.createCategory({
-                name: values.name,
-                creationTimestamp: Date.now()
+                name: values.name
             })
                 .then(response => {
                     if (response) {

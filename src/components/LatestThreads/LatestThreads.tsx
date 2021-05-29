@@ -37,8 +37,9 @@ const Categories: React.FC<ThreadsListProps> = (props) => {
         return new Date(a.lastReplyTimestamp) < new Date(b.lastReplyTimestamp) ? 1 : -1;
     });
     for (const obj of latestthreads2){
-        obj.lastReplyTimestamp =obj.lastReplyTimestamp.slice(0,19);
-        obj.lastReplyTimestamp=obj.lastReplyTimestamp.replace("T"," ");
+        if (obj.lastReplyTimestamp == null) continue;
+        obj.lastReplyTimestamp = obj.lastReplyTimestamp.slice(0,19);
+        obj.lastReplyTimestamp = obj.lastReplyTimestamp.replace("T"," ");
     }
 
     return (

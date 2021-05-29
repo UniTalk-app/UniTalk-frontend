@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 import BackendAPI from "./backendAPI";
 
 class CategoryService {
-    async createCategory(data: {name: string, creationTimestamp: number}) {
+    async createCategory(data: {name: string}) {
         const headers = {
             ...authHeader()
         };
