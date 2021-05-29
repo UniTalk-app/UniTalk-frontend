@@ -37,10 +37,7 @@ const HomePage: React.FC = () => {
                     <Box width="20%">
                         <Categories categories={appData.categories}/>
                         <Box mt={4}>
-                            <LatestThreads  latestthreads={[
-                                {name:"How to die succesfully", comments:"162"},{name:"Did you ever hear the tragedy of Darth Plagueis The Wise?",comments:"16"},
-                                {name:"Juwenalia",comments:"143"}
-                            ]} />
+                            <LatestThreads  latestthreads={appData.threads} />
                         </Box>        
                     </Box>
 

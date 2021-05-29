@@ -10,7 +10,7 @@ type Thread = {
     threadId: string,
     title: string;
     author: string;
-    lastReply: string;
+    lastReplyTimestamp: string;
     replyTime: string;
     creationTimestamp: string;
 }
