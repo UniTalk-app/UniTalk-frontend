@@ -1,4 +1,4 @@
-/*import axios from "axios";
+import axios from "axios";
 import Role from "store/role";
 import storeSubject from "store/store";
 import BackendAPI from "./backendAPI";
@@ -56,11 +56,3 @@ class AuthService {
 }
 
 export default new AuthService();
-*/
-import * as React from "react";
-
-test("test", async () => {
-
-    expect(1).toBeTruthy() ;// pass
-
-});
