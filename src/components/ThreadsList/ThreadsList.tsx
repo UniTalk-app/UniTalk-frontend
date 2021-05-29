@@ -14,6 +14,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    TextField,
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "./NewThreadsDialog";

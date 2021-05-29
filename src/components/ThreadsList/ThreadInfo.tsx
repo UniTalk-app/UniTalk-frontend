@@ -6,6 +6,7 @@ import {
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
+import EditThread from "./EditThreadDialog";
 
 type ThreadInfoProps = {
     firstColumnSize: boolean | GridSize,
