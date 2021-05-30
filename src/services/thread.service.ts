@@ -54,7 +54,7 @@ class ThreadService {
         this.updateThreadRequest(parseInt(threadId),title,parseInt(categoryId))
             .then(response => {
                 if (response) {
-                    snackbar(response.data.message, {variant: "success", anchorOrigin: {
+                    snackbar("Thread successfully changed", {variant: "success", anchorOrigin: {
                         vertical: "bottom",
                         horizontal: "center",
                     },});

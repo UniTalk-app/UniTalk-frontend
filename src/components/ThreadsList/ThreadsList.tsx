@@ -14,14 +14,13 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    TextField,
 } from "@material-ui/core";
 import ThreadInfo from "./ThreadInfo";
 import NewThreads from "./NewThreadsDialog";
 import Chat from "components/Chat";
 import threadService from "services/thread.service";
 import { useSnackbar } from "notistack";
-import storeSubject from "store/store";
+import EditThreadForm from "./EditThreadDialog";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -118,66 +117,11 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
         );
     };
 
-    const EditThreadDialog : React.FC = () => {
+    const EditThreadDialog2 : React.FC = () => {
         return (
             <Dialog onClose={handleCloseEditThread} open={openEditThread}>
-                <DialogTitle>Edit Thread </DialogTitle>
-                <Formik
-                    initialValues={{
-                        title: "",
-                        category: "",
-                    }}
-                    validate={(values:FormikValues)=>{
-                        const errors: FormikErrors<{ title: string;category:string }> = {};
-                        if (!values.title) {
-                            errors.title = "Required";
-                        }
-                        if (!values.category) {
-                            errors.category = "Required";
-                        }
-
-                        return errors;
-                    }}
-                    onSubmit={(values) => {
-                        threadService.updateThread(selectedThread.threadId,values.title,values.category, handleCloseEditThread, enqueueSnackbar);
-                    }}
-                >
-                    {
-                        (props) => (
-                            <Form noValidate>
-                                <DialogContent>
-                                    <TextField
-                                        autoComplete="off"
-                                        id="title"
-                                        label="Title"
-                                        rowsMax={1}
-                                        color="primary"
-                                        variant="outlined"
-                                        onChange={props.handleChange}
-                                        error={props.touched.title && props.errors.title ? true : false}
-                                        helperText={(props.touched.title && props.errors.title) ?? false}
-                                    />
-                                </DialogContent>
-                                <DialogContent>
-                                    <TextField
-                                        autoComplete="off"
-                                        id="category"
-                                        label="Category"
-                                        rowsMax={1}
-                                        color="primary"
-                                        variant="outlined"
-                                        onChange={props.handleChange}
-                                        error={props.touched.category && props.errors.category ? true : false}
-                                        helperText={(props.touched.category && props.errors.category) ?? false}
-                                    />
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleCloseEditThread} color="primary">Cancel </Button>
-                                    <Button type="submit" color="primary" variant="contained" > Yes </Button>
-                                </DialogActions>
-                            </Form>
-                        )}
-                </Formik>
+                <DialogTitle>Edit Thread  &quot;{selectedThread.title}&quot; </DialogTitle>
+                <EditThreadForm threadId={selectedThread.threadId} handleClose={handleCloseEditThread}/>
             </Dialog>
         );
     };
@@ -185,7 +129,7 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     return (
         <Box>
             <ConfirmDialog />
-            <EditThreadDialog/>
+            <EditThreadDialog2/>
 
             <Dialog
                 className={ classes.dialogPaper}
