@@ -4,6 +4,7 @@ type AppData = {
     categories: Category[];
     threads: Thread[]; 
     groups: Group[];
+    users: UserInfo[];
 }
 
 type Thread = {
