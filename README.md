@@ -21,3 +21,8 @@ Node v12+, yarn v1.22+
 2. Theming - MaterialUI
 3. React-testing-library
 4
+
+## Credits
+Links to images used in the project:
+- [Cool looking empty list](https://icons8.com/illustrations/illustration/kingdom-list-is-empty)
+- [Even cooler astronaut](https://icons8.com/illustrations/illustration/pluto-sign-up)
