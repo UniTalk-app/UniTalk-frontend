@@ -12,6 +12,7 @@ class BackendAPI {
     static createCategory = (groupId: number): string => `${basePath}group/${groupId}/category`;
     static joinGroup = (groupId: number): string => `${basePath}group/join/${groupId}`;
     static leaveGroup = (groupId: number): string => `${basePath}group/leave/${groupId}`;
+    static createGroup = (): string => `${basePath}group/`;
     static getUsersInGroup = (groupId: number): string => `${basePath}user/${groupId}/all`;
     static userAvatar = `${basePath}avatar`;
     static deleteCategory = (groupId: number, categoryId: string): string => `${basePath}group/${groupId}/category/${categoryId}`;

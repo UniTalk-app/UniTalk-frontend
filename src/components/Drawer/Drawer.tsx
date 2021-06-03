@@ -23,6 +23,7 @@ import JoinDialog from "./JoinDialog";
 import ConfirmDialog from "./ConfirmDialog";
 import { useStore } from "store/storeProvider";
 import storeSubject from "store/store";
+import CreateDialog from "./CreateDialog";
 
 const useStyles = makeStyles(() => createStyles({
     list:{
@@ -40,11 +41,14 @@ const useStyles = makeStyles(() => createStyles({
 const TemporaryDrawer: React.FC = () => {    
 
     const classes = useStyles();
+    const appData = useStore();
+
     const [state, setState] = React.useState({
         left: false, 
     });
     const [openJoinDialog, setOpenJoinDialog] = React.useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+    const [openCreateDialog, setOpenCreateDialog] = React.useState(false);
     const [groupIdToDelete, setGroupIdToDelete] = React.useState(-1);
 
 
@@ -60,24 +64,19 @@ const TemporaryDrawer: React.FC = () => {
         setState({ ...state, ["left"]: open });
     };
 
-    const handleOpenJoinDialog = () => {
-        setOpenJoinDialog(true);
-    };
-
-    const handleCloseJoinDialog = () => {
-        setOpenJoinDialog(false);
-    };
+    const handleOpenJoinDialog = () => setOpenJoinDialog(true);
+    const handleCloseJoinDialog = () => setOpenJoinDialog(false);
 
     const handleOpenConfirmDialog = (groupId: number) => {
         setGroupIdToDelete(groupId);
         setOpenConfirmDialog(true);
     };
+    const handleCloseConfirmDialog = () => setOpenConfirmDialog(false);
 
-    const handleCloseConfirmDialog = () => {
-        setOpenConfirmDialog(false);
-    };
+    const handleOpenCreateDialog = () => setOpenCreateDialog(true);
+    const handleCloseCreateDialog = () => setOpenCreateDialog(false);
 
-    const appData = useStore();
+
 
     const list = () => (
         <Box
@@ -90,7 +89,7 @@ const TemporaryDrawer: React.FC = () => {
                     <Typography variant="h6">Manage</Typography>
                 </Box>
                 <List>
-                    <ListItem button >
+                    <ListItem button onClick={handleOpenCreateDialog}>
                         <ListItemText primary={"Create new group"} />
                         <Box mr={2} display="flex" justifyContent="center">{<AddCircleIcon />}</Box>
                     </ListItem>
@@ -145,6 +144,7 @@ const TemporaryDrawer: React.FC = () => {
         <Box>
             <JoinDialog open={openJoinDialog} onClose={handleCloseJoinDialog}/>   
             <ConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} groupId={groupIdToDelete}/>   
+            <CreateDialog open={openCreateDialog} onClose={handleCloseCreateDialog} />
             <Box key={"left"}>
                 <IconButton edge="start" color="inherit" onClick={toggleDrawer( true)} data-testId="drawerToogleOn">
                     <MenuIcon/>

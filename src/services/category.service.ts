@@ -1,4 +1,5 @@
 import axios from "axios";
+import storeSubject from "store/store";
 import authHeader from "./auth-header";
 import BackendAPI from "./backendAPI";
 
@@ -8,7 +9,7 @@ class CategoryService {
             ...authHeader()
         };
 
-        const response = await axios.post(BackendAPI.createCategory(1) , data, { headers });
+        const response = await axios.post(BackendAPI.createCategory(storeSubject.getCurrentGroupId()) , data, { headers });
         return response;
     }
 
