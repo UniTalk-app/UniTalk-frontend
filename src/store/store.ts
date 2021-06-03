@@ -4,7 +4,7 @@ import BackendAPI from "services/backendAPI";
 
 class StoreSubject {
     private observers: StoreObserver[] = [];
-    private appData: AppData = {categories: [], threads: [], groups: []};
+    private appData: AppData = {categories: [], groups: [], threads: [], users: []};
     public currentGroupId = Number(localStorage.getItem("selectedGroup")) || -1;
 
     constructor() {
@@ -12,8 +12,8 @@ class StoreSubject {
     }
 
     public getAppData() {return this.appData;}
-
     public getCurrentGroupId() {return this.currentGroupId;}
+    public getCurrentGroupName() {return this.appData.groups.find(g => g.groupId == this.currentGroupId)?.groupName;}
 
     public subscribe(observer: StoreObserver) {
         this.observers.push(observer);
@@ -45,10 +45,14 @@ class StoreSubject {
                 this.appData.categories = categoriesResponse.data._embedded?.categoryList || [];
                 const threadsResponse = await axios.get(BackendAPI.getThreads(this.currentGroupId), {headers});
                 this.appData.threads = threadsResponse.data._embedded?.threadList || [];
+                const usersResponse = await axios.get(BackendAPI.getUsersInGroup(this.currentGroupId), {headers});
+                this.appData.users = usersResponse.data || [];
+                console.log(this.appData.users);
             }
             else {
                 this.appData.categories = [];
                 this.appData.threads = [];
+                this.appData.users = [];
             }
             
             this.notify({

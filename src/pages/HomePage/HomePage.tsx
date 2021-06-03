@@ -7,10 +7,10 @@ import {
 } from "@material-ui/core";
 import ThreadsList from "../../components/ThreadsList";
 import Categories from "components/Categories";
-import LatestThreads from "../../components/LatestThreads";
 import Lock from "../../components/Lock";
 import authHeader from "services/auth-header";
 import { useStore } from "store/storeProvider";
+import UsersTab from "components/UsersTab";
 
 
 const useStyles = makeStyles(() => createStyles({
@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
                     <Box width="20%">
                         <Categories categories={appData.categories}/>
                         <Box mt={4}>
-                            <LatestThreads  latestthreads={appData.threads} />
+                            <UsersTab users={appData.users}/>
                         </Box>        
                     </Box>
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import storeSubject from "./store";
 
 export const useStore = () : AppData => {
-    const [appData, setAppData] = React.useState<AppData>({categories: [], threads: [], groups: []});
+    const [appData, setAppData] = React.useState<AppData>({categories: [], groups: [], threads: [], users: []});
 
     const onStoreUpdated = (appData: AppData) => {
         setAppData(appData);

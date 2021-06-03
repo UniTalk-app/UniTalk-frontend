@@ -20,6 +20,7 @@ import NewThreads from "./NewThreadsDialog";
 import Chat from "components/Chat";
 import threadService from "services/thread.service";
 import { useSnackbar } from "notistack";
+import storeSubject from "store/store";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -32,6 +33,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     margin: {
         marginRight: theme.spacing(0.3)
+    },
+    media: {
+        backgroundImage: "url(kingdom-list-is-empty.png)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "contain",
+        width: "370px",
+        height: "370px",
     },
     dialogPaper: {
         minHeight: "100vh",
@@ -124,7 +132,7 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
 
             <Box display="flex" alignItems="center" mb={1.5}>
                 <Box flexGrow={1}>
-                    <Typography variant="h5">All</Typography>
+                    <Typography variant="h5">{storeSubject.getCurrentGroupName() ?? "Join any group to see more!"}</Typography>
                 </Box>
                 <Box>
                     <NewThreads/>
@@ -168,17 +176,20 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
             </Box>
             <Box mt={1}>
                 <Grid container direction={"column"} spacing={1}>
-                    {threads.map((value) => (
-                        <Grid item key={value.threadId}>
-                            <ThreadInfo
-                                firstColumnSize={firstColumnSize}
-                                thread={value}
-                                handleOpenChat={handleOpenChat}
-                                setSelectedThread={setSelectedThread}
-                                classes={classes}
-                                handleOpenConfirmDelete={handleOpenConfirmDelete}                            />
-                        </Grid>
-                    ))}
+                    {threads.length > 0
+                        ? threads.map((value) => (
+                            <Grid item key={value.threadId}>
+                                <ThreadInfo
+                                    firstColumnSize={firstColumnSize}
+                                    thread={value}
+                                    handleOpenChat={handleOpenChat}
+                                    setSelectedThread={setSelectedThread}
+                                    classes={classes}
+                                    handleOpenConfirmDelete={handleOpenConfirmDelete}/>
+                            </Grid>
+                        ))
+                        : <Box display="flex" justifyContent="center" width="100%"><Box className={classes.media}/></Box>
+                    }
                 </Grid>
             </Box>
         </Box>
