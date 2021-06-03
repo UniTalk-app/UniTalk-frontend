@@ -9,17 +9,7 @@ class ThreadService {
         title: string,
         categoryId: number
     }, groupId: number){
-        try {
-            const headers = {
-                ...authHeader()
-            };
-
-            const response = await axios.post(BackendAPI.createThread(groupId), data, {headers});
-            
-            return response;
-        } catch (e) {
-            console.log(e);
-        }
+        return await axios.post(BackendAPI.createThread(groupId), data, {headers: authHeader()});
     }
 
     private async deleteThreadRequest(threadId: number) {
