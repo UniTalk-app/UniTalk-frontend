@@ -147,7 +147,7 @@ const NewThreads: React.FC = () => {
                                 label="categories"
                             >
                                 <MenuItem  key={-1} value={-1}>
-                                    All
+                                    None
                                 </MenuItem>
                                 {appData.categories.map(cat => (
                                     <MenuItem  key={cat.categoryId}
