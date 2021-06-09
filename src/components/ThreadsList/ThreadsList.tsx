@@ -21,6 +21,7 @@ import Chat from "components/Chat";
 import threadService from "services/thread.service";
 import { useSnackbar } from "notistack";
 import EditThreadForm from "./EditThreadDialog";
+import storeSubject from "store/store";
 
 type ThreadsListProps = {
   threads: Array<Thread>;
@@ -198,7 +199,9 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                                     handleOpenChat={handleOpenChat}
                                     setSelectedThread={setSelectedThread}
                                     classes={classes}
-                                    handleOpenConfirmDelete={handleOpenConfirmDelete}/>
+                                    handleOpenConfirmDelete={handleOpenConfirmDelete}
+                                    handleOpenEditThread={ handleOpenEditThread}/>
+
                             </Grid>
                         ))
                         : <Box display="flex" justifyContent="center" width="100%"><Box className={classes.media}/></Box>
