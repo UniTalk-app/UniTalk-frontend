@@ -26,6 +26,26 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
         handleOpenConfirmDelete: handleOpenConfirmDelete,
     } = props;
 
+    const GetFormattedDate = (dateString: string) : string => {
+        const date = Date.parse(dateString);
+        const now = new Date().getTime();
+        if (isNaN(date)) {
+            return "-";
+        }
+
+        if (now - date > 1000 * 60 * 60 * 24) { // > 24h
+            return `${Math.round((now - date) / 1000 / 60 / 60 / 24)} days ago`;
+        }
+        else if (now - date > 1000 * 60 * 60) { // > 60m
+            return `${Math.round((now - date) / 1000 / 60 / 60)}h ago`;
+        }
+        else if (now - date > 1000 * 60) { // > 1m
+            return `${Math.round((now - date) / 1000 / 60)}m ago`;
+        }
+        
+        return "1m ago";
+    };
+
     return (
         <Box bgcolor={"background.dp02" } boxShadow={1} borderRadius={"borderRadius"} height={"40px"}>
 
@@ -47,20 +67,20 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                         <Grid item>
                             <Box display="flex" alignItems="center">
                                 <Avatar className={classes.small + " " + classes.margin}/>
-                                <Typography variant={"body2"}>{thread.author}</Typography>
+                                <Typography variant={"body2"}>{thread.creatorId}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
                             <Box display="flex" alignItems="center">
                                 <Avatar className={classes.small + " " + classes.margin}/>
-                                <Typography variant={"body2"}>[...]</Typography>
+                                <Typography variant={"body2"}>{thread.lastReplyAuthorId}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
-                            <Typography variant={"body2"}>{thread.lastReplyTimestamp}</Typography>
+                            <Typography variant={"body2"}>{GetFormattedDate(thread.lastReplyTimestamp)}</Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant={"body2"}>10h</Typography>
+                            <Typography variant={"body2"}>{GetFormattedDate(thread.creationTimestamp)}</Typography>
                         </Grid>
                         <Grid item >
                             <IconButton onClick={(e) => {e.stopPropagation();}}>

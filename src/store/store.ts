@@ -47,7 +47,6 @@ class StoreSubject {
                 this.appData.threads = threadsResponse.data._embedded?.threadList || [];
                 const usersResponse = await axios.get(BackendAPI.getUsersInGroup(this.currentGroupId), {headers});
                 this.appData.users = usersResponse.data || [];
-                console.log(this.appData.users);
             }
             else {
                 this.appData.categories = [];
