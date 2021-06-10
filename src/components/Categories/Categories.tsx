@@ -1,7 +1,7 @@
 import * as React from "react";
-import { 
-    createStyles, 
-    makeStyles, 
+import {
+    createStyles,
+    makeStyles,
     Typography,
     Divider,
     Box,
@@ -26,20 +26,20 @@ const useStyles = makeStyles(() => createStyles({
     root: {
         marginTop: "80px",
         width: "100%",
-        borderRadius:"10px",
+        borderRadius: "10px",
     },
-    table:{
-        maxHeight:253,
+    table: {
+        maxHeight: 253,
     },
-    tab:{
-        width:"100%",
-        height:"35px",
+    tab: {
+        width: "100%",
+        height: "35px",
         justifyContent: "left",
-        textTransform:"none",
+        textTransform: "none",
         borderRadius: "8px",
         margin: "0 0 13px 0",
     },
-    buttonNew:{
+    buttonNew: {
         height: "23px",
     },
     deleteIcon: {
@@ -52,25 +52,27 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 type CategListProps = {
-    categories: Array<Category>
+    categories: Array<Category>,
+    setCurrentCategory: (id: number) => void;
 }
 
 const Categories: React.FC<CategListProps> = (props) => {
 
     const {
-        categories
+        categories,
+        setCurrentCategory
     } = props;
 
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
 
     const onDeleteCategory = async (catId: string) => {
-        if(!confirm("Are you sure?"))return;
+        if (!confirm("Are you sure?")) return;
         const showSnackbar = (isError = false) => {
             enqueueSnackbar(
-                isError ? "Error while deleting categories!" : "Category deleted!", 
+                isError ? "Error while deleting categories!" : "Category deleted!",
                 {
-                    variant: isError ? "error" : "success", 
+                    variant: isError ? "error" : "success",
                     anchorOrigin: {
                         vertical: "bottom",
                         horizontal: "center",
@@ -78,33 +80,38 @@ const Categories: React.FC<CategListProps> = (props) => {
                 });
         };
         try {
-            await CategoryService.deleteCategory(catId, storeSubject.currentGroupId); 
+            await CategoryService.deleteCategory(catId, storeSubject.currentGroupId);
             showSnackbar();
             storeSubject.updateStore();
-        } catch(e) {
+        } catch (e) {
             showSnackbar(true);
-        }    
+        }
     };
-    
+
     return (
         <Box className={classes.root} bgcolor={"background.dp04"} >
-            <Box display="flex"  height="57px" alignItems="center" justifyContent="center">
+            <Box display="flex" height="57px" alignItems="center" justifyContent="center">
                 <Box flexGrow={1} ml={3}>
                     <Typography variant="h6">Categories</Typography>
                 </Box>
                 <Box className={`${classes.buttonNew}`}>
-                    <NewCategoryDialog/>
-                </Box>                
+                    <NewCategoryDialog />
+                </Box>
             </Box>
             <Divider />
             <Box>
                 <TableContainer className={classes.table}>
                     <Table>
                         <Box m={1.5} >
-                            <Tabs orientation="vertical"  aria-label="Vertical tabs example"  style={{scrollbarColor:"transparent transparent"}}> 
+                            <Tabs orientation="vertical" aria-label="Categories" style={{ scrollbarColor: "transparent transparent" }}>
+                                <TableRow>
+                                    <Button className={classes.tab} variant="outlined" onClick={() => setCurrentCategory(-1)}>
+                                        <Typography variant="body1">All</Typography>
+                                    </Button>
+                                </TableRow>
                                 {categories.map((cat) => (
-                                    <TableRow key={cat.name}>
-                                        <Button className={classes.tab} variant="outlined">
+                                    <TableRow key={cat.categoryId}>
+                                        <Button className={classes.tab} variant="outlined" onClick={() => setCurrentCategory(Number(cat.categoryId))}>
                                             <Typography variant="body1">{cat.name}</Typography>
                                         </Button>
                                         {

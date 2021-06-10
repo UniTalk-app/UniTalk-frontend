@@ -8,12 +8,13 @@ type AppData = {
 }
 
 type Thread = {
-    threadId: string,
+    threadId: string;
     title: string;
-    author: string;
+    creatorId: number;
     lastReplyTimestamp: string;
-    replyTime: string;
+    lastReplyAuthorId: number;
     creationTimestamp: string;
+    categoryId: number;
 }
 
 type Category = {

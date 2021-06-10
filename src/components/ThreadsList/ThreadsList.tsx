@@ -23,7 +23,8 @@ import { useSnackbar } from "notistack";
 import storeSubject from "store/store";
 
 type ThreadsListProps = {
-  threads: Array<Thread>;
+  threads: Array<Thread>,
+  setSortingType: (id: number) => void,
 };
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -49,11 +50,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width: "100%",
         height: "100%",
         padding: "1",
+        textTransform: "none",
     },
 }));
 
 const ThreadsList: React.FC<ThreadsListProps> = (props) => {
-    const { threads } = props;
+    const { threads, setSortingType } = props;
 
     const firstColumnSize = 4;
     const headers = [
@@ -79,11 +81,11 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     };
 
     const latestChipClicked = () => {
-        console.info("Latest chip clicked");
+        setSortingType(0);
     };
 
     const oldestChipClicked = () => {
-        console.info("Oldest chip clicked");
+        setSortingType(1);
     };
 
     const classes = useStyles();
@@ -132,7 +134,10 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
 
             <Box display="flex" alignItems="center" mb={1.5}>
                 <Box flexGrow={1}>
-                    <Typography variant="h5">{storeSubject.getCurrentGroupName() ?? "Join any group to see more!"}</Typography>
+                    <Typography variant="h5">
+                        {storeSubject.getCurrentGroupName() ?? "Join any group to see more!"} 
+                        {storeSubject.getCurrentGroupName() ? `  #ID: ${storeSubject.getCurrentGroupId()}` : ""}
+                    </Typography>
                 </Box>
                 <Box>
                     <NewThreads/>

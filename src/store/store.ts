@@ -31,6 +31,11 @@ class StoreSubject {
         }
     }
 
+    public getUsername(id: number) {
+        const user = this.appData.users.filter(u => u.id == id)[0];
+        return user ? user.username : "-";
+    }
+
     public async updateStore() {
         try {
             const headers = {
@@ -47,7 +52,6 @@ class StoreSubject {
                 this.appData.threads = threadsResponse.data._embedded?.threadList || [];
                 const usersResponse = await axios.get(BackendAPI.getUsersInGroup(this.currentGroupId), {headers});
                 this.appData.users = usersResponse.data || [];
-                console.log(this.appData.users);
             }
             else {
                 this.appData.categories = [];
