@@ -74,10 +74,12 @@ const NewThreads: React.FC = () => {
                 .string()
                 .required()
                 .min(1)
+                .max(128)
+                .trim()
         }),
-        onSubmit: (values) => {
+        onSubmit: (values,actions) => {
             ThreadService.createThread({
-                title: values.name,
+                title: values.name.trim(),
                 categoryId: categories
             }, storeSubject.getCurrentGroupId())
                 .then(response => {
@@ -100,6 +102,7 @@ const NewThreads: React.FC = () => {
                         horizontal: "center",
                     },});
                 });
+            actions.resetForm();
         }
     });
 
