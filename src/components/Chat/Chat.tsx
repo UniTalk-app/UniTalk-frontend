@@ -142,7 +142,7 @@ const Chat: React.FC<ChatProps> = (props) => {
 
         const message = {
             content: msg,
-            senderUsername: "username",
+            senderUsername: "username",     // pobrać username z user.service
         };
         stompClient.send("/chat/room/" + threadId, {}, JSON.stringify(message));
     };

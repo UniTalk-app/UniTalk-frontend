@@ -19,6 +19,7 @@ import {
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import AvatarService from "../../services/avatar.service";
 
 interface State {
     amount: string;
@@ -36,6 +37,14 @@ const useStyles = makeStyles((theme: Theme) =>
             height: theme.spacing(8),
             width:  theme.spacing(8),
         },
+        avatarButton: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            "&:hover": {
+                backgroundColor: "transparent",
+                boxShadow: "none",
+            },
+        },
         margin: {
             margin: "auto"
         },
@@ -48,7 +57,14 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const UserProfile : React.FC = () => {
+type UserProfileProps = {
+    avatarURL: string;
+    changedAvatar: () => void;
+};
+
+const UserProfile : React.FC<UserProfileProps> = (props) => {
+    const {avatarURL, changedAvatar } = props;
+
     const classes = useStyles();
     
     const [values, setValues] = React.useState<State>({
@@ -88,16 +104,23 @@ const UserProfile : React.FC = () => {
                     direction="column"
                     justify="center"
                     alignItems="center">
-                    <Badge
-                        overlap="circle"
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                        }}
-                        badgeContent={<PhotoCameraIcon/>}
-                    >
-                        <Avatar className={classes.avatar}>H</Avatar>
-                    </Badge>
+                    <Button className={classes.avatarButton} variant="contained" component="label">
+                        <input accept=".jpg,.png,.jpeg" onChange={(e) => {
+                            (avatarURL=="")?
+                                AvatarService.postAvatar(e.target.files, changedAvatar) : AvatarService.putAvatar(e.target.files, changedAvatar);
+                        }} type="file" hidden/>
+                        <Badge
+                            overlap="circle"
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                            }}
+                            badgeContent={<PhotoCameraIcon/>}
+                        >                        
+                            <Avatar src={avatarURL} className={classes.avatar}>a</Avatar>
+                            
+                        </Badge>
+                    </Button>
                 </Grid>
                 <Grid item xs={12}> 
                     <Divider/>
