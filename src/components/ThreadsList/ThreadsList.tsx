@@ -20,6 +20,7 @@ import NewThreads from "./NewThreadsDialog";
 import Chat from "components/Chat";
 import threadService from "services/thread.service";
 import { useSnackbar } from "notistack";
+import EditThreadForm from "./EditThreadDialog";
 import storeSubject from "store/store";
 
 type ThreadsListProps = {
@@ -91,10 +92,13 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
     const classes = useStyles();
     const [openChat, setOpenChat] = React.useState(false);
     const [openConfirmDelete, setOpenConfirmDelete] = React.useState(false);
+    const [openEditThread, setOpenEditThread] = React.useState(false);
     const handleOpenChat = () => setOpenChat(true);
     const handleCloseChat = () => setOpenChat(false);
     const handleOpenConfirmDelete = () => setOpenConfirmDelete(true);
     const handleCloseConfirmDelete = () => setOpenConfirmDelete(false);
+    const handleOpenEditThread = () => setOpenEditThread(true);
+    const handleCloseEditThread = () => setOpenEditThread(false);
     const [selectedThread, setSelectedThread] = React.useState<Thread>({} as Thread);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -116,9 +120,19 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
         );
     };
 
+    const EditThreadDialog2 : React.FC = () => {
+        return (
+            <Dialog onClose={handleCloseEditThread} open={openEditThread}>
+                <DialogTitle>Edit Thread  &quot;{selectedThread.title}&quot; </DialogTitle>
+                <EditThreadForm threadId={selectedThread.threadId} handleClose={handleCloseEditThread}/>
+            </Dialog>
+        );
+    };
+
     return (
         <Box>
             <ConfirmDialog />
+            <EditThreadDialog2/>
 
             <Dialog
                 className={ classes.dialogPaper}
@@ -190,7 +204,9 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                                     handleOpenChat={handleOpenChat}
                                     setSelectedThread={setSelectedThread}
                                     classes={classes}
-                                    handleOpenConfirmDelete={handleOpenConfirmDelete}/>
+                                    handleOpenConfirmDelete={handleOpenConfirmDelete}
+                                    handleOpenEditThread={ handleOpenEditThread}/>
+
                             </Grid>
                         ))
                         : <Box display="flex" justifyContent="center" width="100%"><Box className={classes.media}/></Box>

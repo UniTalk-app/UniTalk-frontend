@@ -15,6 +15,7 @@ type ThreadInfoProps = {
     setSelectedThread: (thread: Thread) => void,
     classes: ClassNameMap<"margin" | "small" | "buttonThread" | "dialogPaper">,
     handleOpenConfirmDelete: () => void,
+    handleOpenEditThread: () => void,
 }
 
 const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
@@ -25,6 +26,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
         setSelectedThread,
         classes,
         handleOpenConfirmDelete: handleOpenConfirmDelete,
+        handleOpenEditThread: handleOpenEditThread,
     } = props;
 
     const GetFormattedDate = (dateString: string) : string => {
@@ -87,7 +89,7 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                             <IconButton onClick={(e) => {e.stopPropagation();}}>
                                 <VisibilityIcon fontSize={"small"} />
                             </IconButton>
-                            <IconButton onClick={(e) => {e.stopPropagation();}}>
+                            <IconButton onClick={(e) => {e.stopPropagation();setSelectedThread(thread); handleOpenEditThread();}}>
                                 <CreateIcon fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={(e) => {e.stopPropagation(); setSelectedThread(thread); handleOpenConfirmDelete();}}>
