@@ -31,6 +31,11 @@ class StoreSubject {
         }
     }
 
+    public getUsername(id: number) {
+        const user = this.appData.users.filter(u => u.id == id)[0];
+        return user ? user.username : "-";
+    }
+
     public async updateStore() {
         try {
             const headers = {

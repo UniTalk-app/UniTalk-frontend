@@ -6,6 +6,7 @@ import {
     Visibility as VisibilityIcon
 } from "@material-ui/icons";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
+import storeSubject from "store/store";
 
 type ThreadInfoProps = {
     firstColumnSize: boolean | GridSize,
@@ -67,13 +68,13 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                         <Grid item>
                             <Box display="flex" alignItems="center">
                                 <Avatar className={classes.small + " " + classes.margin}/>
-                                <Typography variant={"body2"}>{thread.creatorId}</Typography>
+                                <Typography variant={"body2"}>{storeSubject.getUsername(thread.creatorId)}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
                             <Box display="flex" alignItems="center">
                                 <Avatar className={classes.small + " " + classes.margin}/>
-                                <Typography variant={"body2"}>{thread.lastReplyAuthorId}</Typography>
+                                <Typography variant={"body2"}>{storeSubject.getUsername(thread.lastReplyAuthorId)}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
