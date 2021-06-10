@@ -22,7 +22,8 @@ const validateSchema = Yup.object().shape({
     title: Yup.string()
         .required("Required!")
         .min(1, "Too Short!")
-        .max(128, "Too Long!"),
+        .max(128, "Too Long!")
+        .trim(),
     category: Yup.string()
         .required("Required!")
         .min(1, "Too Short!")
