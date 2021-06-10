@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const validateSchema = Yup.object().shape({
     title: Yup.string()
+        .required("Required!")
         .min(1, "Too Short!")
-        .max(128, "Too Long!")
-        .required("Required"),
+        .max(128, "Too Long!"),
     category: Yup.string()
+        .required("Required!")
         .min(1, "Too Short!")
-        .required("Required")
 });
 
 type EditThreadDialogProps = {
@@ -58,9 +58,9 @@ const EditThreadForm: React.FC<EditThreadDialogProps> = (props) => {
                 category:"None",
             }}
             validationSchema={validateSchema}
-            onSubmit={(values) => {
-                console.log(values);
-                threadService.updateThread(threadId,values.title,values.category, handleClose, enqueueSnackbar);
+            onSubmit={(values,actions) => {
+                threadService.updateThread(threadId,values.title.trim(),values.category, handleClose, enqueueSnackbar);
+                actions.resetForm();
             }}
         >
             {
