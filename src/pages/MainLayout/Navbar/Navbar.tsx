@@ -39,6 +39,7 @@ import AuthService from "services/auth.service";
 import Forms from "components/Forms";
 import UserProfile from "components/UserProfile/UserProfile";
 import Drawer from "components/Drawer/Drawer";
+import AvatarService from "../../../services/avatar.service";
 
 const StyledBadge = withStyles((theme: Theme) =>
     createStyles({
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         marginRight: theme.spacing(1),
     }
 }));
+
 // Just for testing purpose
 type dummyNotif = {
     name: string,
@@ -81,6 +83,20 @@ type NotifListProps = {
     notifications: Array<dummyNotif>
 }
 const Navbar: React.FC<NotifListProps> = (props) => {
+
+    const [avatarURL, setAvatarURL] = React.useState("");
+    const handleSetAvatarURL = (value: string) => setAvatarURL(value);
+
+    const changedAvatar = () => {
+        AvatarService.getAvatar().then((value) => {
+            handleSetAvatarURL(value);
+        });
+    };
+    
+    React.useEffect(() => {
+        changedAvatar();
+    });
+
     const classes = useStyles();
     const {
         notifications
@@ -203,7 +219,7 @@ const Navbar: React.FC<NotifListProps> = (props) => {
                                 aria-haspopup="true"
                                 onClick={handleToggle}
                             >
-                                <Avatar className={classes.avatar}>H</Avatar>
+                                <Avatar src={avatarURL} className={classes.avatar}>a</Avatar>
                             </Button>
                             <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                                 {({ TransitionProps, placement }) => (
@@ -236,7 +252,7 @@ const Navbar: React.FC<NotifListProps> = (props) => {
                                 onClose={handleCloseProfile}
                                 aria-labelledby="form-dialog-title"
                             >
-                                <UserProfile/>
+                                <UserProfile avatarURL={avatarURL} changedAvatar={changedAvatar}/>
                             </Dialog>
                         </Container>
                     )}  
