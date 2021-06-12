@@ -1,5 +1,4 @@
-// It should be taken from .env file in the future
-const basePath = "http://localhost:8080/api/";
+const basePath = `${process.env.REACT_APP_BASE_URL}`;
 
 class BackendAPI {
     static TEST = `${basePath}test/`;
