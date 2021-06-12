@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconButton,Avatar,Button,Box, Grid, GridSize, Typography} from "@material-ui/core";
+import { IconButton, Button,Box, Grid, GridSize, Typography} from "@material-ui/core";
 import {
     Create as CreateIcon,
     Delete as DeleteIcon,
@@ -65,17 +65,17 @@ const ThreadInfo : React.FC<ThreadInfoProps> = (props) => {
                 <Box justifyContent={"center"} width={"100%"} display="flex" ml={2}>
                     <Grid container justify={"space-between"} alignItems={"center"}>
                         <Grid item sm={firstColumnSize}>
-                            <Typography variant={"body1"}>{thread.title}</Typography>
+                            <Typography variant={"body1"}>{thread.title.length > 15 ? thread.title.slice(0, 15) + "..." : thread.title}</Typography>
                         </Grid>
                         <Grid item>
                             <Box display="flex" alignItems="center">
-                                <Avatar className={classes.small + " " + classes.margin}/>
+                                {/* <Avatar className={classes.small + " " + classes.margin}/> */}
                                 <Typography variant={"body2"}>{storeSubject.getUsername(thread.creatorId)}</Typography>
                             </Box>
                         </Grid>
                         <Grid item>
                             <Box display="flex" alignItems="center">
-                                <Avatar className={classes.small + " " + classes.margin}/>
+                                {/* <Avatar className={classes.small + " " + classes.margin}/> */}
                                 <Typography variant={"body2"}>{storeSubject.getUsername(thread.lastReplyAuthorId)}</Typography>
                             </Box>
                         </Grid>

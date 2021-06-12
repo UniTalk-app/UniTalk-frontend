@@ -199,7 +199,7 @@ const ThreadsList: React.FC<ThreadsListProps> = (props) => {
                         ? threads.map((value) => (
                             <Grid item key={value.threadId}>
                                 <ThreadInfo
-                                    firstColumnSize={firstColumnSize}
+                                    firstColumnSize={4}
                                     thread={value}
                                     handleOpenChat={handleOpenChat}
                                     setSelectedThread={setSelectedThread}

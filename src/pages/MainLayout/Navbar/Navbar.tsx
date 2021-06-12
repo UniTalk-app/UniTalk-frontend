@@ -31,7 +31,6 @@ import {
     Search as SearchIcon,
     FilterList as FilterListIcon,
     AccountBox as AccountBoxIcon,
-    Settings as SettingsIcon,
     ExitToApp as ExitToAppIcon,
 } from "@material-ui/icons";
 import authHeader from "services/auth-header";
@@ -40,6 +39,7 @@ import Forms from "components/Forms";
 import UserProfile from "components/UserProfile/UserProfile";
 import Drawer from "components/Drawer/Drawer";
 import AvatarService from "../../../services/avatar.service";
+import { useStore } from "store/storeProvider";
 
 const StyledBadge = withStyles((theme: Theme) =>
     createStyles({
@@ -95,7 +95,7 @@ const Navbar: React.FC<NotifListProps> = (props) => {
     
     React.useEffect(() => {
         changedAvatar();
-    });
+    }, []);
 
     const classes = useStyles();
     const {
@@ -159,6 +159,8 @@ const Navbar: React.FC<NotifListProps> = (props) => {
     };
 
     const loggedIn = authHeader();
+    const appData = useStore();
+
     return (
         <AppBar position="sticky" color="default">
             <Toolbar>
@@ -227,14 +229,15 @@ const Navbar: React.FC<NotifListProps> = (props) => {
                                         <Paper>
                                             <ClickAwayListener onClickAway={handleClose}>
                                                 <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                                    <MenuItem onClick={handleClose}><Avatar className={classes.avatar}>H</Avatar>rafi</MenuItem>
+                                                    <MenuItem onClick={handleClose}>{appData.username}</MenuItem>
                                                     <Divider />
                                                     <MenuItem onClick={ (e) => {
                                                         handleClose(e);
                                                         trigger();
-                                                    }}
-                                                    ><AccountBoxIcon className={classes.list}/> See profile</MenuItem>
-                                                    <MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem>
+                                                    }}>
+                                                        <AccountBoxIcon className={classes.list}/> See profile
+                                                    </MenuItem>
+                                                    {/*</ClickAwayListener><MenuItem onClick={handleClose}><SettingsIcon className={classes.list}/>Settings</MenuItem> */}
                                                     <MenuItem onClick={(e) => {
                                                         AuthService.logout();
                                                         handleClose(e);

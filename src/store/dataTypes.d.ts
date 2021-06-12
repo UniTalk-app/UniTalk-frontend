@@ -5,6 +5,7 @@ type AppData = {
     threads: Thread[]; 
     groups: Group[];
     users: UserInfo[];
+    username: string;
 }
 
 type Thread = {
