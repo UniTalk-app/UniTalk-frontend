@@ -4,7 +4,7 @@ import BackendAPI from "services/backendAPI";
 
 class StoreSubject {
     private observers: StoreObserver[] = [];
-    private appData: AppData = {categories: [], groups: [], threads: [], users: []};
+    private appData: AppData = {categories: [], groups: [], threads: [], users: [], username: ""};
     public currentGroupId = Number(localStorage.getItem("selectedGroup")) || -1;
 
     constructor() {
@@ -41,9 +41,12 @@ class StoreSubject {
             const headers = {
                 ...authHeader()
             };
+            const userInfoResponse = await axios.get(BackendAPI.getUserInfo(), {headers});
+            this.appData.username = userInfoResponse.data[0].username;
             
             const groupResponse = await axios.get(BackendAPI.GROUP_ALL, {headers});
             this.appData.groups = groupResponse.data;
+            console.log(userInfoResponse);
     
             if (this.appData.groups.filter(g => g.groupId == this.currentGroupId).length != 0) {
                 const categoriesResponse = await axios.get(BackendAPI.getCategories(this.currentGroupId), {headers});

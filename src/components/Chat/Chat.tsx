@@ -16,6 +16,7 @@ import {
 import { deepOrange,} from "@material-ui/core/colors/";
 import BackendAPI from "services/backendAPI";
 import ReactMarkdown from "react-markdown";
+import storeSubject from "store/store";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -142,7 +143,7 @@ const Chat: React.FC<ChatProps> = (props) => {
 
         const message = {
             content: msg,
-            senderUsername: "username",     // pobrać username z user.service
+            senderUsername: storeSubject.getAppData().username,
         };
         stompClient.send("/chat/room/" + threadId, {}, JSON.stringify(message));
     };
