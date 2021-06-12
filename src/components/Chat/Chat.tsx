@@ -197,7 +197,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                 <ScrollableFeed>
                     <Box pl={8} pr={8}>
                         <Grid container direction={"column"} spacing={1}>
-                            <img className={classes.image} src={process.env.PUBLIC_URL + "pluto-sign-up.png"} />
+                            <img className={classes.image} src="pluto-sign-up.png" />
                             <Typography variant={"h5"} className={classes.bold} >
                                 Beginning of everything!
                             </Typography>
@@ -214,7 +214,7 @@ const Chat: React.FC<ChatProps> = (props) => {
                                 <Grid item>
                                     <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
                                         <Grid item>
-                                            <Avatar src={process.env.PUBLIC_URL + "pluto-sign-up.png"} className={classes.orange}>
+                                            <Avatar src="pluto-sign-up.png" className={classes.orange}>
                                                 User first letter
                                             </Avatar>
                                         </Grid>
