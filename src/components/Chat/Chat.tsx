@@ -214,8 +214,8 @@ const Chat: React.FC<ChatProps> = (props) => {
                                 <Grid item>
                                     <Grid container direction={"row"} spacing={1} justify="flex-start" alignItems="flex-start">
                                         <Grid item>
-                                            <Avatar src="pluto-sign-up.png" className={classes.orange}>
-                                                User first letter
+                                            <Avatar className={classes.orange}>
+                                                {msg.senderUsername.slice(0, 1)}
                                             </Avatar>
                                         </Grid>
                                         <Grid item >
