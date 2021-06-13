@@ -15,11 +15,13 @@ import {
     InputLabel,
     InputAdornment,
     IconButton,
+    Typography,
 } from "@material-ui/core";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import AvatarService from "../../services/avatar.service";
+import storeSubject from "store/store";
 
 interface State {
     amount: string;
@@ -117,29 +119,32 @@ const UserProfile : React.FC<UserProfileProps> = (props) => {
                             }}
                             badgeContent={<PhotoCameraIcon/>}
                         >                        
-                            <Avatar src={avatarURL} className={classes.avatar}>a</Avatar>
+                            <Avatar src={avatarURL} className={classes.avatar}>{storeSubject.getAppData().username.slice(0, 1)}</Avatar>
                             
                         </Badge>
                     </Button>
+                    <Typography variant="h6">
+                        {storeSubject.getAppData().username}
+                    </Typography>
                 </Grid>
                 <Grid item xs={12}> 
                     <Divider/>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField           
+                    <TextField disabled         
                         className={classes.width}
                         id="outlined-required"
                         label="First name"
-                        defaultValue="Rafael"
+                        defaultValue=""
                         variant="outlined"
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField
+                    <TextField disabled
                         className={classes.width}
                         id="outlined-required"
                         label="Last name"
-                        defaultValue="Picasso"
+                        defaultValue=""
                         variant="outlined"
                     />
                 </Grid>
@@ -147,7 +152,7 @@ const UserProfile : React.FC<UserProfileProps> = (props) => {
                     <FormControl 
                         className={classes.width} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">New password</InputLabel>
-                        <OutlinedInput
+                        <OutlinedInput disabled
                             id="outlined-adornment-password"
                             type={values.showChangePassword ? "text" : "password"}
                             value={values.changePassword}
@@ -172,7 +177,7 @@ const UserProfile : React.FC<UserProfileProps> = (props) => {
                     <FormControl 
                         className={classes.width} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Confirm password</InputLabel>
-                        <OutlinedInput
+                        <OutlinedInput disabled
                             id="outlined-adornment-password"
                             type={values.showConfirmPassword ? "text" : "password"}
                             value={values.confirmPassword}
